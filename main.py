@@ -31,7 +31,8 @@ def main_menu():
 
         play_button = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=BLACK,
                                     hovering_color=WHITE)
-        options_button = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OPTIONS", font=FONT,base_color=BLACK,
+        options_button = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OPTIONS", font=FONT,
+                                       base_color=BLACK,
                                        hovering_color=WHITE)
         quit_button = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=BLACK,
                                     hovering_color=WHITE)
@@ -86,4 +87,5 @@ def options():
     pass
 
 
-play()
+# run game
+main_menu()

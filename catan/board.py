@@ -1,10 +1,8 @@
 import math
-
 import pygame
 import random
-
 from catan.constants import BEIGE, HEXAGON_RADIUS, BUFFER, SCREEN_HEIGHT, SCREEN_WIDTH, GRID_SIZE, \
-    EXCLUDED_INDICES, RESOURCE_TYPES
+    EXCLUDED_INDICES, RESOURCE_TYPES, NUMBER_LIST, NUMBER_FONT, BLACK
 
 
 class Board:
@@ -13,18 +11,32 @@ class Board:
         self.selected_piece = None
         self.hexagon_positions = self.generate_hex_positions(GRID_SIZE, HEXAGON_RADIUS)
         self.resources = RESOURCE_TYPES.copy()
+        self.update_numbers()
+        self.update_resources()
 
     def get_grid(self):
         return self.grid
 
-    def update_resources(self, resources):
-        if not resources:
+    def update_resources(self):
+        if not self.resources:
             return
+
         random.shuffle(self.resources)  # Shuffle the list of resources
         for pos, values in self.grid.items():
             if pos not in EXCLUDED_INDICES:
-                resource_type = self.resources.pop(0)  # Remove the first resource from the list and assign it
-                values["resource_type"] = resource_type  # Update the "resource_type" value in the dictionary
+                resource_type_name = self.resources.pop(0)  # Remove the first resource from the list and assign it
+                resource_type_surface = pygame.image.load(f"assets/tile/{resource_type_name}.png")
+                values["resource_type"] = (resource_type_name, resource_type_surface)
+
+    def update_numbers(self):
+        number_list_copy = list(NUMBER_LIST)
+        if not number_list_copy:
+            return
+        random.shuffle(number_list_copy)  # Shuffle the list of numbers
+        for pos, values in self.grid.items():
+            if pos not in EXCLUDED_INDICES:
+                number_type = number_list_copy.pop(0)  # Remove the first number from the list and assign it
+                values["number"] = number_type  # Update the "number_type" value in the dictionary
 
     def generate_hex_positions(self, n, radius):
         positions = []
@@ -46,32 +58,33 @@ class Board:
                 if (x, y) in excluded_indices:
                     # store excluded hexagon with None value
                     self.grid[(x, y)] = {
-                        "position": pos,
+                        "position": None,
                         "resource_type": None,
-                        "rect": None
+                        "number": None
                     }
                 else:
                     # store hexagon position in the dictionary
                     self.grid[(x, y)] = {
                         "position": pos,
                         "resource_type": None,
-                        "rect": pygame.Rect(pos[0] - HEXAGON_RADIUS, pos[1] - HEXAGON_RADIUS, HEXAGON_RADIUS * 2,
-                                            HEXAGON_RADIUS * 2)
+                        "number": None
                     }
                     positions.append(pos)
-        # for key, value in self.grid.items():
-        # print(f"{key}:")
-        # print(f"\tposition: {value['position']}")
-        # print(f"\tresource_type: {value['resource_type']}")
-        # print(f"\trect: {value['rect']}")
+
         return positions
 
     def draw_board(self, screen):
         screen.fill(BEIGE)
-        self.update_resources(self.resources)
+
         for pos, values in self.grid.items():
+
             if values["resource_type"] is not None:
                 # Blit the resource tile onto the screen at the hexagon position
-                resource_image = values["resource_type"]
+                resource_image = values["resource_type"][1]
                 resource_rect = resource_image.get_rect(center=values["position"])
                 screen.blit(resource_image, resource_rect)
+
+            if values["number"] is not None and values["resource_type"][0] != 'desert':
+                menu_text = NUMBER_FONT.render(str(values["number"]), True, BLACK)
+                menu_rect = menu_text.get_rect(center=values["position"])
+                screen.blit(menu_text, menu_rect)
