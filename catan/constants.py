@@ -1,5 +1,7 @@
 import pygame
 
+from catan import button
+
 # screen constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
 
@@ -11,7 +13,7 @@ CYAN = (0, 255, 255)
 
 # board constants
 HEXAGON_RADIUS = 75
-BUFFER = 10
+BUFFER = 5
 GRID_SIZE = 5
 
 # this is the x,y indices that we DO NOT want in our final board.
@@ -26,6 +28,13 @@ NUMBER_FONT = pygame.font.SysFont("comicsansms", 30)
 # menu assets
 MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
 MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')
+# menu title
+MENU_TITLE_TEXT = TITLE_FONT.render("The SETTLERS of CATAN", True, "#b68f40")
+MENU_TITLE_RECT = MENU_TITLE_TEXT.get_rect(center=(960, 150))
+# menu buttons
+PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=BLACK, hovering_color=WHITE)
+OPTIONS_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OPTIONS", font=FONT, base_color=BLACK, hovering_color=WHITE)
+QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=BLACK, hovering_color=WHITE)
 
 # numbers to be drawn on to tiles and their freq given 2x 6 sided die.
 NUMBER_LIST = [
@@ -39,7 +48,7 @@ NUMBER_LIST = [
     10, 10, 10, 10  # 4x
 
 ]
-# resource tile assets
+# resource tile list. Can adj the freq. ENTRIES MUST BE >= 19 AND AT LEAST 1 DESERT TILE.
 RESOURCE_TYPES = [
     "desert",                                               # 1x
     "fields", "fields", "fields",                           # 3x

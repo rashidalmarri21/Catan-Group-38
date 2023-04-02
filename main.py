@@ -1,7 +1,7 @@
 import sys
 import pygame
-from catan import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, board, MENU_BG, button, MENU_BUTTON, FONT, \
-    TITLE_FONT
+from catan import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, PLAY_BUTTON, \
+    OPTIONS_BUTTON, QUIT_BUTTON
 from catan.board import Board
 
 # Set up the screen
@@ -26,20 +26,9 @@ def main_menu():
 
         menu_mouse_pos = pygame.mouse.get_pos()
 
-        menu_text = TITLE_FONT.render("The SETTLERS of CATAN", True, "#b68f40")
-        menu_rect = menu_text.get_rect(center=(960, 150))
+        SCREEN.blit(MENU_TITLE_TEXT, MENU_TITLE_RECT)
 
-        play_button = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=BLACK,
-                                    hovering_color=WHITE)
-        options_button = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OPTIONS", font=FONT,
-                                       base_color=BLACK,
-                                       hovering_color=WHITE)
-        quit_button = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=BLACK,
-                                    hovering_color=WHITE)
-
-        SCREEN.blit(menu_text, menu_rect)
-
-        for butt in [play_button, options_button, quit_button]:
+        for butt in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             butt.change_color(menu_mouse_pos)
             butt.update(SCREEN)
 
@@ -48,11 +37,11 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if play_button.check_for_input(menu_mouse_pos):
+                if PLAY_BUTTON.check_for_input(menu_mouse_pos):
                     play()
-                if options_button.check_for_input(menu_mouse_pos):
+                if OPTIONS_BUTTON.check_for_input(menu_mouse_pos):
                     options()
-                if quit_button.check_for_input(menu_mouse_pos):
+                if QUIT_BUTTON.check_for_input(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
