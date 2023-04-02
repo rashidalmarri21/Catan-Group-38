@@ -85,6 +85,6 @@ class Board:
                 screen.blit(resource_image, resource_rect)
 
             if values["number"] is not None and values["resource_type"][0] != 'desert':
-                menu_text = NUMBER_FONT.render(str(values["number"]), True, BLACK)
-                menu_rect = menu_text.get_rect(center=values["position"])
-                screen.blit(menu_text, menu_rect)
+                number_text = NUMBER_FONT.render(str(values["number"]), True, BLACK)
+                number_rect = number_text.get_rect(center=values["position"])
+                screen.blit(number_text, number_rect)
