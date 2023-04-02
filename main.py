@@ -1,8 +1,10 @@
 import sys
 import pygame
-from catan import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, PLAY_BUTTON, \
+from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, PLAY_BUTTON, \
     OPTIONS_BUTTON, QUIT_BUTTON
 from catan.board import Board
+from catan.player import Player
+
 
 # Set up the screen
 
@@ -50,8 +52,9 @@ def main_menu():
 
 def play():
     run = True
+    mouse_pos = pygame.mouse.get_pos()
     new_board = Board()
-
+    new_player = Player(CYAN)
     # Game loop
     while run:
         # Handle events
@@ -64,7 +67,7 @@ def play():
                 break
 
         new_board.draw_board(SCREEN)
-
+        new_player.draw_valid_house_positions(SCREEN, mouse_pos)
         # Update the screen
         pygame.display.update()
 

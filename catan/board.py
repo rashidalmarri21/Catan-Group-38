@@ -2,20 +2,27 @@ import math
 import pygame
 import random
 from catan.constants import BEIGE, HEXAGON_RADIUS, BUFFER, SCREEN_HEIGHT, SCREEN_WIDTH, GRID_SIZE, \
-    EXCLUDED_INDICES, RESOURCE_TYPES, NUMBER_LIST, NUMBER_FONT, BLACK
+    EXCLUDED_INDICES, RESOURCE_TYPES, NUMBER_LIST, NUMBER_FONT, BLACK, CYAN
 
 
 class Board:
     def __init__(self):
         self.grid = {}
-        self.selected_piece = None
-        self.hexagon_positions = self.generate_hex_positions(GRID_SIZE, HEXAGON_RADIUS)
         self.resources = RESOURCE_TYPES.copy()
+
+        self.generate_hex_positions(GRID_SIZE, HEXAGON_RADIUS)
         self.update_numbers()
         self.update_resources()
 
     def get_grid(self):
         return self.grid
+
+    def get_hexagons_positions(self):
+        positions = []
+        for key, values in self.grid.items():
+            if values["position"] is not None:
+                positions.append([key, values["position"]])
+        return positions
 
     def update_resources(self):
         if not self.resources:
@@ -25,8 +32,8 @@ class Board:
         for pos, values in self.grid.items():
             if pos not in EXCLUDED_INDICES:
                 resource_type_name = self.resources.pop(0)  # Remove the first resource from the list and assign it
-                resource_type_surface = pygame.image.load(f"assets/tile/{resource_type_name}.png")
-                values["resource_type"] = (resource_type_name, resource_type_surface)
+                resource_type_surface = pygame.image.load(f"assets/tile/{resource_type_name}.png")  # Load image
+                values["resource_type"] = (resource_type_name, resource_type_surface)  # Store (name, image_surface)
 
     def update_numbers(self):
         number_list_copy = list(NUMBER_LIST)
@@ -58,7 +65,7 @@ class Board:
                 if (x, y) in excluded_indices:
                     # store excluded hexagon with None value
                     self.grid[(x, y)] = {
-                        "position": None,
+                        "position": pos,
                         "resource_type": None,
                         "number": None
                     }
