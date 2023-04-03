@@ -5,6 +5,8 @@ from catan import button
 # screen constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
 
+MOUSE_BUFFER = 20
+
 # colour constants
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

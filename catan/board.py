@@ -14,6 +14,9 @@ class Board:
         self.update_numbers()
         self.update_resources()
 
+    def draw_house(self, surface, position):
+        pygame.draw.circle(surface, CYAN, position, 15)
+
     def get_grid(self):
         return self.grid
 
