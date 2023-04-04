@@ -1,7 +1,7 @@
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, GAME_BUTTONS
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON
 from catan.game import Game
 
 # Set up the screen
@@ -16,6 +16,13 @@ pygame.display.set_caption("Settlers Of Catan")
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60
+
+
+def check_house_positions(mouse_pos, house_positions, current_player):
+    for pos in house_positions:
+        if pos[0] - 20 <= mouse_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mouse_pos[1] <= pos[1] + 20:
+            print(current_player.get_name(), "placed a house at", pos)
+            current_player.add_house(pos)
 
 
 def main_menu():
@@ -55,37 +62,63 @@ for i in range(NUM_PLAYERS):
     player_names.append("P{}".format(i + 1))
 
 
+
+
 def play():
     run = True
+    house_positions = HOUSE_POSITIONS.copy()
     new_game = Game(player_names)
-
+    game_state = "ui"
     # Game loop
     while run:
+
         # draw board
         new_game.draw_board(SCREEN)
         # get mouse position
         mos_pos = pygame.mouse.get_pos()
         # assign current_player
         current_player = new_game.get_current_player()
+        if game_state == "ui":
+            # loop through each button in the games UI
+            for butt in UI_BUTTONS:
+                # change color if hovered
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
 
-        # loop through each button in the games UI
-        for butt in GAME_BUTTONS:
-            # change color if hovered
-            butt.change_color(mos_pos)
-            butt.update(SCREEN)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if END_TURN_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "ended their turn")
+                        new_game.end_turn()
+                        break
+                    if PLACE_HOUSE_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "wants to place a house")
+                        game_state = "place house"
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if END_TURN_BUTTON.check_for_input(mos_pos):
-                    print(current_player.get_name(), "ended their turn")
-                    new_game.end_turn()
-                    break
+        elif game_state == "place house":
+            for butt in PLACE_HOUSE_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
 
-        # Place Houses
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    while_running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if END_TURN_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "ended their turn")
+                        new_game.end_turn()
+                        game_state = "ui"
+                    if BACK_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "went back")
+                        game_state = "ui"
+                    for pos in house_positions:
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            print(current_player.get_name(), "placed a house at", pos)
+                            current_player.add_house(pos)
 
         new_game.update_state(SCREEN)
 

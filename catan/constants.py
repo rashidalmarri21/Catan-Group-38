@@ -72,7 +72,10 @@ MENU_BUTTON_LIST = [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]
 
 # game buttons
 END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5),text_input="End Turn", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
-GAME_BUTTONS = [END_TURN_BUTTON]
+PLACE_HOUSE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Place House", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
+BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Back", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
+UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON]
+PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 
 # ui elements
 RESOURCE_UI_IMAGE = pygame.image.load("assets/UI/resources.png")
