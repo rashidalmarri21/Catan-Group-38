@@ -56,12 +56,10 @@ def main_menu():
 
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 4
 player_names = []
 for i in range(NUM_PLAYERS):
     player_names.append("P{}".format(i + 1))
-
-
 
 
 def play():
@@ -69,6 +67,7 @@ def play():
     house_positions = HOUSE_POSITIONS.copy()
     new_game = Game(player_names)
     game_state = "ui"
+
     # Game loop
     while run:
 
@@ -78,6 +77,11 @@ def play():
         mos_pos = pygame.mouse.get_pos()
         # assign current_player
         current_player = new_game.get_current_player()
+
+        # this state is for initial placements.
+        if game_state == "initial placements":
+            pass
+
         if game_state == "ui":
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
@@ -106,7 +110,9 @@ def play():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    while_running = False
+                    pygame.quit()
+                    sys.exit()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
@@ -115,11 +121,20 @@ def play():
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
                         game_state = "ui"
+
+                    # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            # if player has enough resources for house and house is valid_house_placement:
+                            # need to implement 2 functions that:
+                            # 1. check if the player has enough resources (player class)
+                            # 2. makes sure the house is at least 2 intersections away any existing houses. (game class)
+                            # 3. makes sure there is a road connected. (can also be in valid_house_placement) (game class)
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
-
+                            # remove the pos from the list
+                            house_positions.remove(pos)
+        # updates the board state
         new_game.update_state(SCREEN)
 
         # Update the screen
