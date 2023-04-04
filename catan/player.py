@@ -1,6 +1,6 @@
 import pygame
 import math
-from catan.constants import HOUSE_POSITIONS, CYAN
+from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD
 
 
 class Player:
@@ -13,6 +13,12 @@ class Player:
         self.development_cards = []
         self.houses = []
         self.roads = []
+    def get_name(self):
+        return self.name
+
+    def has_won(self):
+        if self.victory_points >= VIC_POINT_THRESHOLD:
+            return True
 
     def add_resource(self, resource_type):
         self.resources[resource_type] += 1
@@ -44,9 +50,13 @@ class Player:
     def add_house(self, position):
         self.houses.append(position)
 
+    def get_house(self):
+        return self.houses
     def add_road(self, position):
         self.roads.append(position)
 
+    def get_road(self):
+        return self.roads
     def draw_houses(self, screen):
         for house in self.houses:
-            pygame.draw.circle(screen, self.color, house,20)
+            pygame.draw.circle(screen, self.color, house, 20)

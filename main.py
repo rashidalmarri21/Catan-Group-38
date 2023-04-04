@@ -1,9 +1,8 @@
 import sys
 import pygame
-from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, PLAY_BUTTON, \
-    OPTIONS_BUTTON, QUIT_BUTTON, BUFFER, HOUSE_POSITIONS, MOUSE_BUFFER
-from catan.board import Board
-from catan.player import Player
+from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
+    END_TURN_BUTTON, GAME_BUTTONS
+from catan.game import Game
 
 # Set up the screen
 
@@ -29,7 +28,7 @@ def main_menu():
 
         SCREEN.blit(MENU_TITLE_TEXT, MENU_TITLE_RECT)
 
-        for butt in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for butt in MENU_BUTTON_LIST:
             butt.change_color(menu_mouse_pos)
             butt.update(SCREEN)
 
@@ -38,62 +37,57 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.check_for_input(menu_mouse_pos):
+                if MENU_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
                     play()
-                if OPTIONS_BUTTON.check_for_input(menu_mouse_pos):
+                if MENU_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
                     options()
-                if QUIT_BUTTON.check_for_input(menu_mouse_pos):
+                if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
         clock.tick(FPS)
 
 
-players = 2
+# THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
+NUM_PLAYERS = 2
+player_names = []
+for i in range(NUM_PLAYERS):
+    player_names.append("P{}".format(i + 1))
 
 
 def play():
     run = True
-    game_start = True
-    new_board = Board()
-    all_players = []
-
-    # Loop through the number of players and create new players
-    for player in range(players):
-        player_name = "P{}".format(player + 1)
-        player_color = BLACK if player % 2 == 0 else CYAN
-        new_player = Player(player_name, player_color)
-        all_players.append(new_player)
+    new_game = Game(player_names)
 
     # Game loop
     while run:
-        new_board.draw_board(SCREEN)
+        # draw board
+        new_game.draw_board(SCREEN)
+        # get mouse position
+        mos_pos = pygame.mouse.get_pos()
+        # assign current_player
+        current_player = new_game.get_current_player()
 
-        # Loop through all players and draw their houses on the board
-        for player in all_players:
-            player.draw_houses(SCREEN)
+        # loop through each button in the games UI
+        for butt in GAME_BUTTONS:
+            # change color if hovered
+            butt.change_color(mos_pos)
+            butt.update(SCREEN)
 
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # Get mouse position
-                mouse_pos = pygame.mouse.get_pos()
+                if END_TURN_BUTTON.check_for_input(mos_pos):
+                    print(current_player.get_name(), "ended their turn")
+                    new_game.end_turn()
+                    break
 
-                if game_start:
-                    for pos in HOUSE_POSITIONS:
-                        if (pos[0] - MOUSE_BUFFER <= mouse_pos[0] <= pos[0] + MOUSE_BUFFER) and (
-                                pos[1] - MOUSE_BUFFER <= mouse_pos[1] <= pos[1] + BUFFER):
-                            # Get the current player and add a house to their list
-                            current_player = all_players[0]
-                            current_player.add_house(pos)
-                            print("Clicked on board position:", pos)
+        # Place Houses
 
-                            # Remove the current player from the list and add them to the end
-                            all_players.append(all_players.pop(0))
+        new_game.update_state(SCREEN)
 
         # Update the screen
         pygame.display.update()

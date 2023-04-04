@@ -6,12 +6,17 @@ from catan import button
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
 
 MOUSE_BUFFER = 20
+VIC_POINT_THRESHOLD = 10
 
 # colour constants
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BEIGE = (245, 245, 220)
 CYAN = (0, 255, 255)
+BROWN = (165, 42, 42)
+MAROON = (128, 0, 0)
+
+COLOR_LIST = [MAROON, CYAN, BROWN, BLACK]
 
 # board constants
 HEXAGON_RADIUS = 75
@@ -55,6 +60,7 @@ MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')
 # menu title
 MENU_TITLE_TEXT = TITLE_FONT.render("The SETTLERS of CATAN", True, "#b68f40")
 MENU_TITLE_RECT = MENU_TITLE_TEXT.get_rect(center=(960, 150))
+
 # menu buttons
 PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=BLACK,
                             hovering_color=WHITE)
@@ -62,9 +68,17 @@ OPTIONS_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OP
                                hovering_color=WHITE)
 QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=BLACK,
                             hovering_color=WHITE)
+MENU_BUTTON_LIST = [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]
 
+# game buttons
+END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5),text_input="End Turn", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
+GAME_BUTTONS = [END_TURN_BUTTON]
 
-# player constants
+# ui elements
+RESOURCE_UI_IMAGE = pygame.image.load("assets/UI/resources.png")
+RESOURCE_UI_RECT = RESOURCE_UI_IMAGE.get_rect(bottomleft=(0, 1080))
+
+# houses
 EXCLUDED_INTERSECTIONS = []
 HOUSE_POSITIONS = [
     (821.4359353944899, 220.0), (960.0, 220.0), (1098.56406460551, 220.0), (752.1539030917347, 340.0),
@@ -82,42 +96,8 @@ HOUSE_POSITIONS = [
     (751.4359353944899, 260.0), (890.0, 260.0), (1028.56406460551, 260.0), (1167.1281292110202, 260.0),
     (1307.1281292110202, 580.0), (1237.8460969082653, 700.0)
 
-                   ]
-
-
-
-"""
-(0, 0 : (752.8718707889797, 340.0),
-(1, 0 : (891.4359353944899, 340.0),
-(2, 0 : (1030.0, 340.0),
-(3, 0 : (1168.56406460551, 340.0),
-(4, 0 : (1307.1281292110202, 340.0),
-(0, 1 : (822.1539030917347, 460.0),
-(1, 1 : (960.717967697245, 460.0),
-(2, 1 : (1099.282032302755, 460.0),
-(3, 1 : (1237.8460969082653, 460.0),
-(4, 1 : (1376.4101615137754, 460.0),
-(0, 2 : (752.8718707889797, 580.0),
-(1, 2 : (891.4359353944899, 580.0),
-(2, 2 : (1030.0, 580.0),
-(3, 2 : (1168.56406460551, 580.0),
-(4, 2 : 
-(0, 3 : (822.1539030917347, 700.0),
-(1, 3 : (960.717967697245, 700.0),
-(2, 3 : (1099.282032302755, 700.0),
-(3, 3 : 
-(4, 3 : (1376.4101615137754, 700.0),
-(0, 4 : (752.8718707889797, 820.0),
-(1, 4 : (891.4359353944899, 820.0),
-(2, 4 : (1030.0, 820.0),
-(3, 4 : (1168.56406460551, 820.0),
-(4, 4 : (1307.1281292110202, 820.0),
-(0, 0 : (752.8718707889797, 340.0),
+]
 
 
 
 
-
-
-
-"""
