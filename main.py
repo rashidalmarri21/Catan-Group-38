@@ -1,5 +1,4 @@
-import math
-import numpy as np
+
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
@@ -60,18 +59,21 @@ def main_menu():
 
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 4
 player_names = []
-for i in range(NUM_PLAYERS):
-    player_names.append("P{}".format(i + 1))
+
 
 
 def play():
     run = True
     house_positions = HOUSE_POSITIONS.copy()
     road_positions = ROAD_POSITIONS.copy()
+    for i in range(NUM_PLAYERS):
+        player_names.append("P{}".format(i + 1))
     new_game = Game(player_names)
     game_state = "ui"
+
+
 
     # Game loop
     while run:
@@ -150,7 +152,8 @@ def play():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_BUTTON.check_for_input(mos_pos):
