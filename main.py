@@ -20,11 +20,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 
-def check_house_positions(mouse_pos, house_positions, current_player):
-    for pos in house_positions:
-        if pos[0] - 20 <= mouse_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mouse_pos[1] <= pos[1] + 20:
-            print(current_player.get_name(), "placed a house at", pos)
-            current_player.add_house(pos)
+
 
 
 
@@ -71,25 +67,29 @@ def play():
     for i in range(NUM_PLAYERS):
         player_names.append("P{}".format(i + 1))
     new_game = Game(player_names)
-    game_state = "ui"
+    game_state = "default"
 
 
 
     # Game loop
     while run:
-
+        current_player = new_game.get_current_player()
         # draw board
         new_game.draw_board(SCREEN)
+        new_game.draw_players_resources(SCREEN)
+
         # get mouse position
         mos_pos = pygame.mouse.get_pos()
         # assign current_player
-        current_player = new_game.get_current_player()
+
 
         # this state is for initial placements.
         if game_state == "initial placements":
             pass
-
-        if game_state == "ui":
+        """
+        
+        """
+        if game_state == "default":
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
                 # change color if hovered
@@ -127,10 +127,10 @@ def play():
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        game_state = "ui"
+                        game_state = "default"
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
-                        game_state = "ui"
+                        game_state = "default"
 
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in house_positions:
@@ -142,6 +142,7 @@ def play():
                             # 3. makes sure there is a road connected. (can also be in valid_house_placement) (game class)
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
+                            current_player.add_victory_point()
                             # remove the pos from the list
                             house_positions.remove(pos)
         # implement place road state
@@ -158,11 +159,11 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
-                        game_state = 'ui'
+                        game_state = 'default'
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        game_state = 'ui'
+                        game_state = 'default'
                     # Check if the click is within the clickable area for any of the lines
                     for pos in road_positions:
                         start_point = pos[0]
@@ -183,7 +184,7 @@ def play():
 
         # updates the board state
         new_game.update_state(SCREEN)
-
+        new_game.draw_house(SCREEN)
         # Update the screen
         pygame.display.update()
 

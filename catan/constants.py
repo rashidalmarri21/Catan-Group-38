@@ -81,8 +81,8 @@ PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 
 # ui elements
-RESOURCE_UI_IMAGE = pygame.image.load("assets/UI/resources.png")
-RESOURCE_UI_RECT = RESOURCE_UI_IMAGE.get_rect(bottomleft=(0, 1080))
+BACKGROUND_UI_IMAGE = pygame.image.load("assets/UI/UI_Background.png")
+
 
 # houses
 EXCLUDED_INTERSECTIONS = []
@@ -103,8 +103,7 @@ HOUSE_POSITIONS = [
     (1307.1281292110202, 580.0), (1237.8460969082653, 700.0)
 
 ]
-NEST_LIST = [[list, list, list], [list,list,list]]
-test = NEST_LIST[0][0]
+
 ROAD_POSITIONS = [
     ((821.4359353944899, 220.0), (751.4359353944899, 260.0)),
     ((751.4359353944899, 260.0), (752.1539030917347, 340.0)),

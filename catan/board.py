@@ -2,7 +2,7 @@ import math
 import pygame
 import random
 from catan.constants import BEIGE, HEXAGON_RADIUS, BUFFER, SCREEN_HEIGHT, SCREEN_WIDTH, GRID_SIZE, \
-    EXCLUDED_INDICES, RESOURCE_TYPES, NUMBER_LIST, NUMBER_FONT, BLACK, CYAN
+    EXCLUDED_INDICES, RESOURCE_TYPES, NUMBER_LIST, NUMBER_FONT, BLACK, CYAN, BACKGROUND_UI_IMAGE
 
 
 class Board:
@@ -84,7 +84,7 @@ class Board:
         return positions
 
     def draw_board(self, screen):
-        screen.fill(BEIGE)
+        screen.blit(BACKGROUND_UI_IMAGE, (0, 0))
 
         for pos, values in self.grid.items():
 

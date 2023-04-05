@@ -1,6 +1,6 @@
 import pygame
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
-    END_TURN_BUTTON, PLACE_ROAD_BUTTON
+    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK
 
 
 class Game:
@@ -15,9 +15,13 @@ class Game:
         # update the game board
         for current_player in self.players:
             current_player.draw_roads(screen)
-            current_player.draw_houses(screen)
+
 
         self.check_game_over()  # check if the game is over
+
+    def draw_house(self, screen):
+        for current_player in self.players:
+            current_player.draw_houses(screen)
 
     def get_players(self):
         return self.players
@@ -37,4 +41,17 @@ class Game:
     def draw_board(self, screen):
         self.board.draw_board(screen)
 
-
+    def draw_players_resources(self, screen):
+        for current_player in self.players:
+            if current_player.get_name() == "P1":
+                current_player.draw_player_name(screen, 832)
+                current_player.draw_resources(screen, 832)
+            elif current_player.get_name() == "P2":
+                current_player.draw_player_name(screen, 902)
+                current_player.draw_resources(screen, 902)
+            elif current_player.get_name() == "P3":
+                current_player.draw_player_name(screen, 972)
+                current_player.draw_resources(screen, 972)
+            elif current_player.get_name() == "P4":
+                current_player.draw_player_name(screen, 1042)
+                current_player.draw_resources(screen, 1042)
