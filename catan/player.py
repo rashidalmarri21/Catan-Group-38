@@ -1,6 +1,6 @@
 import pygame
 import math
-from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD
+from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS
 
 
 class Player:
@@ -55,8 +55,12 @@ class Player:
     def add_road(self, position):
         self.roads.append(position)
 
-    def get_road(self):
+    def get_roads(self):
         return self.roads
     def draw_houses(self, screen):
         for house in self.houses:
             pygame.draw.circle(screen, self.color, house, 20)
+
+    def draw_roads(self, screen):
+        for road in self.roads:
+            pygame.draw.line(screen,self.color,road[0], road[1], 10)

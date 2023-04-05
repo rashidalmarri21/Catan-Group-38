@@ -1,5 +1,6 @@
 import pygame
-from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST
+from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
+    END_TURN_BUTTON, PLACE_ROAD_BUTTON
 
 
 class Game:
@@ -13,7 +14,9 @@ class Game:
     def update_state(self, screen):
         # update the game board
         for current_player in self.players:
+            current_player.draw_roads(screen)
             current_player.draw_houses(screen)
+
         self.check_game_over()  # check if the game is over
 
     def get_players(self):
@@ -33,3 +36,5 @@ class Game:
 
     def draw_board(self, screen):
         self.board.draw_board(screen)
+
+

@@ -1,7 +1,10 @@
+import math
+import numpy as np
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON,PLACE_ROAD_BUTTONS, \
+    PLACE_ROAD_BUTTON, ROAD_POSITIONS
 from catan.game import Game
 
 # Set up the screen
@@ -23,6 +26,7 @@ def check_house_positions(mouse_pos, house_positions, current_player):
         if pos[0] - 20 <= mouse_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mouse_pos[1] <= pos[1] + 20:
             print(current_player.get_name(), "placed a house at", pos)
             current_player.add_house(pos)
+
 
 
 def main_menu():
@@ -56,7 +60,7 @@ def main_menu():
 
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
-NUM_PLAYERS = 4
+NUM_PLAYERS = 2
 player_names = []
 for i in range(NUM_PLAYERS):
     player_names.append("P{}".format(i + 1))
@@ -65,6 +69,7 @@ for i in range(NUM_PLAYERS):
 def play():
     run = True
     house_positions = HOUSE_POSITIONS.copy()
+    road_positions = ROAD_POSITIONS.copy()
     new_game = Game(player_names)
     game_state = "ui"
 
@@ -100,8 +105,11 @@ def play():
                         new_game.end_turn()
                         break
                     if PLACE_HOUSE_BUTTON.check_for_input(mos_pos):
-                        print(current_player.get_name(), "wants to place a house")
+                        print(current_player.get_name(), "wants to place a HOUSE")
                         game_state = "place house"
+                    if PLACE_ROAD_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "wants to place a ROAD")
+                        game_state = "place road"
 
         elif game_state == "place house":
             for butt in PLACE_HOUSE_BUTTONS:
@@ -134,6 +142,42 @@ def play():
                             current_player.add_house(pos)
                             # remove the pos from the list
                             house_positions.remove(pos)
+        # implement place road state
+        elif game_state == "place road":
+            for butt in PLACE_ROAD_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "went back")
+                        game_state = 'ui'
+                    if END_TURN_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "ended their turn")
+                        new_game.end_turn()
+                        game_state = 'ui'
+                    # Check if the click is within the clickable area for any of the lines
+                    for pos in road_positions:
+                        start_point = pos[0]
+                        end_point = pos[1]
+
+                        # Calculate the center of the line
+                        center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
+
+                        # Define the radius of the buffer zone
+                        buffer_radius = 15
+
+                        # Check if the mouse position is within the buffer zone
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
+                            # Add the road to the player's list of roads
+                            current_player.add_road(pos)
+                            road_positions.remove(pos)
+                            print(current_player.get_name(), "placed a road from {} to {}".format(start_point, end_point))
+
         # updates the board state
         new_game.update_state(SCREEN)
 
@@ -149,4 +193,4 @@ def options():
 
 
 # run game
-main_menu()
+play()
