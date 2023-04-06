@@ -56,7 +56,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 4
-player_names = []
+
 
 
 
@@ -64,6 +64,7 @@ def play():
     run = True
     house_positions = HOUSE_POSITIONS.copy()
     road_positions = ROAD_POSITIONS.copy()
+    player_names = []
     for i in range(NUM_PLAYERS):
         player_names.append("P{}".format(i + 1))
     new_game = Game(player_names)
@@ -77,6 +78,7 @@ def play():
         # draw board
         new_game.draw_board(SCREEN)
         new_game.draw_players_resources(SCREEN)
+        new_game.ui_Messages(SCREEN, game_state, current_player)
 
         # get mouse position
         mos_pos = pygame.mouse.get_pos()

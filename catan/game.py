@@ -55,3 +55,20 @@ class Game:
             elif current_player.get_name() == "P4":
                 current_player.draw_player_name(screen, 1042)
                 current_player.draw_resources(screen, 1042)
+
+    def ui_Messages(self, screen, game_state, current_player):
+        if game_state == 'default':
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()[1]), True, BLACK)
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+        elif game_state == 'place house':
+            message = pygame.image.load("assets/UI/building_costs/house_cost.png")
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+        elif game_state == 'place road':
+            message = pygame.image.load("assets/UI/building_costs/road_cost.png")
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
