@@ -57,7 +57,7 @@ RESOURCE_TYPES = [
 pygame.font.init()
 FONT = pygame.font.SysFont("comicsansms", 32)
 TITLE_FONT = pygame.font.SysFont("comicsansms", 42)
-NUMBER_FONT = pygame.font.SysFont("comicsansms", 30)
+NUMBER_FONT = pygame.font.SysFont("comicsansms", 29)
 
 # menu assets
 MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
@@ -76,10 +76,10 @@ QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT"
 MENU_BUTTON_LIST = [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]
 
 # game buttons
-END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5),text_input="End Turn", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
-PLACE_HOUSE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Place House", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
-PLACE_ROAD_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 807.5),text_input="Place Road", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
-BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Back", font=NUMBER_FONT, base_color=BLACK, hovering_color= CYAN)
+END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5),text_input="End Turn", font=NUMBER_FONT, base_color=BLACK, hovering_color= WHITE)
+PLACE_HOUSE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Place House", font=NUMBER_FONT, base_color=BLACK, hovering_color= WHITE)
+PLACE_ROAD_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 807.5),text_input="Place Road", font=NUMBER_FONT, base_color=BLACK, hovering_color= WHITE)
+BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5),text_input="Back", font=NUMBER_FONT, base_color=BLACK, hovering_color= WHITE)
 
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON]
 PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
@@ -181,12 +181,6 @@ ROAD_POSITIONS = [
     ((1098.56406460551, 860.0), (1167.1281292110202, 820.0)),
     ((1167.1281292110202, 820.0), (1167.8460969082653, 740.0)),
     ((1306.4101615137754, 500.0), (1307.1281292110202, 580.0))
-
-
-
-
-# for every pos in list_pos
-    # do something
 
 ]
 

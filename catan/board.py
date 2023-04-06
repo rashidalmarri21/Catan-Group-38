@@ -96,5 +96,5 @@ class Board:
 
             if values["number"] is not None and values["resource_type"][0] != 'desert':
                 number_text = NUMBER_FONT.render(str(values["number"]), True, BLACK)
-                number_rect = number_text.get_rect(center=values["position"])
+                number_rect = number_text.get_rect(center=(values["position"][0], values['position'][1] - 29.5))
                 screen.blit(number_text, number_rect)

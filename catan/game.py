@@ -16,7 +16,6 @@ class Game:
         for current_player in self.players:
             current_player.draw_roads(screen)
 
-
         self.check_game_over()  # check if the game is over
 
     def draw_house(self, screen):
@@ -71,4 +70,3 @@ class Game:
             message = pygame.image.load("assets/UI/building_costs/road_cost.png")
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
-

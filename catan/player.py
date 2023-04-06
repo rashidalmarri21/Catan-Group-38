@@ -68,7 +68,7 @@ class Player:
 
     def draw_roads(self, screen):
         for road in self.roads:
-            pygame.draw.line(screen,self.color,road[0], road[1], 10)
+            pygame.draw.line(screen,self.color,road[0], road[1], 15)
 
     def draw_resources(self, screen, y_pos):
         # draw wood number
