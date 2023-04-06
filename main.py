@@ -3,7 +3,7 @@ import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
     END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON,PLACE_ROAD_BUTTONS, \
-    PLACE_ROAD_BUTTON, ROAD_POSITIONS
+    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x
 from catan.game import Game
 
 # Set up the screen
@@ -14,7 +14,7 @@ pygame.font.init()
 
 SCREEN = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Settlers Of Catan")
-
+pygame.display.set_icon(ICON_32x)
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60

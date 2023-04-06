@@ -4,6 +4,8 @@ from catan import button
 
 # screen constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
+# icon
+ICON_32x = pygame.image.load("assets/Icon/honeycomb32.png")
 
 MOUSE_BUFFER = 20
 VIC_POINT_THRESHOLD = 10
@@ -15,8 +17,11 @@ BEIGE = (245, 245, 220)
 CYAN = (0, 255, 255)
 BROWN = (165, 42, 42)
 MAROON = (128, 255, 0)
-
-COLOR_LIST = [MAROON, CYAN, BROWN, BLACK]
+BLUE = "#6633FF"
+ORANGE = "#FF9901"
+RED = "#FF001A"
+PURPLE = "#BC17E5"
+COLOR_LIST = [RED, ORANGE, PURPLE, BLUE]
 
 # board constants
 HEXAGON_RADIUS = 75
@@ -82,7 +87,6 @@ PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 
 # ui elements
 BACKGROUND_UI_IMAGE = pygame.image.load("assets/UI/UI_Background.png")
-
 
 # houses
 EXCLUDED_INTERSECTIONS = []

@@ -61,8 +61,10 @@ class Player:
     def get_roads(self):
         return self.roads
     def draw_houses(self, screen):
+        house_image = pygame.image.load("assets/UI/house/{}.png".format(self.name))
         for house in self.houses:
-            pygame.draw.circle(screen, self.color, house, 20)
+            house_rect = house_image.get_rect(center=house)
+            screen.blit(house_image, house_rect)
 
     def draw_roads(self, screen):
         for road in self.roads:
