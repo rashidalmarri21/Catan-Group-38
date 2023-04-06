@@ -58,7 +58,7 @@ pygame.font.init()
 FONT = pygame.font.SysFont("comicsansms", 32)
 TITLE_FONT = pygame.font.SysFont("comicsansms", 42)
 NUMBER_FONT = pygame.font.SysFont("comicsansms", 29)
-
+BANK_NUMBER_FONT = pygame.font.SysFont("comicsansms", 15)
 # menu assets
 MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
 MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')

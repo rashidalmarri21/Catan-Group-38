@@ -1,6 +1,6 @@
 import pygame
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
-    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK
+    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank
 
 
 class Game:
@@ -10,9 +10,10 @@ class Game:
                         player_names]  # create a new player list
         self.current_player_index = 0  # initialize the current player index
         self.game_over = False  # initialize the game over flag
-
+        self.bank = bank.Bank()
     def update_state(self, screen):
         # update the game board
+        self.bank.draw_bank_resources(screen)
         for current_player in self.players:
             current_player.draw_roads(screen)
 

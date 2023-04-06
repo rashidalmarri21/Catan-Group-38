@@ -1,8 +1,8 @@
-
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON,PLACE_ROAD_BUTTONS, \
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
+    PLACE_ROAD_BUTTONS, \
     PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x
 from catan.game import Game
 
@@ -18,10 +18,6 @@ pygame.display.set_icon(ICON_32x)
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60
-
-
-
-
 
 
 def main_menu():
@@ -58,8 +54,6 @@ def main_menu():
 NUM_PLAYERS = 4
 
 
-
-
 def play():
     run = True
     house_positions = HOUSE_POSITIONS.copy()
@@ -69,8 +63,6 @@ def play():
         player_names.append("P{}".format(i + 1))
     new_game = Game(player_names)
     game_state = "default"
-
-
 
     # Game loop
     while run:
@@ -83,7 +75,6 @@ def play():
         # get mouse position
         mos_pos = pygame.mouse.get_pos()
         # assign current_player
-
 
         # this state is for initial placements.
         if game_state == "initial placements":
@@ -182,7 +173,8 @@ def play():
                             # Add the road to the player's list of roads
                             current_player.add_road(pos)
                             road_positions.remove(pos)
-                            print(current_player.get_name(), "placed a road from {} to {}".format(start_point, end_point))
+                            print(current_player.get_name(),
+                                  "placed a road from {} to {}".format(start_point, end_point))
 
         # updates the board state
         new_game.update_state(SCREEN)
