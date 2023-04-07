@@ -9,7 +9,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
         self.development_cards = []
         self.houses = []
         self.houses_rect = []
@@ -32,8 +32,19 @@ class Player:
             return
         self.resources[resource_type] += 1
 
-    def remove_resources(self, resource_type):
-        self.resources[resource_type] -= 1
+    def remove_resources(self, placement_type):
+        if placement_type == "road":
+            self.resources['forest'] -= 1
+            self.resources['hills'] -= 1
+        elif placement_type == "house":
+            self.resources['forest'] -= 1
+            self.resources['fields'] -= 1
+            self.resources['pasture'] -= 1
+            self.resources['hills'] -= 1
+        elif placement_type == "city":
+            self.resources['fields'] -= 3
+            self.resources['mountains'] -= 2
+
 
     def get_resources(self):
         return self.resources
@@ -62,6 +73,30 @@ class Player:
     def get_house(self):
         return self.houses
 
+    def is_valid_house_placement(self, house_pos):
+        p_roads = self.get_roads()
+        for start, end in p_roads:
+            if start == house_pos or end == house_pos:
+                return True
+
+    def has_enough_resources(self, placement_type):
+        if placement_type == "road":
+            if self.resources['forest'] >= 1 and self.resources['hills'] >= 1:
+                return True
+            else:
+                return False
+        elif placement_type == "house":
+            if self.resources['forest'] >= 1 and self.resources['fields'] >= 1 and self.resources['pasture'] >= 1 and self.resources['hills'] >= 1:
+                return True
+            else:
+                return False
+        elif placement_type == "city":
+            if self.resources['fields'] >= 3 and self.resources['mountains'] >= 2:
+                return True
+            else:
+                return False
+
+
     def add_road(self, position):
         self.roads.append(position)
 
@@ -83,8 +118,7 @@ class Player:
         screen.blit(dice_2, dice_2_rect)
 
 
-    def draw_houses(self, screen):
-        house_image = pygame.image.load("assets/UI/house/{}.png".format(self.name))
+    def draw_houses(self, screen, house_image):
         for house in self.houses:
             house_rect = house_image.get_rect(center=house)
             screen.blit(house_image, house_rect)
@@ -141,5 +175,5 @@ class Player:
 
     def draw_player_name(self, screen, y_pos):
         player_name = NUMBER_FONT.render("{}".format(self.name), True, self.color)
-        player_name_rect = player_name.get_rect(center=(1372, y_pos))
+        player_name_rect = player_name.get_rect(center=(1350, y_pos))
         screen.blit(player_name, player_name_rect)

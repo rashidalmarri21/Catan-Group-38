@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK
 
@@ -21,8 +21,28 @@ class Game:
         self.check_game_over()  # check if the game is over
 
     def draw_house(self, screen):
+        house_image = None
         for current_player in self.players:
-            current_player.draw_houses(screen)
+            if current_player == self.players[0]:
+                house_image = pygame.image.load("assets/UI/house/P1.png")
+            elif current_player == self.players[1]:
+                house_image = pygame.image.load("assets/UI/house/P2.png")
+            elif current_player == self.players[2]:
+                house_image = pygame.image.load("assets/UI/house/P3.png")
+            elif current_player == self.players[3]:
+                house_image = pygame.image.load("assets/UI/house/P4.png")
+            current_player.draw_houses(screen, house_image)
+
+    def isnt_to_close_to_other_houses(self, pos):
+        for p in self.players:
+            for house in p.get_house():
+                distance = math.sqrt((pos[0] - house[0]) ** 2 + (pos[1] - house[1]) ** 2)
+                if distance < 130:
+                    return False
+        return True
+
+
+
 
     def get_players(self):
         return self.players
@@ -72,22 +92,24 @@ class Game:
 
     def draw_players_resources(self, screen):
         for current_player in self.players:
-            if current_player.get_name() == "P1":
+            if current_player == self.players[0]:
                 current_player.draw_player_name(screen, 832)
                 current_player.draw_resources(screen, 832)
-            elif current_player.get_name() == "P2":
+            elif current_player == self.players[1]:
                 current_player.draw_player_name(screen, 902)
                 current_player.draw_resources(screen, 902)
-            elif current_player.get_name() == "P3":
+            elif current_player == self.players[2]:
                 current_player.draw_player_name(screen, 972)
                 current_player.draw_resources(screen, 972)
-            elif current_player.get_name() == "P4":
+            elif current_player == self.players[3]:
                 current_player.draw_player_name(screen, 1042)
                 current_player.draw_resources(screen, 1042)
 
+
+
     def ui_Messages(self, screen, game_state, current_player):
-        if game_state == 'default':
-            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()[1]), True, BLACK)
+        if game_state == 'default' or game_state == 'dice roll':
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True, BLACK)
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
 

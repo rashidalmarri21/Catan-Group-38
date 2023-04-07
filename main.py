@@ -1,10 +1,12 @@
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON,PLACE_ROAD_BUTTONS, \
-    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x,ROLL_DICE_BUTTON
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
+    PLACE_ROAD_BUTTONS, \
+    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON
 from catan.game import Game
 from catan.player import Player
+
 # Set up the screen
 
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -50,19 +52,17 @@ def main_menu():
 
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
-NUM_PLAYERS = 4
+NUM_PLAYERS = 2
+player_names = ["Bob", "Dillon", "Mike", "Sara"]
 
 
 def play():
-
     run = True
     house_positions = HOUSE_POSITIONS.copy()
     road_positions = ROAD_POSITIONS.copy()
-    player_names = []
-    for i in range(NUM_PLAYERS):
-        player_names.append("P{}".format(i + 1))
+
     new_game = Game(player_names)
-    game_state = "default"
+    game_state = "dice roll"
 
     # Game loop
     while run:
@@ -141,14 +141,14 @@ def play():
 
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in house_positions:
-                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
-                            # if player has enough resources for house and house is valid_house_placement:
-                            # need to implement 2 functions that:
-                            # 1. check if the player has enough resources (player class)
-                            # 2. makes sure the house is at least 2 intersections away any existing houses. (game class)
-                            # 3. makes sure there is a road connected. (can also be in valid_house_placement) (game class)
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and current_player.is_valid_house_placement(pos) \
+                                and current_player.has_enough_resources("house") \
+                                and new_game.isnt_to_close_to_other_houses(pos):
+
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
+                            current_player.remove_resources('house')
                             current_player.add_victory_point()
                             # remove the pos from the list
                             house_positions.remove(pos)
