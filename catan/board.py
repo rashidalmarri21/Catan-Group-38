@@ -9,7 +9,6 @@ class Board:
     def __init__(self):
         self.grid = {}
         self.resources = RESOURCE_TYPES.copy()
-
         self.generate_hex_positions(GRID_SIZE, HEXAGON_RADIUS)
         self.update_numbers()
         self.update_resources()

@@ -1,11 +1,10 @@
 import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
-    PLACE_ROAD_BUTTONS, \
-    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON,PLACE_ROAD_BUTTONS, \
+    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x,ROLL_DICE_BUTTON
 from catan.game import Game
-
+from catan.player import Player
 # Set up the screen
 
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -55,6 +54,7 @@ NUM_PLAYERS = 4
 
 
 def play():
+
     run = True
     house_positions = HOUSE_POSITIONS.copy()
     road_positions = ROAD_POSITIONS.copy()
@@ -79,9 +79,23 @@ def play():
         # this state is for initial placements.
         if game_state == "initial placements":
             pass
-        """
-        
-        """
+
+        if game_state == "dice roll":
+            ROLL_DICE_BUTTON.change_color(mos_pos)
+            ROLL_DICE_BUTTON.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if ROLL_DICE_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "rolled the dice")
+                        current_player.roll_dice()
+                        new_game.give_resources(current_player)
+                        game_state = "default"
+
         if game_state == "default":
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
@@ -98,7 +112,7 @@ def play():
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        break
+                        game_state = 'dice roll'
                     if PLACE_HOUSE_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "wants to place a HOUSE")
                         game_state = "place house"
@@ -120,7 +134,7 @@ def play():
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        game_state = "default"
+                        game_state = 'dice roll'
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
                         game_state = "default"
@@ -156,7 +170,7 @@ def play():
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        game_state = 'default'
+                        game_state = 'dice roll'
                     # Check if the click is within the clickable area for any of the lines
                     for pos in road_positions:
                         start_point = pos[0]
@@ -179,6 +193,8 @@ def play():
         # updates the board state
         new_game.update_state(SCREEN)
         new_game.draw_house(SCREEN)
+        current_player.draw_dice(SCREEN)
+
         # Update the screen
         pygame.display.update()
 

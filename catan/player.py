@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 import math
 from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS, NUMBER_FONT, BLACK
 
@@ -9,11 +9,14 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'wood': 0, 'brick': 0, 'sheep': 0, 'wheat': 0, 'ore': 0}
+        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.development_cards = []
         self.houses = []
+        self.houses_rect = []
         self.roads = []
         self.robbers = 0
+        self.dice_roll = [1, 1]
+
     def get_name(self):
         return self.name
 
@@ -23,7 +26,10 @@ class Player:
 
     def add_robber(self):
         self.robbers += 1
+
     def add_resource(self, resource_type):
+        if resource_type == 'desert':
+            return
         self.resources[resource_type] += 1
 
     def remove_resources(self, resource_type):
@@ -55,11 +61,28 @@ class Player:
 
     def get_house(self):
         return self.houses
+
     def add_road(self, position):
         self.roads.append(position)
 
     def get_roads(self):
         return self.roads
+
+    def roll_dice(self):
+        nums = [random.randint(1, 6), random.randint(1, 6)]
+        self.dice_roll = nums
+
+    def get_dice_number(self):
+        return sum(self.dice_roll)
+    def draw_dice(self, screen):
+        dice_1 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[0]))
+        dice_2 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[1]))
+        dice_1_rect = dice_1.get_rect(center=(90, 400))
+        dice_2_rect = dice_2.get_rect(center=(160, 400))
+        screen.blit(dice_1, dice_1_rect)
+        screen.blit(dice_2, dice_2_rect)
+
+
     def draw_houses(self, screen):
         house_image = pygame.image.load("assets/UI/house/{}.png".format(self.name))
         for house in self.houses:
@@ -68,31 +91,31 @@ class Player:
 
     def draw_roads(self, screen):
         for road in self.roads:
-            pygame.draw.line(screen,self.color, road[0], road[1], 10)
+            pygame.draw.line(screen, self.color, road[0], road[1], 10)
 
     def draw_resources(self, screen, y_pos):
         # draw wood number
-        wood = NUMBER_FONT.render("{}".format(self.resources['wood']), True, BLACK)
+        wood = NUMBER_FONT.render("{}".format(self.resources['forest']), True, BLACK)
         wood_rect = wood.get_rect(center=(1427, y_pos))
         screen.blit(wood, wood_rect)
 
         # draw sheep number
-        sheep = NUMBER_FONT.render("{}".format(self.resources['sheep']), True, BLACK)
+        sheep = NUMBER_FONT.render("{}".format(self.resources['pasture']), True, BLACK)
         sheep_rect = sheep.get_rect(center=(1484, y_pos))
         screen.blit(sheep, sheep_rect)
 
         # draw wheat number
-        wheat = NUMBER_FONT.render("{}".format(self.resources['wheat']), True, BLACK)
+        wheat = NUMBER_FONT.render("{}".format(self.resources['fields']), True, BLACK)
         wheat_rect = wheat.get_rect(center=(1546, y_pos))
         screen.blit(wheat, wheat_rect)
 
         # draw ore number
-        ore = NUMBER_FONT.render("{}".format(self.resources['ore']), True, BLACK)
+        ore = NUMBER_FONT.render("{}".format(self.resources['mountains']), True, BLACK)
         ore_rect = ore.get_rect(center=(1604, y_pos))
         screen.blit(ore, ore_rect)
 
         # draw brick number
-        brick = NUMBER_FONT.render("{}".format(self.resources['brick']), True, BLACK)
+        brick = NUMBER_FONT.render("{}".format(self.resources['hills']), True, BLACK)
         brick_rect = brick.get_rect(center=(1659, y_pos))
         screen.blit(brick, brick_rect)
 
