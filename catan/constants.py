@@ -53,12 +53,23 @@ RESOURCE_TYPES = [
     "pasture", "pasture", "pasture", "pasture"  # 4x
 ]
 
+DEV_CARDS = [
+    "knight", "knight", "knight", "knight", "knight", "knight", "knight",  # 14x knight cards
+    "knight", "knight", "knight", "knight", "knight", "knight", "knight",
+    "victory", "victory", "victory", "victory", "victory",  # 5x victory point cards
+    "monopoly", "monopoly",  # 2x monopoly cards
+    "build", "build",  # 2x Road building cards
+    "year", "year"  # 2x Year of plenty cards
+]
+
 # fonts
 pygame.font.init()
 FONT = pygame.font.SysFont("comicsansms", 32)
 TITLE_FONT = pygame.font.SysFont("comicsansms", 42)
 NUMBER_FONT = pygame.font.SysFont("comicsansms", 29)
 BANK_NUMBER_FONT = pygame.font.SysFont("comicsansms", 15)
+PLAYER_NAME_FONT = pygame.font.SysFont("comicsansms", 23)
+
 # menu assets
 MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
 MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')

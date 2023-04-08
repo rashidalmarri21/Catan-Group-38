@@ -53,7 +53,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "Dillon", "Mike"]#, "Sara"]
+player_names = ["Bob", "Dillon", "Mike", "Sara"]
 
 
 def play():

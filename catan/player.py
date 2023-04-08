@@ -1,8 +1,9 @@
 import pygame, random
 import math
-from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS, NUMBER_FONT, BLACK
-from shapely.geometry import Point, LineString
-from shapely.ops import unary_union
+from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS, NUMBER_FONT, BLACK, BANK_NUMBER_FONT,\
+    PLAYER_NAME_FONT
+
+
 
 class Player:
     def __init__(self, name, color):
@@ -50,12 +51,8 @@ class Player:
         pass  # this will allow the player to pick which resources to discard when a player rolls a 7 and
         pass  # the player has more than 7 cards
 
-
     def get_resources(self):
         return self.resources
-
-    def add_development_card(self, card):
-        self.development_cards.append(card)
 
     def remove_development_card(self, card):
         self.development_cards.remove(card)
@@ -91,7 +88,8 @@ class Player:
             else:
                 return False
         elif placement_type == "house":
-            if self.resources['forest'] >= 1 and self.resources['fields'] >= 1 and self.resources['pasture'] >= 1 and self.resources['hills'] >= 1:
+            if self.resources['forest'] >= 1 and self.resources['fields'] >= 1 and self.resources['pasture'] >= 1 and \
+                    self.resources['hills'] >= 1:
                 return True
             else:
                 return False
@@ -100,7 +98,6 @@ class Player:
                 return True
             else:
                 return False
-
 
     def add_road(self, position):
         self.roads.append(position)
@@ -137,14 +134,14 @@ class Player:
 
     def get_dice_number(self):
         return sum(self.dice_roll)
+
     def draw_dice(self, screen):
         dice_1 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[0]))
         dice_2 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[1]))
-        dice_1_rect = dice_1.get_rect(center=(90, 400))
-        dice_2_rect = dice_2.get_rect(center=(160, 400))
+        dice_1_rect = dice_1.get_rect(center=(508, 53))
+        dice_2_rect = dice_2.get_rect(center=(593, 53))
         screen.blit(dice_1, dice_1_rect)
         screen.blit(dice_2, dice_2_rect)
-
 
     def draw_houses(self, screen, house_image):
         for house in self.houses:
@@ -157,51 +154,51 @@ class Player:
 
     def draw_resources(self, screen, y_pos):
         # draw wood number
-        wood = NUMBER_FONT.render("{}".format(self.resources['forest']), True, BLACK)
-        wood_rect = wood.get_rect(center=(1427, y_pos))
+        wood = BANK_NUMBER_FONT.render("{}".format(self.resources['forest']), True, BLACK)
+        wood_rect = wood.get_rect(center=(1395, y_pos))
         screen.blit(wood, wood_rect)
 
         # draw sheep number
-        sheep = NUMBER_FONT.render("{}".format(self.resources['pasture']), True, BLACK)
-        sheep_rect = sheep.get_rect(center=(1484, y_pos))
+        sheep = BANK_NUMBER_FONT.render("{}".format(self.resources['pasture']), True, BLACK)
+        sheep_rect = sheep.get_rect(center=(1455, y_pos))
         screen.blit(sheep, sheep_rect)
 
         # draw wheat number
-        wheat = NUMBER_FONT.render("{}".format(self.resources['fields']), True, BLACK)
-        wheat_rect = wheat.get_rect(center=(1546, y_pos))
+        wheat = BANK_NUMBER_FONT.render("{}".format(self.resources['fields']), True, BLACK)
+        wheat_rect = wheat.get_rect(center=(1515, y_pos))
         screen.blit(wheat, wheat_rect)
 
         # draw ore number
-        ore = NUMBER_FONT.render("{}".format(self.resources['mountains']), True, BLACK)
-        ore_rect = ore.get_rect(center=(1604, y_pos))
+        ore = BANK_NUMBER_FONT.render("{}".format(self.resources['mountains']), True, BLACK)
+        ore_rect = ore.get_rect(center=(1575, y_pos))
         screen.blit(ore, ore_rect)
 
         # draw brick number
-        brick = NUMBER_FONT.render("{}".format(self.resources['hills']), True, BLACK)
-        brick_rect = brick.get_rect(center=(1659, y_pos))
+        brick = BANK_NUMBER_FONT.render("{}".format(self.resources['hills']), True, BLACK)
+        brick_rect = brick.get_rect(center=(1635, y_pos))
         screen.blit(brick, brick_rect)
 
         # draw dev_card number
-        dev_card = NUMBER_FONT.render("{}".format(len(self.development_cards)), True, BLACK)
-        dev_card_rect = dev_card.get_rect(center=(1717, y_pos))
+        dev_card = BANK_NUMBER_FONT.render("{}".format(len(self.development_cards)), True, BLACK)
+        dev_card_rect = dev_card.get_rect(center=(1695, y_pos))
         screen.blit(dev_card, dev_card_rect)
 
-        # draw robber number
-        robber = NUMBER_FONT.render("{}".format(self.robbers), True, BLACK)
-        robber_rect = robber.get_rect(center=(1774, y_pos))
-        screen.blit(robber, robber_rect)
+        # draw knight number
+        knight = BANK_NUMBER_FONT.render("{}".format(self.robbers), True, BLACK)
+        knight_rect = knight.get_rect(center=(1755, y_pos))
+        screen.blit(knight, knight_rect)
 
         # draw road number
-        road = NUMBER_FONT.render("{}".format(len(self.roads)), True, BLACK)
-        road_rect = road.get_rect(center=(1832, y_pos))
+        road = BANK_NUMBER_FONT.render("{}".format(len(self.roads)), True, BLACK)
+        road_rect = road.get_rect(center=(1815, y_pos))
         screen.blit(road, road_rect)
 
         # draw vic_points number
-        vic_points = NUMBER_FONT.render("{}".format(self.victory_points), True, BLACK)
-        vic_points_rect = vic_points.get_rect(center=(1889, y_pos))
+        vic_points = BANK_NUMBER_FONT.render("{}".format(self.victory_points), True, BLACK)
+        vic_points_rect = vic_points.get_rect(center=(1875, y_pos))
         screen.blit(vic_points, vic_points_rect)
 
     def draw_player_name(self, screen, y_pos):
-        player_name = NUMBER_FONT.render("{}".format(self.name), True, self.color)
-        player_name_rect = player_name.get_rect(center=(1350, y_pos))
+        player_name = PLAYER_NAME_FONT.render("{}".format(self.name), True, self.color)
+        player_name_rect = player_name.get_rect(center=(1315, y_pos))
         screen.blit(player_name, player_name_rect)

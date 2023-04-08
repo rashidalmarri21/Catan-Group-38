@@ -91,17 +91,17 @@ class Game:
     def draw_players_resources(self, screen):
         for current_player in self.players:
             if current_player == self.players[0]:
-                current_player.draw_player_name(screen, 832)
-                current_player.draw_resources(screen, 832)
+                current_player.draw_player_name(screen, 74)
+                current_player.draw_resources(screen, 74)
             elif current_player == self.players[1]:
-                current_player.draw_player_name(screen, 902)
-                current_player.draw_resources(screen, 902)
+                current_player.draw_player_name(screen, 114)
+                current_player.draw_resources(screen, 114)
             elif current_player == self.players[2]:
-                current_player.draw_player_name(screen, 972)
-                current_player.draw_resources(screen, 972)
+                current_player.draw_player_name(screen, 154)
+                current_player.draw_resources(screen, 154)
             elif current_player == self.players[3]:
-                current_player.draw_player_name(screen, 1042)
-                current_player.draw_resources(screen, 1042)
+                current_player.draw_player_name(screen, 194)
+                current_player.draw_resources(screen, 194)
 
     def ui_Messages(self, screen, game_state, current_player):
         if game_state == 'default' or game_state == 'dice roll':

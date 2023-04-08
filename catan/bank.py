@@ -1,10 +1,10 @@
-import pygame
-from catan import BLACK, BANK_NUMBER_FONT
+import pygame, random
+from catan import BLACK, BANK_NUMBER_FONT, DEV_CARDS
 
 class Bank:
     def __init__(self):
         self.bank_resources ={'forest': 19, 'hills': 19, 'pasture': 19, 'fields': 19, 'mountains': 19}
-        self.dev_cards = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        self.dev_cards = self.shuffled_dev_cards(DEV_CARDS)
 
     def get_bank_resources(self):
         return self.bank_resources
@@ -16,6 +16,10 @@ class Bank:
 
     def get_dev_cards(self):
         return self.dev_cards
+
+    def shuffled_dev_cards(self, card_list):
+        random.shuffle(card_list)
+        return card_list
 
     def add_bank_resources(self, resource_type):
         self.bank_resources[resource_type] += 1
