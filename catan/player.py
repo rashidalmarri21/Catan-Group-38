@@ -32,7 +32,7 @@ class Player:
             return
         self.resources[resource_type] += 1
 
-    def remove_resources(self, placement_type):
+    def remove_resources_for_placement(self, placement_type):
         if placement_type == "road":
             self.resources['forest'] -= 1
             self.resources['hills'] -= 1
@@ -44,6 +44,10 @@ class Player:
         elif placement_type == "city":
             self.resources['fields'] -= 3
             self.resources['mountains'] -= 2
+
+    def remove_resources_for_discard(self):
+        pass  # this will allow the player to pick which resources to discard when a player rolls a 7 and
+        pass  # the player has more than 7 cards
 
 
     def get_resources(self):

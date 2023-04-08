@@ -41,9 +41,6 @@ class Game:
                     return False
         return True
 
-
-
-
     def get_players(self):
         return self.players
 
@@ -86,7 +83,6 @@ class Game:
                     print("adding resources to", p.get_name())
                     p.add_resource(tile_grid[tile]["resource_type"][0])
 
-
     def draw_board(self, screen):
         self.board.draw_board(screen)
 
@@ -104,8 +100,6 @@ class Game:
             elif current_player == self.players[3]:
                 current_player.draw_player_name(screen, 1042)
                 current_player.draw_resources(screen, 1042)
-
-
 
     def ui_Messages(self, screen, game_state, current_player):
         if game_state == 'default' or game_state == 'dice roll':

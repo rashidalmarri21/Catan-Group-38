@@ -64,6 +64,7 @@ def play():
     new_game = Game(player_names)
     game_state = "dice roll"
 
+    chosen_house = None
     # Game loop
     while run:
         current_player = new_game.get_current_player()
@@ -77,8 +78,121 @@ def play():
         # assign current_player
 
         # this state is for initial placements.
-        if game_state == "initial placements":
-            pass
+        if game_state == "initial house placements P1":
+            chosen_house_p1 = None
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    for pos in house_positions:
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and new_game.isnt_to_close_to_other_houses(pos):
+                            print(current_player.get_name(), "placed a house at", pos)
+                            current_player.add_house(pos)
+                            current_player.add_victory_point()
+                            # remove the pos from the list
+                            house_positions.remove(pos)
+                            chosen_house_p1 = pos
+                            game_state = "initial road placements P1"
+
+        if game_state == "initial road placements P1":
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    roads_next_to_house = []
+                    for road in ROAD_POSITIONS:
+                        if road[0] == chosen_house_p1 or road[1] == chosen_house_p1:
+                            roads_next_to_house.append(road)
+
+                    for pos_2 in roads_next_to_house:
+                        start_point = pos_2[0]
+                        end_point = pos_2[1]
+
+                        # Calculate the center of the line
+                        center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
+
+                        # Define the radius of the buffer zone
+                        buffer_radius = 15
+
+                        # Check if the mouse position is within the buffer zone
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
+                            # Add the road to the player's list of roads
+                            current_player.add_road(pos_2)
+                            ROAD_POSITIONS.remove(pos_2)
+                            road_positions.remove(pos_2)
+                            print(current_player.get_name(),
+                                  "placed a road from {} to {}".format(start_point, end_point))
+                            if len(current_player.get_roads()) == 2:
+                                game_state = "dice roll"
+                            else:
+                                new_game.end_turn()
+                                game_state = "initial house placements P2+"
+
+        if game_state == "initial house placements P2+":
+            chosen_house_P2 = None
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    for pos in house_positions:
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and new_game.isnt_to_close_to_other_houses(pos):
+                            print(current_player.get_name(), "placed a house at", pos)
+                            current_player.add_house(pos)
+                            current_player.add_victory_point()
+                            # remove the pos from the list
+                            house_positions.remove(pos)
+                            chosen_house_P2 = pos
+                            game_state = "initial road placements P2+"
+
+        if game_state == "initial road placements P2+":
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    roads_next_to_house = []
+                    for road in ROAD_POSITIONS:
+                        if road[0] == chosen_house_P2 or road[1] == chosen_house_P2[0]:
+                            roads_next_to_house.append(road)
+
+                    for pos_2 in roads_next_to_house:
+                        start_point = pos_2[0]
+                        end_point = pos_2[1]
+
+                        # Calculate the center of the line
+                        center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
+
+                        # Define the radius of the buffer zone
+                        buffer_radius = 15
+
+                        # Check if the mouse position is within the buffer zone
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
+                            # Add the road to the player's list of roads
+                            current_player.add_road(pos_2)
+                            ROAD_POSITIONS.remove(pos_2)
+                            road_positions.remove(pos_2)
+                            print(current_player.get_name(),
+                                  "placed a road from {} to {}".format(start_point, end_point))
+                            if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[3]:
+                                new_game.end_turn()
+                                game_state = "initial house placements P2+"
+                            elif len(current_player.get_roads()) == 1:
+                                game_state = "initial house placements P2+"
+                            else:
+                                new_game.end_turn()
+                                game_state = "initial house placements P1"
 
         if game_state == "dice roll":
             ROLL_DICE_BUTTON.change_color(mos_pos)
@@ -145,10 +259,9 @@ def play():
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("house") \
                                 and new_game.isnt_to_close_to_other_houses(pos):
-
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
-                            current_player.remove_resources('house')
+                            current_player.remove_resources_for_placement('house')
                             current_player.add_victory_point()
                             # remove the pos from the list
                             house_positions.remove(pos)
