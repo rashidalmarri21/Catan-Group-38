@@ -298,7 +298,9 @@ def play():
                         buffer_radius = 15
 
                         # Check if the mouse position is within the buffer zone
-                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2\
+                                and current_player.is_valid_road_placement(pos)\
+                                and current_player.has_enough_resources('road'):
                             # Add the road to the player's list of roads
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
@@ -306,6 +308,7 @@ def play():
                             current_player.remove_resources_for_placement('road')
                             new_game.bank.add_bank_resources_from_placement('road')
                             road_positions.remove(pos)
+                            ROAD_POSITIONS.remove(pos)
 
 
 

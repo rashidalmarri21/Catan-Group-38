@@ -1,7 +1,8 @@
 import pygame, random
 import math
 from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS, NUMBER_FONT, BLACK
-
+from shapely.geometry import Point, LineString
+from shapely.ops import unary_union
 
 class Player:
     def __init__(self, name, color):
@@ -106,6 +107,29 @@ class Player:
 
     def get_roads(self):
         return self.roads
+
+    def is_valid_road_placement(self, road_pos):
+        buffer_distance = 73
+        print(self.name, "wants to place a road at", road_pos)
+
+        # Calculate center points of player's current roads
+        road_center_points = []
+        for start, end in self.roads:
+            x = (start[0] + end[0]) / 2
+            y = (start[1] + end[1]) / 2
+            road_center_points.append((x, y))
+
+        # Check if given road position is within buffer distance of any road center point
+        for center_point in road_center_points:
+            if math.sqrt((road_pos[0][0] - center_point[0]) ** 2 + (
+                    road_pos[0][1] - center_point[1]) ** 2) <= buffer_distance or \
+                    math.sqrt((road_pos[1][0] - center_point[0]) ** 2 + (
+                            road_pos[1][1] - center_point[1]) ** 2) <= buffer_distance:
+                print("True")
+                return True
+
+        print("False")
+        return False
 
     def roll_dice(self):
         nums = [random.randint(1, 6), random.randint(1, 6)]
