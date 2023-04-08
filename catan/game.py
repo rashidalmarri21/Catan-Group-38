@@ -81,8 +81,10 @@ class Game:
             for pp, tile in players_to_receive:
                 if pp == p:
                     print("adding resources to", p.get_name())
-                    p.add_resource(tile_grid[tile]["resource_type"][0])
-
+                    test = tile_grid[tile]["resource_type"][0]
+                    if self.bank.get_bank_resource(test) > 0:
+                        p.add_resource(test)
+                        self.bank.remove_resources(test)
     def draw_board(self, screen):
         self.board.draw_board(screen)
 
@@ -106,6 +108,22 @@ class Game:
             message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True, BLACK)
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
+
+        elif game_state == "initial house placements P1" or game_state == "initial road placements P1":
+            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True, BLACK)
+            message_1_rect = message_1.get_rect(center=(960, 100))
+            message_2 = NUMBER_FONT.render("{}! Place 1 settlement and 1 road!".format(current_player.get_name()), True, BLACK)
+            message_2_rect = message_2.get_rect(center=(960, 140))
+            screen.blit(message_1, message_1_rect)
+            screen.blit(message_2, message_2_rect)
+
+        elif game_state == "initial house placements P2+" or game_state == "initial road placements P2+":
+            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True, BLACK)
+            message_1_rect = message_1.get_rect(center=(960, 100))
+            message_2 = NUMBER_FONT.render("{}! Place 2 settlements and 2 roads!".format(current_player.get_name()), True, BLACK)
+            message_2_rect = message_2.get_rect(center=(960, 140))
+            screen.blit(message_1, message_1_rect)
+            screen.blit(message_2, message_2_rect)
 
         elif game_state == 'place house':
             message = pygame.image.load("assets/UI/building_costs/house_cost.png")

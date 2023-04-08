@@ -53,7 +53,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "Dillon", "Mike", "Sara"]
+player_names = ["Bob", "Dillon", "Mike"]#, "Sara"]
 
 
 def play():
@@ -185,7 +185,7 @@ def play():
                             road_positions.remove(pos_2)
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
-                            if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[3]:
+                            if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
                                 new_game.end_turn()
                                 game_state = "initial house placements P2+"
                             elif len(current_player.get_roads()) == 1:
@@ -261,8 +261,10 @@ def play():
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
-                            current_player.remove_resources_for_placement('house')
                             current_player.add_victory_point()
+                            current_player.remove_resources_for_placement('house')
+                            new_game.bank.add_bank_resources_from_placement('house')
+
                             # remove the pos from the list
                             house_positions.remove(pos)
         # implement place road state
@@ -298,10 +300,14 @@ def play():
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
                             # Add the road to the player's list of roads
-                            current_player.add_road(pos)
-                            road_positions.remove(pos)
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
+                            current_player.add_road(pos)
+                            current_player.remove_resources_for_placement('road')
+                            new_game.bank.add_bank_resources_from_placement('road')
+                            road_positions.remove(pos)
+
+
 
         # updates the board state
         new_game.update_state(SCREEN)
