@@ -62,9 +62,9 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "dice roll"
+    game_state = "initial house placements P1"
 
-    chosen_house = None
+
     # Game loop
     while run:
         current_player = new_game.get_current_player()
@@ -164,7 +164,7 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     roads_next_to_house = []
                     for road in ROAD_POSITIONS:
-                        if road[0] == chosen_house_P2 or road[1] == chosen_house_P2[0]:
+                        if road[0] == chosen_house_P2 or road[1] == chosen_house_P2:
                             roads_next_to_house.append(road)
 
                     for pos_2 in roads_next_to_house:
