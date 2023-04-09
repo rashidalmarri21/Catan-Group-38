@@ -62,8 +62,7 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "initial house placements P1"
-
+    game_state = "default" #"initial house placements P1"
 
     # Game loop
     while run:
@@ -77,7 +76,7 @@ def play():
         mos_pos = pygame.mouse.get_pos()
         # assign current_player
 
-        # this state is for initial placements.
+        # initial HOUSE placements for player 1
         if game_state == "initial house placements P1":
             chosen_house_p1 = None
             for event in pygame.event.get():
@@ -98,6 +97,7 @@ def play():
                             chosen_house_p1 = pos
                             game_state = "initial road placements P1"
 
+        # initial ROAD placements for player 1
         if game_state == "initial road placements P1":
 
             for event in pygame.event.get():
@@ -135,6 +135,7 @@ def play():
                                 new_game.end_turn()
                                 game_state = "initial house placements P2+"
 
+        # initial HOUSE placements for players 2+
         if game_state == "initial house placements P2+":
             chosen_house_P2 = None
             for event in pygame.event.get():
@@ -155,6 +156,7 @@ def play():
                             chosen_house_P2 = pos
                             game_state = "initial road placements P2+"
 
+        # initial ROAD placements for players 2+
         if game_state == "initial road placements P2+":
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -185,7 +187,8 @@ def play():
                             road_positions.remove(pos_2)
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
-                            if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
+                            if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[
+                                -1]:
                                 new_game.end_turn()
                                 game_state = "initial house placements P2+"
                             elif len(current_player.get_roads()) == 1:
@@ -194,6 +197,7 @@ def play():
                                 new_game.end_turn()
                                 game_state = "initial house placements P1"
 
+        # dice roll game state
         if game_state == "dice roll":
             ROLL_DICE_BUTTON.change_color(mos_pos)
             ROLL_DICE_BUTTON.update(SCREEN)
@@ -210,6 +214,7 @@ def play():
                         new_game.give_resources(current_player)
                         game_state = "default"
 
+        # default game state
         if game_state == "default":
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
@@ -234,6 +239,7 @@ def play():
                         print(current_player.get_name(), "wants to place a ROAD")
                         game_state = "place road"
 
+        # implement place house state
         elif game_state == "place house":
             for butt in PLACE_HOUSE_BUTTONS:
                 butt.change_color(mos_pos)
@@ -267,6 +273,7 @@ def play():
 
                             # remove the pos from the list
                             house_positions.remove(pos)
+
         # implement place road state
         elif game_state == "place road":
             for butt in PLACE_ROAD_BUTTONS:
@@ -298,8 +305,8 @@ def play():
                         buffer_radius = 15
 
                         # Check if the mouse position is within the buffer zone
-                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2\
-                                and current_player.is_valid_road_placement(pos)\
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
+                                and current_player.is_valid_road_placement(pos) \
                                 and current_player.has_enough_resources('road'):
                             # Add the road to the player's list of roads
                             print(current_player.get_name(),
@@ -310,12 +317,11 @@ def play():
                             road_positions.remove(pos)
                             ROAD_POSITIONS.remove(pos)
 
-
-
         # updates the board state
         new_game.update_state(SCREEN)
         new_game.draw_house(SCREEN)
         current_player.draw_dice(SCREEN)
+        new_game.draw_player_bank_ratios(SCREEN, current_player)
 
         # Update the screen
         pygame.display.update()

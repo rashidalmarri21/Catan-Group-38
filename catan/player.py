@@ -18,9 +18,16 @@ class Player:
         self.roads = []
         self.robbers = 0
         self.dice_roll = [1, 1]
+        self.trade_ratios = {'forest': (4, 1), 'hills': (4, 1), 'pasture': (4, 1), 'fields': (4, 1), 'mountains': (4, 1)}
 
     def get_name(self):
         return self.name
+
+    def get_trade_ratios(self):
+        return self.trade_ratios
+
+    def update_trade_ratios(self, resource_type, ratio):
+        self.trade_ratios[resource_type] = ratio
 
     def has_won(self):
         if self.victory_points >= VIC_POINT_THRESHOLD:
@@ -138,8 +145,8 @@ class Player:
     def draw_dice(self, screen):
         dice_1 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[0]))
         dice_2 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[1]))
-        dice_1_rect = dice_1.get_rect(center=(508, 53))
-        dice_2_rect = dice_2.get_rect(center=(593, 53))
+        dice_1_rect = dice_1.get_rect(center=(508, 47))
+        dice_2_rect = dice_2.get_rect(center=(593, 47))
         screen.blit(dice_1, dice_1_rect)
         screen.blit(dice_2, dice_2_rect)
 

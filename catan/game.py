@@ -1,6 +1,6 @@
 import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
-    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK
+    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT
 
 
 class Game:
@@ -102,6 +102,34 @@ class Game:
             elif current_player == self.players[3]:
                 current_player.draw_player_name(screen, 194)
                 current_player.draw_resources(screen, 194)
+
+    def draw_player_bank_ratios(self, screen, current_player):
+        ratios = current_player.get_trade_ratios()
+        for resource_type, ratio in ratios.items():
+            if resource_type == 'forest':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(51, 115))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'pasture':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(161, 115))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'fields':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(272, 115))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'mountains':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(381, 115))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'hills':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(491, 115))
+                screen.blit(ratio_image, ratio_rect)
+        dev_image = BANK_NUMBER_FONT.render("DEV CARD", True, BLACK)
+        dev_rect = dev_image.get_rect(center=(602, 115))
+        screen.blit(dev_image, dev_rect)
+
 
     def ui_Messages(self, screen, game_state, current_player):
         if game_state == 'default' or game_state == 'dice roll':

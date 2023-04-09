@@ -98,7 +98,28 @@ BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5), text_input="Bac
 ROLL_DICE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5), text_input="Roll Dice", font=NUMBER_FONT,
                                  base_color=BLACK, hovering_color=WHITE)
 
-UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON]
+# bank assets
+SHEEP_IMAGE = pygame.image.load("assets/UI/bank buttons/sheep.png")
+WHEAT_IMAGE = pygame.image.load("assets/UI/bank buttons/wheat.png")
+WOOD_IMAGE = pygame.image.load("assets/UI/bank buttons/wood.png")
+ORE_IMAGE = pygame.image.load("assets/UI/bank buttons/ore.png")
+BRICK_IMAGE = pygame.image.load("assets/UI/bank buttons/bricks.png")
+DEV_IMAGE = pygame.image.load("assets/UI/bank buttons/dev.png")
+# bank buttons
+SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(161, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(272, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(51, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(381, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(491, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+DEV_BUTTON = button.Button(image=DEV_IMAGE, pos=(602, 169), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
+
+UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON]
 PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 
