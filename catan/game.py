@@ -2,7 +2,7 @@ import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
     QUESTION_MARK_DICE, \
-    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE
+    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT
 
 
 class Game:
@@ -198,6 +198,30 @@ class Game:
             dice_rect_2 = QUESTION_MARK_DICE.get_rect(center=(593, 47))
             screen.blit(QUESTION_MARK_DICE, dice_rect_1)
             screen.blit(QUESTION_MARK_DICE, dice_rect_2)
+        elif game_state == "dev cards":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "player trading":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border

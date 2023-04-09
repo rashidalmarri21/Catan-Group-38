@@ -70,6 +70,9 @@ class Player:
     def get_development_cards(self):
         return self.development_cards
 
+    def get_dev_card_total_by_type(self, card_type):
+        return self.development_cards.count(card_type)
+
     def add_victory_point(self):
         self.victory_points += 1
 
@@ -212,3 +215,28 @@ class Player:
         player_name = PLAYER_NAME_FONT.render("{}".format(self.name), True, self.color)
         player_name_rect = player_name.get_rect(center=(1315, y_pos))
         screen.blit(player_name, player_name_rect)
+
+    def draw_dev_card_numbers(self, screen):
+        knight = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('knight')), True, BLACK)
+        knight_rect = knight.get_rect(center=(170, 707))
+        screen.blit(knight, knight_rect)
+
+        victory = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('victory')), True, BLACK)
+        victory_rect = victory.get_rect(center=(355, 707))
+        screen.blit(victory, victory_rect)
+
+        road = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('build')), True, BLACK)
+        road_rect = road.get_rect(center=(540, 707))
+        screen.blit(road, road_rect)
+
+        mono = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('monopoly')), True, BLACK)
+        mono_rect = mono.get_rect(center=(170, 857))
+        screen.blit(mono, mono_rect)
+
+        year = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('year')), True, BLACK)
+        year_rect = year.get_rect(center=(355, 857))
+        screen.blit(year, year_rect)
+
+        blank = NUMBER_FONT.render("{}x".format(len(self.development_cards)), True, BLACK)
+        blank_rect = blank.get_rect(center=(540, 857))
+        screen.blit(blank, blank_rect)

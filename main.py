@@ -2,8 +2,8 @@ import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
     END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
-    PLACE_ROAD_BUTTONS, \
-    PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON
+    PLACE_ROAD_BUTTONS,PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, BACK_DEV_TRADE_BUTTON,\
+    DEV_CARDS_BUTTONS_LIST
 from catan.game import Game
 from catan.player import Player
 
@@ -62,7 +62,7 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "default"#"initial house placements P1"
+    game_state = "initial house placements P1"
 
     # Game loop
     while run:
@@ -238,6 +238,9 @@ def play():
                     if PLACE_ROAD_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "wants to place a ROAD")
                         game_state = "place road"
+                    if DEV_CARDS_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "opened Dev Cards")
+                        game_state = "dev cards"
 
         # implement place house state
         elif game_state == "place house":
@@ -316,6 +319,21 @@ def play():
                             new_game.bank.add_bank_resources_from_placement('road')
                             road_positions.remove(pos)
                             ROAD_POSITIONS.remove(pos)
+
+        elif game_state == "dev cards":
+            for butt in DEV_CARDS_BUTTONS_LIST:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "went back")
+                        game_state = "default"
 
         # updates the board state
         new_game.update_state(SCREEN)
