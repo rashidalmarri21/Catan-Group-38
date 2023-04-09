@@ -86,18 +86,26 @@ QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT"
                             hovering_color=WHITE)
 MENU_BUTTON_LIST = [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]
 
+# game images
+DEV_CARDS_IMAGE = pygame.image.load("assets/UI/dev cards.png")
+PLAYER_TRADING_IMAGE = pygame.image.load("assets/UI/player trading.png")
 # game buttons
-END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5), text_input="End Turn", font=NUMBER_FONT,
-                                base_color=BLACK, hovering_color=WHITE)
-PLACE_HOUSE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5), text_input="Place House", font=NUMBER_FONT,
-                                   base_color=BLACK, hovering_color=WHITE)
-PLACE_ROAD_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 807.5), text_input="Place Road", font=NUMBER_FONT,
-                                  base_color=BLACK, hovering_color=WHITE)
-BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 916.5), text_input="Back", font=NUMBER_FONT, base_color=BLACK,
-                            hovering_color=WHITE)
-ROLL_DICE_BUTTON = button.Button(image=MENU_BUTTON, pos=(185, 1025.5), text_input="Roll Dice", font=NUMBER_FONT,
-                                 base_color=BLACK, hovering_color=WHITE)
-
+END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="End Turn", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+PLACE_HOUSE_BUTTON = button.Button(image=MENU_BUTTON, pos=(718, 967), text_input="Place House", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+PLACE_CITY_BUTTON = button.Button(image=MENU_BUTTON, pos=(1207, 967), text_input="Place City", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+PLACE_ROAD_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="Place Road", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+BACK_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="Back", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+ROLL_DICE_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 967), text_input="Roll Dice", font=NUMBER_FONT, base_color=(160, 32, 220),
+                            hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
+DEV_CARDS_BUTTON = button.Button(image=DEV_CARDS_IMAGE, pos=(95, 540), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=10, border_color=BLACK)
+PLAYER_TRADING_BUTTON = button.Button(image=PLAYER_TRADING_IMAGE, pos=(1825, 540), text_input="", font=NUMBER_FONT,
+                                      base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
 # bank assets
 SHEEP_IMAGE = pygame.image.load("assets/UI/bank buttons/sheep.png")
 WHEAT_IMAGE = pygame.image.load("assets/UI/bank buttons/wheat.png")
@@ -105,6 +113,7 @@ WOOD_IMAGE = pygame.image.load("assets/UI/bank buttons/wood.png")
 ORE_IMAGE = pygame.image.load("assets/UI/bank buttons/ore.png")
 BRICK_IMAGE = pygame.image.load("assets/UI/bank buttons/bricks.png")
 DEV_IMAGE = pygame.image.load("assets/UI/bank buttons/dev.png")
+QUESTION_MARK_DICE = pygame.image.load("assets/UI/dice/dice_roll.png")
 # bank buttons
 SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(161, 169), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
@@ -119,7 +128,8 @@ BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(491, 169), text_input="", f
 DEV_BUTTON = button.Button(image=DEV_IMAGE, pos=(602, 169), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=WHITE, border=True,border_width=5, border_color=(127, 127, 127))
 
-UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON]
+UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON,
+              DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON]
 PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 

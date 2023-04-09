@@ -1,6 +1,8 @@
 import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
-    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT
+    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
+    QUESTION_MARK_DICE, \
+    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE
 
 
 class Game:
@@ -85,6 +87,7 @@ class Game:
                     if self.bank.get_bank_resource(test) > 0:
                         p.add_resource(test)
                         self.bank.remove_resources(test)
+
     def draw_board(self, screen):
         self.board.draw_board(screen)
 
@@ -126,39 +129,87 @@ class Game:
                 ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
                 ratio_rect = ratio_image.get_rect(center=(491, 115))
                 screen.blit(ratio_image, ratio_rect)
-        dev_image = BANK_NUMBER_FONT.render("DEV CARD", True, BLACK)
+        dev_image = BANK_NUMBER_FONT.render("BUY CARD", True, BLACK)
         dev_rect = dev_image.get_rect(center=(602, 115))
         screen.blit(dev_image, dev_rect)
 
-
     def ui_Messages(self, screen, game_state, current_player):
-        if game_state == 'default' or game_state == 'dice roll':
-            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True, BLACK)
+        if game_state == 'default':
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
+            self.players[self.current_player_index].draw_dice(screen)
 
         elif game_state == "initial house placements P1" or game_state == "initial road placements P1":
-            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True, BLACK)
+            self.draw_trade_dev_buttons(screen)
+            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True,
+                                           current_player.get_color())
             message_1_rect = message_1.get_rect(center=(960, 100))
-            message_2 = NUMBER_FONT.render("{}! Place 1 settlement and 1 road!".format(current_player.get_name()), True, BLACK)
+            message_2 = NUMBER_FONT.render("{}! Place 1 settlement and 1 road!".format(current_player.get_name()), True,
+                                           current_player.get_color())
             message_2_rect = message_2.get_rect(center=(960, 140))
             screen.blit(message_1, message_1_rect)
             screen.blit(message_2, message_2_rect)
+
+            dice_rect_1 = QUESTION_MARK_DICE.get_rect(center=(508, 47))
+            dice_rect_2 = QUESTION_MARK_DICE.get_rect(center=(593, 47))
+            screen.blit(QUESTION_MARK_DICE, dice_rect_1)
+            screen.blit(QUESTION_MARK_DICE, dice_rect_2)
 
         elif game_state == "initial house placements P2+" or game_state == "initial road placements P2+":
-            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True, BLACK)
+            self.draw_trade_dev_buttons(screen)
+            message_1 = NUMBER_FONT.render("Place Initial Settlements!".format(current_player.get_name()), True,
+                                           current_player.get_color())
             message_1_rect = message_1.get_rect(center=(960, 100))
-            message_2 = NUMBER_FONT.render("{}! Place 2 settlements and 2 roads!".format(current_player.get_name()), True, BLACK)
+            message_2 = NUMBER_FONT.render("{}! Place 2 settlements and 2 roads!".format(current_player.get_name()),
+                                           True, current_player.get_color())
             message_2_rect = message_2.get_rect(center=(960, 140))
             screen.blit(message_1, message_1_rect)
             screen.blit(message_2, message_2_rect)
 
+            dice_rect_1 = QUESTION_MARK_DICE.get_rect(center=(508, 47))
+            dice_rect_2 = QUESTION_MARK_DICE.get_rect(center=(593, 47))
+            screen.blit(QUESTION_MARK_DICE, dice_rect_1)
+            screen.blit(QUESTION_MARK_DICE, dice_rect_2)
+
         elif game_state == 'place house':
+            self.draw_trade_dev_buttons(screen)
             message = pygame.image.load("assets/UI/building_costs/house_cost.png")
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
+            self.players[self.current_player_index].draw_dice(screen)
 
         elif game_state == 'place road':
+            self.draw_trade_dev_buttons(screen)
             message = pygame.image.load("assets/UI/building_costs/road_cost.png")
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
+            self.players[self.current_player_index].draw_dice(screen)
+
+        elif game_state == 'dice roll':
+            self.draw_trade_dev_buttons(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+            self.players[self.current_player_index].draw_dice(screen)
+            dice_rect_1 = QUESTION_MARK_DICE.get_rect(center=(508, 47))
+            dice_rect_2 = QUESTION_MARK_DICE.get_rect(center=(593, 47))
+            screen.blit(QUESTION_MARK_DICE, dice_rect_1)
+            screen.blit(QUESTION_MARK_DICE, dice_rect_2)
+
+    def draw_trade_dev_buttons(self, screen):
+        # Draw the player trading button with a border
+        player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+        player_trading_rect.inflate_ip(20, 20)
+        pygame.draw.rect(screen, BLACK, player_trading_rect)
+        screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        # Draw the dev cards button with a border
+        dev_cards_rect = pygame.Rect(DEV_CARDS_BUTTON)
+        dev_cards_rect.inflate_ip(20, 20)
+        pygame.draw.rect(screen, BLACK, dev_cards_rect)
+        screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
+
+

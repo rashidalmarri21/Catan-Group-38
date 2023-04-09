@@ -62,7 +62,7 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "default" #"initial house placements P1"
+    game_state = "default"#"initial house placements P1"
 
     # Game loop
     while run:
@@ -98,7 +98,7 @@ def play():
                             game_state = "initial road placements P1"
 
         # initial ROAD placements for player 1
-        if game_state == "initial road placements P1":
+        elif game_state == "initial road placements P1":
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -136,7 +136,7 @@ def play():
                                 game_state = "initial house placements P2+"
 
         # initial HOUSE placements for players 2+
-        if game_state == "initial house placements P2+":
+        elif game_state == "initial house placements P2+":
             chosen_house_P2 = None
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -157,7 +157,7 @@ def play():
                             game_state = "initial road placements P2+"
 
         # initial ROAD placements for players 2+
-        if game_state == "initial road placements P2+":
+        elif game_state == "initial road placements P2+":
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -198,7 +198,7 @@ def play():
                                 game_state = "initial house placements P1"
 
         # dice roll game state
-        if game_state == "dice roll":
+        elif game_state == "dice roll":
             ROLL_DICE_BUTTON.change_color(mos_pos)
             ROLL_DICE_BUTTON.update(SCREEN)
 
@@ -215,7 +215,7 @@ def play():
                         game_state = "default"
 
         # default game state
-        if game_state == "default":
+        elif game_state == "default":
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
                 # change color if hovered
@@ -320,7 +320,6 @@ def play():
         # updates the board state
         new_game.update_state(SCREEN)
         new_game.draw_house(SCREEN)
-        current_player.draw_dice(SCREEN)
         new_game.draw_player_bank_ratios(SCREEN, current_player)
 
         # Update the screen

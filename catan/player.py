@@ -23,6 +23,9 @@ class Player:
     def get_name(self):
         return self.name
 
+    def get_color(self):
+        return self.color
+
     def get_trade_ratios(self):
         return self.trade_ratios
 
