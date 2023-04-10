@@ -101,6 +101,8 @@ DEV_CARDS_MONOPOLY_UI_IMAGE = pygame.image.load("assets/UI/dev cards/monopoly UI
 DEV_CARDS_MONOPOLY_UI_RECT = DEV_CARDS_MONOPOLY_UI_IMAGE.get_rect(topleft=(0, 486))
 DEV_CARDS_YEAR_UI_IMAGE = pygame.image.load("assets/UI/dev cards/year UI static.png")
 DEV_CARDS_YEAR_UI_RECT = DEV_CARDS_YEAR_UI_IMAGE.get_rect(topleft=(0, 486))
+ROBBER = pygame.image.load("assets/UI/robber/robber.png")
+
 
 
 # game buttons
@@ -449,3 +451,5 @@ HOUSE_TILE_CHECK = {
 
 
 }
+
+

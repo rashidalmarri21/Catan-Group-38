@@ -2,12 +2,17 @@ import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
     QUESTION_MARK_DICE, \
-    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT,\
-    KNIGHT_INFO_DEV, KNIGHT_INFO_DEV_RECT, DEV_CARDS_KNIGHT_UI_RECT, DEV_CARDS_KNIGHT_UI_IMAGE, GREY_USE_DEV, GREY_USE_RECT,\
-    BLANK_INFO_DEV, BLANK_INFO_DEV_RECT, DEV_CARDS_ROAD_BUILDING_UI_IMAGE, DEV_CARDS_ROAD_BUILDING_UI_RECT, DEV_CARDS_YEAR_UI_IMAGE,\
-    DEV_CARDS_YEAR_UI_RECT, DEV_CARDS_MONOPOLY_UI_IMAGE, DEV_CARDS_MONOPOLY_UI_RECT, DEV_CARDS_VICTORY_UI_IMAGE, DEV_CARDS_VICTORY_UI_RECT,\
-    VICTORY_INFO_DEV, VICTORY_INFO_RECT, ROAD_BUILDING_INFO_DEV, ROAD_BUILDING_INFO_DEV_RECT, MONOPOLY_INFO_DEV, MONOPOLY_INFO_DEV_RECT,\
-    YEAR_INFO_DEV, YEAR_INFO_DEV_RECT
+    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, \
+    DEV_CARDS_UI_RECT, \
+    KNIGHT_INFO_DEV, KNIGHT_INFO_DEV_RECT, DEV_CARDS_KNIGHT_UI_RECT, DEV_CARDS_KNIGHT_UI_IMAGE, GREY_USE_DEV, \
+    GREY_USE_RECT, \
+    BLANK_INFO_DEV, BLANK_INFO_DEV_RECT, DEV_CARDS_ROAD_BUILDING_UI_IMAGE, DEV_CARDS_ROAD_BUILDING_UI_RECT, \
+    DEV_CARDS_YEAR_UI_IMAGE, \
+    DEV_CARDS_YEAR_UI_RECT, DEV_CARDS_MONOPOLY_UI_IMAGE, DEV_CARDS_MONOPOLY_UI_RECT, DEV_CARDS_VICTORY_UI_IMAGE, \
+    DEV_CARDS_VICTORY_UI_RECT, \
+    VICTORY_INFO_DEV, VICTORY_INFO_RECT, ROAD_BUILDING_INFO_DEV, ROAD_BUILDING_INFO_DEV_RECT, MONOPOLY_INFO_DEV, \
+    MONOPOLY_INFO_DEV_RECT, \
+    YEAR_INFO_DEV, YEAR_INFO_DEV_RECT, ROBBER
 
 
 class Game:
@@ -18,14 +23,42 @@ class Game:
         self.current_player_index = 0  # initialize the current player index
         self.game_over = False  # initialize the game over flag
         self.bank = bank.Bank()
+        # calculate robbers starting position
+        self.robber_pos = ()
+        self.current_board = self.board.get_grid()
+        for pos, tile in self.current_board.items():
+            if tile["resource_type"] is not None:
+                if tile['resource_type'][0] == 'desert':
+                    self.robber_pos = tile["position"]
+        self.possible_robber_pos = {}
+        self.update_robber_pos_list()
 
     def update_state(self, screen):
         # update the game board
         self.bank.draw_bank_resources(screen)
         for current_player in self.players:
             current_player.draw_roads(screen)
-
+        self.draw_robber(screen)
         self.check_game_over()  # check if the game is over
+
+    def update_robber_pos_list(self):
+        for pos, tile in self.current_board.items():
+            if tile["resource_type"] is not None:
+                if tile['position'] != (self.robber_pos[0], self.robber_pos[1]):
+                    self.possible_robber_pos[pos] = (tile["position"][0] - 45, tile["position"][1])
+
+    def update_robber_pos(self, new_robber_pos):
+        self.robber_pos = new_robber_pos
+
+    def remove_robber_pos(self):
+        for key, value in self.possible_robber_pos.copy().items():
+            if value == (self.robber_pos[0] - 45, self.robber_pos[1]):
+                self.possible_robber_pos.pop(key)
+                break
+    def robber_effect(self):
+        pass
+    def get_robber_pos(self):
+        return self.robber_pos
 
     def draw_house(self, screen):
         house_image = None
@@ -47,6 +80,11 @@ class Game:
                 if distance < 130:
                     return False
         return True
+
+    def draw_robber(self, screen):
+        robber_pos = self.robber_pos
+        robber_rect = ROBBER.get_rect(center=((robber_pos[0] - 45), robber_pos[1]))
+        screen.blit(ROBBER, robber_rect)
 
     def get_players(self):
         return self.players
@@ -235,7 +273,8 @@ class Game:
         elif game_state == "knight":
             self.players[self.current_player_index].draw_dice(screen)
 
-            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True, current_player.get_color())
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
 
@@ -323,6 +362,13 @@ class Game:
             pygame.draw.rect(screen, BLACK, player_trading_rect)
             screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
 
+        elif game_state == "robber":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, Pick a tile to place the robber!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+            self.draw_trade_dev_buttons(screen)
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
@@ -337,14 +383,17 @@ class Game:
         pygame.draw.rect(screen, BLACK, dev_cards_rect)
         screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
 
-
     def knight(self):
         pass
+
     def victory(self):
         pass
+
     def monopoly(self):
         pass
+
     def road_building(self):
         pass
+
     def year_of_plenty(self):
         pass

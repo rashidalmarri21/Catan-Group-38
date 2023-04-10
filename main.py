@@ -2,8 +2,10 @@ import sys
 import pygame
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
     END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
-    PLACE_ROAD_BUTTONS,PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, BACK_DEV_TRADE_BUTTON,\
-    DEV_CARDS_BUTTONS_LIST, KNIGHT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, VICTORY_POINT_BUTTON,\
+    PLACE_ROAD_BUTTONS, PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, \
+    BACK_DEV_TRADE_BUTTON, \
+    DEV_CARDS_BUTTONS_LIST, KNIGHT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, \
+    VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV
 from catan.game import Game
 from catan.player import Player
@@ -63,7 +65,7 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "default"# "initial house placements P1"
+    game_state = "default"  # "initial house placements P1"
 
     # Game loop
     while run:
@@ -210,10 +212,33 @@ def play():
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if ROLL_DICE_BUTTON.check_for_input(mos_pos):
-                        print(current_player.get_name(), "rolled the dice")
                         current_player.roll_dice()
                         new_game.give_resources(current_player)
-                        game_state = "default"
+                        print(current_player.get_name(), "rolled a", current_player.get_dice_number())
+                        if current_player.get_dice_number() == 7:
+                            game_state = "robber"
+                        else:
+                            game_state = "default"
+
+        # robber game state
+        elif game_state == "robber":
+            for key, value in new_game.possible_robber_pos.copy().items():
+                pygame.draw.circle(SCREEN, (160, 32, 240), value, 15, 5)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    for key, pos in new_game.possible_robber_pos.copy().items():
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            print(current_player.get_name(), "placed the robber at", pos)
+                            new_game.update_robber_pos(new_game.current_board[key]["position"])
+                            new_game.update_robber_pos_list()
+                            new_game.remove_robber_pos()
+                            # do robber effect
+                            game_state = "default"
 
         # default game state
         elif game_state == "default":
@@ -370,7 +395,7 @@ def play():
                         game_state = "dev cards"
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("knight") > 0:
                         current_player.remove_development_card("knight")
-                        # DO CARD EFFECT
+                        game_state = "robber"
         # dev victory
         elif game_state == "victory":
 
@@ -430,7 +455,8 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
                         game_state = "dev cards"
-                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("monopoly") > 0:
+                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type(
+                            "monopoly") > 0:
                         current_player.remove_development_card("monopoly")
                         # DO CARD EFFECT
         # dev year
@@ -456,7 +482,6 @@ def play():
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("year") > 0:
                         current_player.remove_development_card("year")
                         # DO CARD EFFECT
-
 
         # updates the board state
         new_game.update_state(SCREEN)
