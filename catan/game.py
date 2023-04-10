@@ -2,7 +2,9 @@ import pygame, math
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
     QUESTION_MARK_DICE, \
-    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT
+    DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT,\
+    KNIGHT_INFO_DEV, KNIGHT_INFO_DEV_RECT, DEV_CARDS_KNIGHT_UI_RECT, DEV_CARDS_KNIGHT_UI_IMAGE, GREY_USE_DEV, GREY_USE_RECT,\
+    BLANK_INFO_DEV, BLANK_INFO_DEV_RECT
 
 
 class Game:
@@ -193,7 +195,7 @@ class Game:
                                          current_player.get_color())
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
-            self.players[self.current_player_index].draw_dice(screen)
+
             dice_rect_1 = QUESTION_MARK_DICE.get_rect(center=(508, 47))
             dice_rect_2 = QUESTION_MARK_DICE.get_rect(center=(593, 47))
             screen.blit(QUESTION_MARK_DICE, dice_rect_1)
@@ -209,6 +211,10 @@ class Game:
 
             current_player.draw_dev_card_numbers(screen)
 
+            screen.blit(GREY_USE_DEV, GREY_USE_RECT)
+
+            screen.blit(BLANK_INFO_DEV, BLANK_INFO_DEV_RECT)
+
             player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
             player_trading_rect.inflate_ip(20, 20)
             pygame.draw.rect(screen, BLACK, player_trading_rect)
@@ -222,6 +228,24 @@ class Game:
             screen.blit(message, message_rect)
 
             self.draw_trade_dev_buttons(screen)
+
+        elif game_state == "knight":
+            self.players[self.current_player_index].draw_dice(screen)
+
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True, current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_KNIGHT_UI_IMAGE, DEV_CARDS_KNIGHT_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            screen.blit(KNIGHT_INFO_DEV, KNIGHT_INFO_DEV_RECT)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
@@ -237,3 +261,13 @@ class Game:
         screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
 
 
+    def knight(self):
+        pass
+    def victory(self):
+        pass
+    def monopoly(self):
+        pass
+    def road_building(self):
+        pass
+    def year_of_plenty(self):
+        pass

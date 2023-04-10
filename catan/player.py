@@ -12,7 +12,7 @@ class Player:
 
         self.victory_points = 0
         self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
-        self.development_cards = []
+        self.development_cards = ["knight"]
         self.houses = []
         self.houses_rect = []
         self.roads = []
@@ -64,8 +64,8 @@ class Player:
     def get_resources(self):
         return self.resources
 
-    def remove_development_card(self, card):
-        self.development_cards.remove(card)
+    def remove_development_card(self, card_type):
+        self.development_cards.remove(card_type)
 
     def get_development_cards(self):
         return self.development_cards

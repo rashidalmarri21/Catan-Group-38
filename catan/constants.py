@@ -91,6 +91,9 @@ DEV_CARDS_IMAGE = pygame.image.load("assets/UI/dev cards.png")
 PLAYER_TRADING_IMAGE = pygame.image.load("assets/UI/player trading.png")
 DEV_CARDS_UI_IMAGE = pygame.image.load("assets/UI/dev cards UI.png")
 DEV_CARDS_UI_RECT = DEV_CARDS_UI_IMAGE.get_rect(topleft=(0, 486))
+DEV_CARDS_KNIGHT_UI_IMAGE = pygame.image.load("assets/UI/dev cards/knight UI static.png")
+DEV_CARDS_KNIGHT_UI_RECT = DEV_CARDS_KNIGHT_UI_IMAGE.get_rect(topleft=(0, 486))
+
 # game buttons
 END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="End Turn", font=NUMBER_FONT, base_color=(160, 32, 220),
                             hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
@@ -140,6 +143,8 @@ ROAD_BUILDING_DEV = pygame.image.load("assets/UI/dev cards/road building.png")
 MONOPOLY_DEV = pygame.image.load("assets/UI/dev cards/monopoly.png")
 YEAR_OF_PLENTY_DEV = pygame.image.load("assets/UI/dev cards/year of plenty.png")
 BLACK_CARD_DEV = pygame.image.load("assets/UI/dev cards/blank card.png")
+USE_DEV = pygame.image.load("assets/UI/dev cards/use button.png")
+GREY_USE_DEV = pygame.image.load("assets/UI/dev cards/grey use button.png")
 
 # dev cards buttons
 KNIGHT_BUTTON = button.Button(image=KNIGHT_DEV, pos=(81, 692), text_input="", font=NUMBER_FONT,
@@ -154,6 +159,25 @@ YEAR_OF_PLENTY_BUTTON = button.Button(image=YEAR_OF_PLENTY_DEV, pos=(267, 842), 
                                 base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
 BLANK_CARD_BUTTON = button.Button(image=BLACK_CARD_DEV, pos=(451, 842), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=(127, 127, 127), border=True,border_width=5, border_color=(127, 127, 127))
+USE_BUTTON = button.Button(image=USE_DEV, pos=(503, 1007), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+GREY_USE_RECT = GREY_USE_DEV.get_rect(center=(503, 1007))
+
+# dev card info images
+KNIGHT_INFO_DEV = pygame.image.load("assets/UI/dev cards/knight info.png")
+VICTORY_INFO_DEV = pygame.image.load("assets/UI/dev cards/victory info.png")
+ROAD_BUILDING_INFO_DEV = pygame.image.load("assets/UI/dev cards/road building info.png")
+MONOPOLY_INFO_DEV = pygame.image.load("assets/UI/dev cards/monopoly info.png")
+YEAR_INFO_DEV = pygame.image.load("assets/UI/dev cards/year of plenty info.png")
+BLANK_INFO_DEV = pygame.image.load("assets/UI/dev cards/blank info.png")
+
+# dev card info rects
+KNIGHT_INFO_DEV_RECT = KNIGHT_INFO_DEV.get_rect(center=(217, 1012))
+VICTORY_INFO_RECT = VICTORY_INFO_DEV.get_rect(center=(217, 1012))
+ROAD_BUILDING_INFO_DEV_RECT = ROAD_BUILDING_INFO_DEV.get_rect(center=(217, 1012))
+MONOPOLY_INFO_DEV_RECT = MONOPOLY_INFO_DEV.get_rect(center=(217, 1012))
+YEAR_INFO_DEV_RECT = YEAR_INFO_DEV.get_rect(center=(217, 1012))
+BLANK_INFO_DEV_RECT = BLANK_INFO_DEV.get_rect(center=(217, 1012))
 
 # button lists
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON,
