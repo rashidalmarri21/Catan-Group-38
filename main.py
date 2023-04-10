@@ -348,7 +348,7 @@ def play():
                         game_state = "monopoly"
                     if YEAR_OF_PLENTY_BUTTON.check_for_input(mos_pos):
                         game_state = "year"
-
+        # dev knight
         elif game_state == "knight":
             if current_player.get_dev_card_total_by_type("knight"):
                 for butt in [USE_BUTTON, BACK_DEV_TRADE_BUTTON]:
@@ -368,8 +368,94 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
                         game_state = "dev cards"
-                    if USE_BUTTON.check_for_input(mos_pos):
+                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("knight") > 0:
                         current_player.remove_development_card("knight")
+                        # DO CARD EFFECT
+        # dev victory
+        elif game_state == "victory":
+
+            BACK_DEV_TRADE_BUTTON.change_color(mos_pos)
+            BACK_DEV_TRADE_BUTTON.update(SCREEN)
+            SCREEN.blit(GREY_USE_DEV, GREY_USE_RECT)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        game_state = "dev cards"
+        # dev road
+        elif game_state == "road":
+            if current_player.get_dev_card_total_by_type("road"):
+                for butt in [USE_BUTTON, BACK_DEV_TRADE_BUTTON]:
+                    butt.change_color(mos_pos)
+                    butt.update(SCREEN)
+            else:
+                BACK_DEV_TRADE_BUTTON.change_color(mos_pos)
+                BACK_DEV_TRADE_BUTTON.update(SCREEN)
+                SCREEN.blit(GREY_USE_DEV, GREY_USE_RECT)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        game_state = "dev cards"
+                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("road") > 0:
+                        current_player.remove_development_card("road")
+                        # DO CARD EFFECT
+        # dev monopoly
+        elif game_state == "monopoly":
+            if current_player.get_dev_card_total_by_type("monopoly"):
+                for butt in [USE_BUTTON, BACK_DEV_TRADE_BUTTON]:
+                    butt.change_color(mos_pos)
+                    butt.update(SCREEN)
+            else:
+                BACK_DEV_TRADE_BUTTON.change_color(mos_pos)
+                BACK_DEV_TRADE_BUTTON.update(SCREEN)
+                SCREEN.blit(GREY_USE_DEV, GREY_USE_RECT)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        game_state = "dev cards"
+                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("monopoly") > 0:
+                        current_player.remove_development_card("monopoly")
+                        # DO CARD EFFECT
+        # dev year
+        elif game_state == "year":
+            if current_player.get_dev_card_total_by_type("year"):
+                for butt in [USE_BUTTON, BACK_DEV_TRADE_BUTTON]:
+                    butt.change_color(mos_pos)
+                    butt.update(SCREEN)
+            else:
+                BACK_DEV_TRADE_BUTTON.change_color(mos_pos)
+                BACK_DEV_TRADE_BUTTON.update(SCREEN)
+                SCREEN.blit(GREY_USE_DEV, GREY_USE_RECT)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        game_state = "dev cards"
+                    if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("year") > 0:
+                        current_player.remove_development_card("year")
+                        # DO CARD EFFECT
 
 
         # updates the board state

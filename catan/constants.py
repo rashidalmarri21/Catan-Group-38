@@ -93,6 +93,15 @@ DEV_CARDS_UI_IMAGE = pygame.image.load("assets/UI/dev cards UI.png")
 DEV_CARDS_UI_RECT = DEV_CARDS_UI_IMAGE.get_rect(topleft=(0, 486))
 DEV_CARDS_KNIGHT_UI_IMAGE = pygame.image.load("assets/UI/dev cards/knight UI static.png")
 DEV_CARDS_KNIGHT_UI_RECT = DEV_CARDS_KNIGHT_UI_IMAGE.get_rect(topleft=(0, 486))
+DEV_CARDS_VICTORY_UI_IMAGE = pygame.image.load("assets/UI/dev cards/victory UI static.png")
+DEV_CARDS_VICTORY_UI_RECT = DEV_CARDS_VICTORY_UI_IMAGE.get_rect(topleft=(0, 486))
+DEV_CARDS_ROAD_BUILDING_UI_IMAGE = pygame.image.load("assets/UI/dev cards/road building UI static.png")
+DEV_CARDS_ROAD_BUILDING_UI_RECT = DEV_CARDS_ROAD_BUILDING_UI_IMAGE.get_rect(topleft=(0, 486))
+DEV_CARDS_MONOPOLY_UI_IMAGE = pygame.image.load("assets/UI/dev cards/monopoly UI static.png")
+DEV_CARDS_MONOPOLY_UI_RECT = DEV_CARDS_MONOPOLY_UI_IMAGE.get_rect(topleft=(0, 486))
+DEV_CARDS_YEAR_UI_IMAGE = pygame.image.load("assets/UI/dev cards/year UI static.png")
+DEV_CARDS_YEAR_UI_RECT = DEV_CARDS_YEAR_UI_IMAGE.get_rect(topleft=(0, 486))
+
 
 # game buttons
 END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="End Turn", font=NUMBER_FONT, base_color=(160, 32, 220),

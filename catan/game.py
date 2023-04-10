@@ -4,7 +4,10 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     QUESTION_MARK_DICE, \
     DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, DEV_CARDS_UI_RECT,\
     KNIGHT_INFO_DEV, KNIGHT_INFO_DEV_RECT, DEV_CARDS_KNIGHT_UI_RECT, DEV_CARDS_KNIGHT_UI_IMAGE, GREY_USE_DEV, GREY_USE_RECT,\
-    BLANK_INFO_DEV, BLANK_INFO_DEV_RECT
+    BLANK_INFO_DEV, BLANK_INFO_DEV_RECT, DEV_CARDS_ROAD_BUILDING_UI_IMAGE, DEV_CARDS_ROAD_BUILDING_UI_RECT, DEV_CARDS_YEAR_UI_IMAGE,\
+    DEV_CARDS_YEAR_UI_RECT, DEV_CARDS_MONOPOLY_UI_IMAGE, DEV_CARDS_MONOPOLY_UI_RECT, DEV_CARDS_VICTORY_UI_IMAGE, DEV_CARDS_VICTORY_UI_RECT,\
+    VICTORY_INFO_DEV, VICTORY_INFO_RECT, ROAD_BUILDING_INFO_DEV, ROAD_BUILDING_INFO_DEV_RECT, MONOPOLY_INFO_DEV, MONOPOLY_INFO_DEV_RECT,\
+    YEAR_INFO_DEV, YEAR_INFO_DEV_RECT
 
 
 class Game:
@@ -246,6 +249,80 @@ class Game:
             player_trading_rect.inflate_ip(20, 20)
             pygame.draw.rect(screen, BLACK, player_trading_rect)
             screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "victory":
+            self.players[self.current_player_index].draw_dice(screen)
+
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_VICTORY_UI_IMAGE, DEV_CARDS_VICTORY_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            screen.blit(VICTORY_INFO_DEV, VICTORY_INFO_RECT)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "road":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_ROAD_BUILDING_UI_IMAGE, DEV_CARDS_ROAD_BUILDING_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            screen.blit(ROAD_BUILDING_INFO_DEV, ROAD_BUILDING_INFO_DEV_RECT)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "monopoly":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_MONOPOLY_UI_IMAGE, DEV_CARDS_MONOPOLY_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            screen.blit(MONOPOLY_INFO_DEV, MONOPOLY_INFO_DEV_RECT)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "year":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            screen.blit(DEV_CARDS_YEAR_UI_IMAGE, DEV_CARDS_YEAR_UI_RECT)
+
+            current_player.draw_dev_card_numbers(screen)
+
+            screen.blit(YEAR_INFO_DEV, YEAR_INFO_DEV_RECT)
+
+            player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
+            player_trading_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, player_trading_rect)
+            screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border

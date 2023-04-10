@@ -12,7 +12,7 @@ class Player:
 
         self.victory_points = 0
         self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
-        self.development_cards = ["knight"]
+        self.development_cards = ["knight", "victory", "year", "monopoly", "road"]
         self.houses = []
         self.houses_rect = []
         self.roads = []
@@ -225,7 +225,7 @@ class Player:
         victory_rect = victory.get_rect(center=(355, 707))
         screen.blit(victory, victory_rect)
 
-        road = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('build')), True, BLACK)
+        road = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('road')), True, BLACK)
         road_rect = road.get_rect(center=(540, 707))
         screen.blit(road, road_rect)
 
