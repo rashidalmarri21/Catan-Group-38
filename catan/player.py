@@ -11,7 +11,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
+        self.resources = {'forest': 3, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
         self.development_cards = ["knight", "victory", "year", "monopoly", "road"]
         self.houses = []
         self.cities = []
@@ -32,6 +32,36 @@ class Player:
     def update_trade_ratios(self, resource_type, ratio):
         self.trade_ratios[resource_type] = ratio
 
+    def update_all_trade_ratios(self, ratio):
+        for key, value in self.trade_ratios.items():
+            if value == (4, 1):
+                self.trade_ratios[key] = (3, 1)
+
+    def draw_trade_ratio_maritime(self, screen):
+        y_pos = 650
+        ratios = self.trade_ratios
+        for resource_type, ratio in ratios.items():
+            if resource_type == 'forest':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(742, y_pos))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'pasture':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(851, y_pos))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'fields':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(960, y_pos))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'mountains':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(1069, y_pos))
+                screen.blit(ratio_image, ratio_rect)
+            elif resource_type == 'hills':
+                ratio_image = NUMBER_FONT.render("{}:1".format(ratio[0]), True, BLACK)
+                ratio_rect = ratio_image.get_rect(center=(1178, y_pos))
+                screen.blit(ratio_image, ratio_rect)
+
     def has_won(self):
         if self.victory_points >= VIC_POINT_THRESHOLD:
             return True
@@ -48,6 +78,9 @@ class Player:
         if resource_type == 'desert':
             return
         self.resources[resource_type] -= 1
+
+    def remove_resource_with_amount(self, resource_type, amount):
+        self.resources[resource_type] -= amount
     def remove_resources_for_placement(self, placement_type):
         if placement_type == "road":
             self.resources['forest'] -= 1
@@ -228,6 +261,37 @@ class Player:
         vic_points = BANK_NUMBER_FONT.render("{}".format(self.victory_points), True, BLACK)
         vic_points_rect = vic_points.get_rect(center=(1875, y_pos))
         screen.blit(vic_points, vic_points_rect)
+
+    def draw_resource_in_maritime(self, screen, selected_resource):
+        y_pos = 450
+        if selected_resource == "wood":
+            # draw wood number
+            wood = NUMBER_FONT.render("{}".format(self.resources['forest']), True, BLACK)
+            wood_rect = wood.get_rect(center=(1217, y_pos))
+            screen.blit(wood, wood_rect)
+
+        if selected_resource == "sheep":
+            # draw sheep number
+            sheep = NUMBER_FONT.render("{}".format(self.resources['pasture']), True, BLACK)
+            sheep_rect = sheep.get_rect(center=(1217, y_pos))
+            screen.blit(sheep, sheep_rect)
+
+        if selected_resource == "wheat":
+            # draw wheat number
+            wheat = NUMBER_FONT.render("{}".format(self.resources['fields']), True, BLACK)
+            wheat_rect = wheat.get_rect(center=(1217, y_pos))
+            screen.blit(wheat, wheat_rect)
+
+        if selected_resource == "ore":
+            # draw ore number
+            ore = NUMBER_FONT.render("{}".format(self.resources['mountains']), True, BLACK)
+            ore_rect = ore.get_rect(center=(1217, y_pos))
+            screen.blit(ore, ore_rect)
+        if selected_resource == "brick":
+            # draw brick number
+            brick = NUMBER_FONT.render("{}".format(self.resources['hills']), True, BLACK)
+            brick_rect = brick.get_rect(center=(1217, y_pos))
+            screen.blit(brick, brick_rect)
 
     def draw_player_name(self, screen, y_pos):
         player_name = PLAYER_NAME_FONT.render("{}".format(self.name), True, self.color)

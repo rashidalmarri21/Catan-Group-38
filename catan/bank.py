@@ -24,6 +24,8 @@ class Bank:
     def add_bank_resources(self, resource_type):
         self.bank_resources[resource_type] += 1
 
+    def add_bank_resources_with_amount(self, resource_type, amount):
+        self.bank_resources[resource_type] += amount
     def add_bank_resources_from_placement(self, placement_type):
         if placement_type == "road":
             self.bank_resources['forest'] += 1
@@ -34,8 +36,8 @@ class Bank:
             self.bank_resources['pasture'] += 1
             self.bank_resources['hills'] += 1
         elif placement_type == "city":
-            self.bank_resources['fields'] += 3
-            self.bank_resources['mountains'] += 2
+            self.bank_resources['fields'] += 2
+            self.bank_resources['mountains'] += 3
 
     def remove_resources(self, resource_type):
         if resource_type == 'desert':

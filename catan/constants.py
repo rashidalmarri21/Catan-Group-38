@@ -132,6 +132,8 @@ ORE_IMAGE = pygame.image.load("assets/UI/bank buttons/ore.png")
 BRICK_IMAGE = pygame.image.load("assets/UI/bank buttons/bricks.png")
 DEV_IMAGE = pygame.image.load("assets/UI/bank buttons/dev.png")
 QUESTION_MARK_DICE = pygame.image.load("assets/UI/dice/dice_roll.png")
+MARITIME_TRADE = pygame.image.load("assets/UI/bank buttons/maritime trade.png")
+BUY_DEV_TRADE = pygame.image.load("assets/UI/bank buttons/buy dev card.png")
 
 # bank buttons
 SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(161, 169), text_input="", font=NUMBER_FONT,
@@ -146,6 +148,7 @@ BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(491, 169), text_input="", f
                                 base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
 DEV_BUTTON = button.Button(image=DEV_IMAGE, pos=(602, 169), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+
 
 # dev cards images
 KNIGHT_DEV = pygame.image.load("assets/UI/dev cards/knight.png")
@@ -217,7 +220,7 @@ PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 DEV_CARDS_BUTTONS_LIST = [KNIGHT_BUTTON, VICTORY_POINT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, BLANK_CARD_BUTTON, BACK_DEV_TRADE_BUTTON]
 
 # ui elements
-BACKGROUND_UI_IMAGE = pygame.image.load("assets/UI/UI_Background.png")
+BACKGROUND_UI_IMAGE = pygame.image.load("assets/UI/UI_Background_ship.png")
 
 # houses
 EXCLUDED_INTERSECTIONS = []
@@ -471,4 +474,34 @@ HOUSE_TILE_CHECK = {
 
 }
 
+WOOD_FLAG = pygame.image.load("assets/UI/flags/wood flag.png")
+WHEAT_FLAG = pygame.image.load("assets/UI/flags/wheat flag.png")
+SHEEP_FLAG = pygame.image.load("assets/UI/flags/sheep flag.png")
+ORE_FLAG = pygame.image.load("assets/UI/flags/ore flag.png")
+BRICK_FLAG = pygame.image.load("assets/UI/flags/brick flag.png")
+ANY_FLAG = pygame.image.load("assets/UI/flags/any flag.png")
+FLAG_LIST = [WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG, ANY_FLAG, ANY_FLAG, ANY_FLAG]
 
+FLAG_POSITIONS = [
+    (707, 174),
+    (1036, 140),
+    (1246, 265),
+    (1397, 490),
+    (1282, 724),
+    (1054, 870),
+    (711, 822),
+    (571, 584),
+    (561, 349)
+]
+
+FLAG_HOUSE_CHECK = {
+    1: [(751.4359353944899, 260.0), (821.4359353944899, 220.0)],
+    2: [(960.0, 220.0), (1028.56406460551, 260.0)],
+    3: [(1167.8460969082653, 340.0), (1237.1281292110202, 380.0)],
+    4: [(1306.4101615137754, 500.0), (1307.1281292110202, 580.0)],
+    5: [(1237.8460969082653, 700.0), (1167.8460969082653, 740.0)],
+    6: [(1028.56406460551, 820.0), (960.0, 860.0)],
+    7: [(821.4359353944899, 860.0), (751.4359353944899, 820.0)],
+    8: [(682.1539030917347, 700.0), (682.8718707889797, 620.0)],
+    9: [(682.8718707889797, 460.0), (682.8718707889797, 380.0)]
+}
