@@ -73,12 +73,29 @@ class Game:
                 house_image = pygame.image.load("assets/UI/house/P4.png")
             current_player.draw_houses(screen, house_image)
 
+    def draw_city(self, screen):
+        city_image = None
+        for current_player in self.players:
+            if current_player == self.players[0]:
+                city_image = pygame.image.load("assets/UI/city/P1.png")
+            elif current_player == self.players[1]:
+                city_image = pygame.image.load("assets/UI/city/P2.png")
+            elif current_player == self.players[2]:
+                city_image = pygame.image.load("assets/UI/city/P3.png")
+            elif current_player == self.players[3]:
+                city_image = pygame.image.load("assets/UI/city/P4.png")
+            current_player.draw_cities(screen, city_image)
+
     def isnt_to_close_to_other_houses(self, pos):
         for p in self.players:
             for house in p.get_house():
-                distance = math.sqrt((pos[0] - house[0]) ** 2 + (pos[1] - house[1]) ** 2)
-                if distance < 130:
-                    return False
+                for city in p.get_cities():
+                    distance = math.sqrt((pos[0] - house[0]) ** 2 + (pos[1] - house[1]) ** 2)
+                    if distance < 130:
+                        return False
+                    distance = math.sqrt((pos[0] - city[0]) ** 2 + (pos[1] - city[1]) ** 2)
+                    if distance < 130:
+                        return False
         return True
 
     def draw_robber(self, screen):
@@ -219,6 +236,13 @@ class Game:
         elif game_state == 'place house':
             self.draw_trade_dev_buttons(screen)
             message = pygame.image.load("assets/UI/building_costs/house_cost.png")
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+            self.players[self.current_player_index].draw_dice(screen)
+
+        elif game_state == 'place city':
+            self.draw_trade_dev_buttons(screen)
+            message = pygame.image.load("assets/UI/building_costs/city_cost.png")
             message_rect = message.get_rect(center=(960, 100))
             screen.blit(message, message_rect)
             self.players[self.current_player_index].draw_dice(screen)

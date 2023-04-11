@@ -14,7 +14,7 @@ class Player:
         self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
         self.development_cards = ["knight", "victory", "year", "monopoly", "road"]
         self.houses = []
-        self.houses_rect = []
+        self.cities = []
         self.roads = []
         self.robbers = 0
         self.dice_roll = [1, 1]
@@ -58,8 +58,8 @@ class Player:
             self.resources['pasture'] -= 1
             self.resources['hills'] -= 1
         elif placement_type == "city":
-            self.resources['fields'] -= 3
-            self.resources['mountains'] -= 2
+            self.resources['fields'] -= 2
+            self.resources['mountains'] -= 3
 
     def remove_resources_for_discard(self):
         pass  # this will allow the player to pick which resources to discard when a player rolls a 7 and
@@ -89,8 +89,17 @@ class Player:
     def add_house(self, position):
         self.houses.append(position)
 
+    def remove_house(self, position):
+        self.houses.remove(position)
+
     def get_house(self):
         return self.houses
+
+    def add_city(self, position):
+        self.cities.append(position)
+
+    def get_cities(self):
+        return self.cities
 
     def is_valid_house_placement(self, house_pos):
         p_roads = self.get_roads()
@@ -164,6 +173,11 @@ class Player:
         for house in self.houses:
             house_rect = house_image.get_rect(center=house)
             screen.blit(house_image, house_rect)
+
+    def draw_cities(self, screen, city_image):
+        for city in self.cities:
+            city_rect = city_image.get_rect(center=city)
+            screen.blit(city_image, city_rect)
 
     def draw_roads(self, screen):
         for road in self.roads:

@@ -7,7 +7,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     DEV_CARDS_BUTTONS_LIST, KNIGHT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, \
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY,\
-    WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY
+    WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON
 from catan.game import Game
 from catan.player import Player
 
@@ -78,6 +78,7 @@ def play():
         new_game.draw_players_resources(SCREEN)
         new_game.update_state(SCREEN)
         new_game.draw_house(SCREEN)
+        new_game.draw_city(SCREEN)
         new_game.draw_robber(SCREEN)
         new_game.ui_Messages(SCREEN, game_state, current_player)
 
@@ -270,6 +271,9 @@ def play():
                     if PLACE_ROAD_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "wants to place a ROAD")
                         game_state = "place road"
+                    if PLACE_CITY_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "wants to place a CITY")
+                        game_state = "place city"
                     if DEV_CARDS_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "opened Dev Cards")
                         game_state = "dev cards"
@@ -308,6 +312,8 @@ def play():
 
                             # remove the pos from the list
                             house_positions.remove(pos)
+                        else:
+                            print("False")
 
         # implement place road state
         elif game_state == "place road":
@@ -351,6 +357,39 @@ def play():
                             new_game.bank.add_bank_resources_from_placement('road')
                             road_positions.remove(pos)
                             ROAD_POSITIONS.remove(pos)
+
+        # place city state
+        elif game_state == "place city":
+            for butt in PLACE_HOUSE_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if END_TURN_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "ended their turn")
+                        new_game.end_turn()
+                        game_state = 'dice roll'
+                    if BACK_BUTTON.check_for_input(mos_pos):
+                        print(current_player.get_name(), "went back")
+                        game_state = "default"
+
+                    # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
+                    for pos in current_player.get_house():
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and current_player.is_valid_house_placement(pos) \
+                                and current_player.has_enough_resources("city"):
+                            print(current_player.get_name(), "placed a city at", pos)
+                            current_player.add_city(pos)
+                            current_player.remove_house(pos)
+                            current_player.add_victory_point()
+                            current_player.remove_resources_for_placement('city')
+                            new_game.bank.add_bank_resources_from_placement('city')
+
 
         # dev cards game state
         elif game_state == "dev cards":
@@ -401,6 +440,7 @@ def play():
                         game_state = "dev cards"
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("knight") > 0:
                         current_player.remove_development_card("knight")
+                        current_player.add_robber()
                         game_state = "robber"
         # dev victory
         elif game_state == "victory":
@@ -418,6 +458,7 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
                         game_state = "dev cards"
+
         # dev road
         elif game_state == "road":
             if current_player.get_dev_card_total_by_type("road"):
@@ -476,6 +517,7 @@ def play():
                             if road_counter == 2:
                                 road_counter = 0
                                 game_state = "default"
+
         # dev monopoly
         elif game_state == "monopoly":
             if current_player.get_dev_card_total_by_type("monopoly"):
