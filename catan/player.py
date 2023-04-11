@@ -44,6 +44,10 @@ class Player:
             return
         self.resources[resource_type] += 1
 
+    def remove_resource(self, resource_type):
+        if resource_type == 'desert':
+            return
+        self.resources[resource_type] -= 1
     def remove_resources_for_placement(self, placement_type):
         if placement_type == "road":
             self.resources['forest'] -= 1

@@ -6,7 +6,8 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     BACK_DEV_TRADE_BUTTON, \
     DEV_CARDS_BUTTONS_LIST, KNIGHT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, \
     VICTORY_POINT_BUTTON, \
-    USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV
+    USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY,\
+    WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY
 from catan.game import Game
 from catan.player import Player
 
@@ -65,7 +66,9 @@ def play():
     road_positions = ROAD_POSITIONS.copy()
 
     new_game = Game(player_names)
-    game_state = "default"  # "initial house placements P1"
+    game_state = "initial house placements P1"
+    road_counter = 0
+    resource_counter = 0
 
     # Game loop
     while run:
@@ -73,6 +76,9 @@ def play():
         # draw board
         new_game.draw_board(SCREEN)
         new_game.draw_players_resources(SCREEN)
+        new_game.update_state(SCREEN)
+        new_game.draw_house(SCREEN)
+        new_game.draw_robber(SCREEN)
         new_game.ui_Messages(SCREEN, game_state, current_player)
 
         # get mouse position
@@ -434,7 +440,42 @@ def play():
                         game_state = "dev cards"
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("road") > 0:
                         current_player.remove_development_card("road")
-                        # DO CARD EFFECT
+                        game_state = "road effect"
+        # handles placing of 2 roads after road building card is used.
+        elif game_state == "road effect":
+
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Check if the click is within the clickable area for any of the lines
+
+                    for pos in road_positions:
+                        start_point = pos[0]
+                        end_point = pos[1]
+
+                        # Calculate the center of the line
+                        center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
+
+                        # Define the radius of the buffer zone
+                        buffer_radius = 15
+
+                        # Check if the mouse position is within the buffer zone
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
+                                and current_player.is_valid_road_placement(pos):
+                            # Add the road to the player's list of roads
+                            print(current_player.get_name(),
+                                  "placed a road from {} to {}".format(start_point, end_point))
+                            current_player.add_road(pos)
+                            road_positions.remove(pos)
+                            ROAD_POSITIONS.remove(pos)
+                            road_counter += 1
+                            if road_counter == 2:
+                                road_counter = 0
+                                game_state = "default"
         # dev monopoly
         elif game_state == "monopoly":
             if current_player.get_dev_card_total_by_type("monopoly"):
@@ -458,7 +499,51 @@ def play():
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type(
                             "monopoly") > 0:
                         current_player.remove_development_card("monopoly")
-                        # DO CARD EFFECT
+                        game_state = "monopoly effect"
+        # monopoly effect
+        elif game_state == "monopoly effect":
+            for butt in MONOPOLY_EFFECT_BUTTON_LIST:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if WOOD_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        for p in new_game.get_players():
+                            if p is not current_player and p.get_resources()["forest"] > 0:
+                                p.remove_resource("forest")
+                                current_player.add_resource("forest")
+                        game_state = "default"
+                    if SHEEP_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        for p in new_game.get_players():
+                            if p is not current_player and p.get_resources()["pasture"] > 0:
+                                p.remove_resource("pasture")
+                                current_player.add_resource("pasture")
+                        game_state = "default"
+                    if WHEAT_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        for p in new_game.get_players():
+                            if p is not current_player and p.get_resources()["fields"] > 0:
+                                p.remove_resource("fields")
+                                current_player.add_resource("fields")
+                        game_state = "default"
+                    if ORE_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        for p in new_game.get_players():
+                            if p is not current_player and p.get_resources()["mountains"] > 0:
+                                p.remove_resource("mountains")
+                                current_player.add_resource("mountains")
+                        game_state = "default"
+                    if BRICK_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        for p in new_game.get_players():
+                            if p is not current_player and p.get_resources()["hills"] > 0:
+                                p.remove_resource("hills")
+                                current_player.add_resource("hills")
+                        game_state = "default"
+
         # dev year
         elif game_state == "year":
             if current_player.get_dev_card_total_by_type("year"):
@@ -481,11 +566,64 @@ def play():
                         game_state = "dev cards"
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("year") > 0:
                         current_player.remove_development_card("year")
-                        # DO CARD EFFECT
+                        game_state = "year effect"
+        # year effect state
+        elif game_state == "year effect":
+            for butt in MONOPOLY_EFFECT_BUTTON_LIST:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                # handles state switching
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if WOOD_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        if new_game.bank.get_bank_resource("forest") > 0:
+                            new_game.bank.remove_resources("forest")
+                            current_player.add_resource("forest")
+                            resource_counter += 1
+                        if resource_counter == 2:
+                            resource_counter = 0
+                            game_state = "default"
+
+                    if SHEEP_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        if new_game.bank.get_bank_resource("pasture") > 0:
+                            new_game.bank.remove_resources("pasture")
+                            current_player.add_resource("pasture")
+                            resource_counter += 1
+                        if resource_counter == 2:
+                            resource_counter = 0
+                            game_state = "default"
+                    if WHEAT_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        if new_game.bank.get_bank_resource("fields") > 0:
+                            new_game.bank.remove_resources("fields")
+                            current_player.add_resource("fields")
+                            resource_counter += 1
+                        if resource_counter == 2:
+                            resource_counter = 0
+                            game_state = "default"
+                    if ORE_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        if new_game.bank.get_bank_resource("mountains") > 0:
+                            new_game.bank.remove_resources("mountains")
+                            current_player.add_resource("mountains")
+                            resource_counter += 1
+                        if resource_counter == 2:
+                            resource_counter = 0
+                            game_state = "default"
+                    if BRICK_BUTTON_MONOPOLY.check_for_input(mos_pos):
+                        if new_game.bank.get_bank_resource("hills") > 0:
+                            new_game.bank.remove_resources("hills")
+                            current_player.add_resource("hills")
+                            resource_counter += 1
+                        if resource_counter == 2:
+                            resource_counter = 0
+                            game_state = "default"
 
         # updates the board state
-        new_game.update_state(SCREEN)
-        new_game.draw_house(SCREEN)
+
         new_game.draw_player_bank_ratios(SCREEN, current_player)
 
         # Update the screen
@@ -500,4 +638,4 @@ def options():
 
 
 # run game
-play()
+main_menu()

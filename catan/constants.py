@@ -157,6 +157,7 @@ BLACK_CARD_DEV = pygame.image.load("assets/UI/dev cards/blank card.png")
 USE_DEV = pygame.image.load("assets/UI/dev cards/use button.png")
 GREY_USE_DEV = pygame.image.load("assets/UI/dev cards/grey use button.png")
 
+
 # dev cards buttons
 KNIGHT_BUTTON = button.Button(image=KNIGHT_DEV, pos=(81, 692), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
@@ -173,6 +174,24 @@ BLANK_CARD_BUTTON = button.Button(image=BLACK_CARD_DEV, pos=(451, 842), text_inp
 USE_BUTTON = button.Button(image=USE_DEV, pos=(503, 1007), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
 GREY_USE_RECT = GREY_USE_DEV.get_rect(center=(503, 1007))
+
+# monopoly effect buttons and image
+MONOPOLY_EFFECT_IMAGE = pygame.image.load("assets/UI/dev cards/monopoly effect.png")
+MONOPOLY_EFFECT_RECT = MONOPOLY_EFFECT_IMAGE.get_rect(center=(960, 540))
+YEAR_EFFECT_IMAGE = pygame.image.load("assets/UI/dev cards/year effect.png")
+YEAR_EFFECT_RECT = YEAR_EFFECT_IMAGE.get_rect(center=(960, 540))
+
+SHEEP_BUTTON_MONOPOLY = button.Button(image=SHEEP_IMAGE, pos=(851, 570), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+WHEAT_BUTTON_MONOPOLY = button.Button(image=WHEAT_IMAGE, pos=(960, 570), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+WOOD_BUTTON_MONOPOLY = button.Button(image=WOOD_IMAGE, pos=(742, 570), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+ORE_BUTTON_MONOPOLY = button.Button(image=ORE_IMAGE, pos=(1069, 570), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+BRICK_BUTTON_MONOPOLY = button.Button(image=BRICK_IMAGE, pos=(1178, 570), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK, hovering_color=(160, 32, 220), border=True,border_width=5, border_color=(127, 127, 127))
+MONOPOLY_EFFECT_BUTTON_LIST = [SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY]
 
 # dev card info images
 KNIGHT_INFO_DEV = pygame.image.load("assets/UI/dev cards/knight info.png")

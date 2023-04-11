@@ -12,7 +12,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     DEV_CARDS_VICTORY_UI_RECT, \
     VICTORY_INFO_DEV, VICTORY_INFO_RECT, ROAD_BUILDING_INFO_DEV, ROAD_BUILDING_INFO_DEV_RECT, MONOPOLY_INFO_DEV, \
     MONOPOLY_INFO_DEV_RECT, \
-    YEAR_INFO_DEV, YEAR_INFO_DEV_RECT, ROBBER
+    YEAR_INFO_DEV, YEAR_INFO_DEV_RECT, ROBBER, MONOPOLY_EFFECT_IMAGE, MONOPOLY_EFFECT_RECT, YEAR_EFFECT_IMAGE, YEAR_EFFECT_RECT
 
 
 class Game:
@@ -38,7 +38,7 @@ class Game:
         self.bank.draw_bank_resources(screen)
         for current_player in self.players:
             current_player.draw_roads(screen)
-        self.draw_robber(screen)
+
         self.check_game_over()  # check if the game is over
 
     def update_robber_pos_list(self):
@@ -326,6 +326,15 @@ class Game:
             pygame.draw.rect(screen, BLACK, player_trading_rect)
             screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
 
+        elif game_state == "road effect":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, place 2 roads for free!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
         elif game_state == "monopoly":
             self.players[self.current_player_index].draw_dice(screen)
             message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
@@ -344,6 +353,17 @@ class Game:
             pygame.draw.rect(screen, BLACK, player_trading_rect)
             screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
 
+        elif game_state == "monopoly effect":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, pick a resource!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(MONOPOLY_EFFECT_IMAGE, MONOPOLY_EFFECT_RECT)
+
         elif game_state == "year":
             self.players[self.current_player_index].draw_dice(screen)
             message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
@@ -361,6 +381,17 @@ class Game:
             player_trading_rect.inflate_ip(20, 20)
             pygame.draw.rect(screen, BLACK, player_trading_rect)
             screen.blit(PLAYER_TRADING_IMAGE, PLAYER_TRADING_BUTTON)
+
+        elif game_state == "year effect":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, pick a resource!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 100))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(YEAR_EFFECT_IMAGE, YEAR_EFFECT_RECT)
 
         elif game_state == "robber":
             self.players[self.current_player_index].draw_dice(screen)
@@ -383,16 +414,7 @@ class Game:
         pygame.draw.rect(screen, BLACK, dev_cards_rect)
         screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
 
-    def knight(self):
-        pass
-
-    def victory(self):
-        pass
-
     def monopoly(self):
-        pass
-
-    def road_building(self):
         pass
 
     def year_of_plenty(self):
