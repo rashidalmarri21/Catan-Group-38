@@ -373,6 +373,7 @@ def play():
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
                             current_player.add_road(pos)
+                            new_game.update_longest_road_player()
                             current_player.remove_resources_for_placement('road')
                             new_game.bank.add_bank_resources_from_placement('road')
                             road_positions.remove(pos)
@@ -458,7 +459,8 @@ def play():
                         game_state = "dev cards"
                     if USE_BUTTON.check_for_input(mos_pos) and current_player.get_dev_card_total_by_type("knight") > 0:
                         current_player.remove_development_card("knight")
-                        current_player.add_robber()
+                        current_player.add_knight()
+                        new_game.update_largest_army_player()
                         game_state = "robber"
         # dev victory
         elif game_state == "victory":
@@ -527,6 +529,7 @@ def play():
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
                             current_player.add_road(pos)
+                            new_game.update_longest_road_player()
                             road_positions.remove(pos)
                             ROAD_POSITIONS.remove(pos)
                             road_counter += 1

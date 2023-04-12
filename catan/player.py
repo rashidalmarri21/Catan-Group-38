@@ -16,7 +16,7 @@ class Player:
         self.houses = []
         self.cities = []
         self.roads = []
-        self.robbers = 0
+        self.knights_played = 0
         self.dice_roll = [1, 1]
         self.trade_ratios = {'forest': (4, 1), 'hills': (4, 1), 'pasture': (4, 1), 'fields': (4, 1), 'mountains': (4, 1)}
 
@@ -25,6 +25,9 @@ class Player:
 
     def get_color(self):
         return self.color
+
+    def add_knight(self):
+        self.knights_played += 1
 
     def get_trade_ratios(self):
         return self.trade_ratios
@@ -65,9 +68,6 @@ class Player:
     def has_won(self):
         if self.victory_points >= VIC_POINT_THRESHOLD:
             return True
-
-    def add_robber(self):
-        self.robbers += 1
 
     def add_resource(self, resource_type):
         if resource_type == 'desert':
@@ -260,7 +260,7 @@ class Player:
         screen.blit(dev_card, dev_card_rect)
 
         # draw knight number
-        knight = BANK_NUMBER_FONT.render("{}".format(self.robbers), True, BLACK)
+        knight = BANK_NUMBER_FONT.render("{}".format(self.knights_played), True, BLACK)
         knight_rect = knight.get_rect(center=(1755, y_pos))
         screen.blit(knight, knight_rect)
 

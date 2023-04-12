@@ -14,7 +14,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     MONOPOLY_INFO_DEV_RECT, \
     YEAR_INFO_DEV, YEAR_INFO_DEV_RECT, ROBBER, MONOPOLY_EFFECT_IMAGE, MONOPOLY_EFFECT_RECT, YEAR_EFFECT_IMAGE, \
     YEAR_EFFECT_RECT, \
-    FLAG_POSITIONS, FLAG_LIST, FLAG_HOUSE_CHECK, WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG,\
+    FLAG_POSITIONS, FLAG_LIST, FLAG_HOUSE_CHECK, WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG, \
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV
 
@@ -29,6 +29,9 @@ class Game:
         self.bank = bank.Bank()
         # calculate robbers starting position
         self.robber_pos = ()
+        self.longest_road_player = None
+        self.largest_army_player = None
+
         self.current_board = self.board.get_grid()
         for pos, tile in self.current_board.items():
             if tile["resource_type"] is not None:
@@ -47,6 +50,36 @@ class Game:
 
         self.check_game_over()  # check if the game is over
 
+    def update_largest_army_player(self):
+        for p in self.players:
+            if p.knights_played >= 3:
+                if self.largest_army_player is not None:
+                    if p.knights_played > self.largest_army_player.knights_played:
+                        self.largest_army_player.remove_victory_point()
+                        self.largest_army_player.remove_victory_point()
+                        p.add_victory_point()
+                        p.add_victory_point()
+                        self.largest_army_player = p
+                else:
+                    p.add_victory_point()
+                    p.add_victory_point()
+                    self.largest_army_player = p
+
+    def update_longest_road_player(self):
+        for p in self.players:
+            if len(p.roads) >= 3:
+                if self.longest_road_player is not None:
+                    if len(p.roads) > len(self.longest_road_player.roads):
+                        self.longest_road_player.remove_victory_point()
+                        self.longest_road_player.remove_victory_point()
+                        p.add_victory_point()
+                        p.add_victory_point()
+                        self.longest_road_player = p
+                else:
+                    p.add_victory_point()
+                    p.add_victory_point()
+                    self.longest_road_player = p
+
     def update_robber_pos_list(self):
         for pos, tile in self.current_board.items():
             if tile["resource_type"] is not None:
@@ -61,8 +94,10 @@ class Game:
             if value == (self.robber_pos[0] - 45, self.robber_pos[1]):
                 self.possible_robber_pos.pop(key)
                 break
+
     def robber_effect(self):
         pass
+
     def get_robber_pos(self):
         return self.robber_pos
 
@@ -539,7 +574,6 @@ class Game:
 
             current_player.draw_dev_card_num_in_bank_trade(screen)
 
-
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
@@ -570,7 +604,6 @@ class Game:
                             p.update_trade_ratios("pasture", (2, 1))
                         elif FLAG_LIST[index - 1] == ANY_FLAG:
                             p.update_all_trade_ratios((3, 1))
-
 
     def draw_flags(self, screen):
         flag_list = FLAG_LIST.copy()
