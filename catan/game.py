@@ -15,7 +15,8 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     YEAR_INFO_DEV, YEAR_INFO_DEV_RECT, ROBBER, MONOPOLY_EFFECT_IMAGE, MONOPOLY_EFFECT_RECT, YEAR_EFFECT_IMAGE, \
     YEAR_EFFECT_RECT, \
     FLAG_POSITIONS, FLAG_LIST, FLAG_HOUSE_CHECK, WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG,\
-    SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE
+    SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
+    ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV
 
 
 class Game:
@@ -509,6 +510,35 @@ class Game:
             current_player.draw_trade_ratio_maritime(screen)
             brick_rect = BRICK_IMAGE.get_rect(center=(1217, 383))
             screen.blit(BRICK_IMAGE, brick_rect)
+
+        elif game_state == "bank dev":
+            self.players[self.current_player_index].draw_dice(screen)
+            dev_cost = pygame.image.load("assets/UI/building_costs/dev_cost.png")
+            dev_cost_rect = dev_cost.get_rect(center=(960, 50))
+            screen.blit(dev_cost, dev_cost_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            buy_dev_rect = BUY_DEV_TRADE.get_rect(center=(960, 540))
+            screen.blit(BUY_DEV_TRADE, buy_dev_rect)
+
+            knight_dev = KNIGHT_BUY_DEV.get_rect(center=(742, 520))
+            screen.blit(KNIGHT_BUY_DEV, knight_dev)
+
+            victory_dev = VICTORY_BUY_DEV.get_rect(center=(851, 520))
+            screen.blit(VICTORY_BUY_DEV, victory_dev)
+
+            road_building_dev = ROAD_BUILDING_BUY_DEV.get_rect(center=(960, 520))
+            screen.blit(ROAD_BUILDING_BUY_DEV, road_building_dev)
+
+            monopoly_dev = MONOPOLY_BUY_DEV.get_rect(center=(1069, 520))
+            screen.blit(MONOPOLY_BUY_DEV, monopoly_dev)
+
+            year_dev = YEAR_BUY_DEV.get_rect(center=(1178, 520))
+            screen.blit(YEAR_BUY_DEV, year_dev)
+
+            current_player.draw_dev_card_num_in_bank_trade(screen)
+
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border

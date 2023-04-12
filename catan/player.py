@@ -11,8 +11,8 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 3, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
-        self.development_cards = ["knight", "victory", "year", "monopoly", "road"]
+        self.resources = {'forest': 100, 'hills': 100, 'pasture': 100, 'fields': 100, 'mountains': 100}
+        self.development_cards = []
         self.houses = []
         self.cities = []
         self.roads = []
@@ -93,6 +93,10 @@ class Player:
         elif placement_type == "city":
             self.resources['fields'] -= 2
             self.resources['mountains'] -= 3
+        elif placement_type == "dev card":
+            self.resources['fields'] -= 1
+            self.resources['mountains'] -= 1
+            self.resources['pasture'] -= 1
 
     def remove_resources_for_discard(self):
         pass  # this will allow the player to pick which resources to discard when a player rolls a 7 and
@@ -103,6 +107,9 @@ class Player:
 
     def remove_development_card(self, card_type):
         self.development_cards.remove(card_type)
+
+    def add_development_card(self, card_type):
+        self.development_cards.append(card_type)
 
     def get_development_cards(self):
         return self.development_cards
@@ -154,6 +161,11 @@ class Player:
                 return False
         elif placement_type == "city":
             if self.resources['fields'] >= 3 and self.resources['mountains'] >= 2:
+                return True
+            else:
+                return False
+        elif placement_type == "dev card":
+            if self.resources['fields'] >= 1 and self.resources['mountains'] >= 1 and self.resources["pasture"] >= 1:
                 return True
             else:
                 return False
@@ -322,3 +334,25 @@ class Player:
         blank = NUMBER_FONT.render("{}x".format(len(self.development_cards)), True, BLACK)
         blank_rect = blank.get_rect(center=(540, 857))
         screen.blit(blank, blank_rect)
+
+    def draw_dev_card_num_in_bank_trade(self, screen):
+        knight = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('knight')), True, BLACK)
+        knight_rect = knight.get_rect(center=(742, 600))
+        screen.blit(knight, knight_rect)
+
+        victory = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('victory')), True, BLACK)
+        victory_rect = victory.get_rect(center=(851, 600))
+        screen.blit(victory, victory_rect)
+
+        road = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('road')), True, BLACK)
+        road_rect = road.get_rect(center=(960, 600))
+        screen.blit(road, road_rect)
+
+        mono = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('monopoly')), True, BLACK)
+        mono_rect = mono.get_rect(center=(1069, 600))
+        screen.blit(mono, mono_rect)
+
+        year = NUMBER_FONT.render("{}x".format(self.get_dev_card_total_by_type('year')), True, BLACK)
+        year_rect = year.get_rect(center=(1178, 600))
+        screen.blit(year, year_rect)
+

@@ -17,6 +17,10 @@ class Bank:
     def get_dev_cards(self):
         return self.dev_cards
 
+    def remove_dev_card(self):
+        card = self.dev_cards.pop(0)
+        return card
+
     def shuffled_dev_cards(self, card_list):
         random.shuffle(card_list)
         return card_list
@@ -26,6 +30,7 @@ class Bank:
 
     def add_bank_resources_with_amount(self, resource_type, amount):
         self.bank_resources[resource_type] += amount
+
     def add_bank_resources_from_placement(self, placement_type):
         if placement_type == "road":
             self.bank_resources['forest'] += 1

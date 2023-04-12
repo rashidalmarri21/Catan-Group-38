@@ -8,7 +8,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
-    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON
+    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV
 from catan.game import Game
 from catan.player import Player
 
@@ -502,7 +502,6 @@ def play():
         # handles placing of 2 roads after road building card is used.
         elif game_state == "road effect":
 
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -697,35 +696,46 @@ def play():
                         game_state = "default"
 
                     if WOOD_BUTTON_MONOPOLY.check_for_input(mos_pos):
-                        if current_player.get_resources()["forest"] >= current_player.get_trade_ratios()["forest"][0]\
+                        if current_player.get_resources()["forest"] >= current_player.get_trade_ratios()["forest"][0] \
                                 and new_game.bank.get_bank_resource("pasture") >= 1:
                             current_player.add_resource("pasture")
-                            current_player.remove_resource_with_amount("forest", current_player.get_trade_ratios()["forest"][0])
-                            new_game.bank.add_bank_resources_with_amount("forest", current_player.get_trade_ratios()["forest"][0])
+                            current_player.remove_resource_with_amount("forest",
+                                                                       current_player.get_trade_ratios()["forest"][0])
+                            new_game.bank.add_bank_resources_with_amount("forest",
+                                                                         current_player.get_trade_ratios()["forest"][0])
                             new_game.bank.remove_resources("pasture")
 
                     if WHEAT_BUTTON_MONOPOLY.check_for_input(mos_pos):
-                        if current_player.get_resources()["fields"] >= current_player.get_trade_ratios()["fields"][0]\
+                        if current_player.get_resources()["fields"] >= current_player.get_trade_ratios()["fields"][0] \
                                 and new_game.bank.get_bank_resource("pasture") >= 1:
                             current_player.add_resource("pasture")
-                            current_player.remove_resource_with_amount("fields", current_player.get_trade_ratios()["fields"][0])
-                            new_game.bank.add_bank_resources_with_amount("fields", current_player.get_trade_ratios()["fields"][0])
+                            current_player.remove_resource_with_amount("fields",
+                                                                       current_player.get_trade_ratios()["fields"][0])
+                            new_game.bank.add_bank_resources_with_amount("fields",
+                                                                         current_player.get_trade_ratios()["fields"][0])
                             new_game.bank.remove_resources("pasture")
 
                     if ORE_BUTTON_MONOPOLY.check_for_input(mos_pos):
-                        if current_player.get_resources()["mountains"] >= current_player.get_trade_ratios()["mountains"][0]\
+                        if current_player.get_resources()["mountains"] >= \
+                                current_player.get_trade_ratios()["mountains"][0] \
                                 and new_game.bank.get_bank_resource("pasture") >= 1:
                             current_player.add_resource("pasture")
-                            current_player.remove_resource_with_amount("mountains", current_player.get_trade_ratios()["mountains"][0])
-                            new_game.bank.add_bank_resources_with_amount("mountains", current_player.get_trade_ratios()["mountains"][0])
+                            current_player.remove_resource_with_amount("mountains",
+                                                                       current_player.get_trade_ratios()["mountains"][
+                                                                           0])
+                            new_game.bank.add_bank_resources_with_amount("mountains",
+                                                                         current_player.get_trade_ratios()["mountains"][
+                                                                             0])
                             new_game.bank.remove_resources("pasture")
 
                     if BRICK_BUTTON_MONOPOLY.check_for_input(mos_pos):
-                        if current_player.get_resources()["hills"] >= current_player.get_trade_ratios()["hills"][0]\
+                        if current_player.get_resources()["hills"] >= current_player.get_trade_ratios()["hills"][0] \
                                 and new_game.bank.get_bank_resource("pasture") >= 1:
                             current_player.add_resource("pasture")
-                            current_player.remove_resource_with_amount("hills", current_player.get_trade_ratios()["hills"][0])
-                            new_game.bank.add_bank_resources_with_amount("hills", current_player.get_trade_ratios()["hills"][0])
+                            current_player.remove_resource_with_amount("hills",
+                                                                       current_player.get_trade_ratios()["hills"][0])
+                            new_game.bank.add_bank_resources_with_amount("hills",
+                                                                         current_player.get_trade_ratios()["hills"][0])
                             new_game.bank.remove_resources("pasture")
         elif game_state == "bank wood":
             for butt in MONOPOLY_EFFECT_BUTTON_LIST:
@@ -750,7 +760,8 @@ def play():
                             current_player.remove_resource_with_amount("pasture",
                                                                        current_player.get_trade_ratios()["pasture"][0])
                             new_game.bank.add_bank_resources_with_amount("pasture",
-                                                                         current_player.get_trade_ratios()["pasture"][0])
+                                                                         current_player.get_trade_ratios()["pasture"][
+                                                                             0])
                             new_game.bank.remove_resources("forest")
 
                     if WHEAT_BUTTON_MONOPOLY.check_for_input(mos_pos):
@@ -808,7 +819,8 @@ def play():
                             current_player.remove_resource_with_amount("pasture",
                                                                        current_player.get_trade_ratios()["pasture"][0])
                             new_game.bank.add_bank_resources_with_amount("pasture",
-                                                                         current_player.get_trade_ratios()["pasture"][0])
+                                                                         current_player.get_trade_ratios()["pasture"][
+                                                                             0])
                             new_game.bank.remove_resources("fields")
 
                     if WOOD_BUTTON_MONOPOLY.check_for_input(mos_pos):
@@ -953,16 +965,38 @@ def play():
                             new_game.bank.remove_resources("hills")
 
                     if ORE_BUTTON_MONOPOLY.check_for_input(mos_pos):
-                        if current_player.get_resources()["mountains"] >= current_player.get_trade_ratios()["mountains"][0] \
+                        if current_player.get_resources()["mountains"] >= \
+                                current_player.get_trade_ratios()["mountains"][0] \
                                 and new_game.bank.get_bank_resource("hills") >= 1:
                             current_player.add_resource("hills")
                             current_player.remove_resource_with_amount("mountains",
-                                                                       current_player.get_trade_ratios()["mountains"][0])
+                                                                       current_player.get_trade_ratios()["mountains"][
+                                                                           0])
                             new_game.bank.add_bank_resources_with_amount("mountains",
-                                                                         current_player.get_trade_ratios()["mountains"][0])
+                                                                         current_player.get_trade_ratios()["mountains"][
+                                                                             0])
                             new_game.bank.remove_resources("hills")
         elif game_state == "bank dev":
-            pass
+            BACK_BUTTON_BUY_DEV.change_color(mos_pos)
+            BACK_BUTTON_BUY_DEV.update(SCREEN)
+            BUY_BUTTON_BUY_DEV.change_color(mos_pos)
+            BUY_BUTTON_BUY_DEV.update(SCREEN)
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON_BUY_DEV.check_for_input(mos_pos):
+                        game_state = "default"
+                    if BUY_BUTTON_BUY_DEV.check_for_input(mos_pos) and current_player.has_enough_resources("dev card")\
+                            and len(new_game.bank.dev_cards) > 0:
+                        card = new_game.bank.remove_dev_card()
+                        current_player.remove_resources_for_placement("dev card")
+                        current_player.add_development_card(card)
+                        if card == "victory":
+                            current_player.add_victory_point()
+
 
 
         # updates the board state
