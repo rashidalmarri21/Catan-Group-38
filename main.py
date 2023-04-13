@@ -302,6 +302,13 @@ def play():
 
         # default game state
         elif game_state == "default":
+            if "AI" in current_player.get_name():
+                if current_player.make_decision("default"):
+                    game_state = "place road"
+                else:
+                    new_game.end_turn()
+                    game_state = "dice roll"
+
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
                 # change color if hovered
@@ -345,6 +352,12 @@ def play():
 
         # implement place house state
         elif game_state == "place house":
+            if "AI" in current_player.get_name():
+                current_player.make_decision("place house")
+                new_game.bank.add_bank_resources_from_placement('house')
+                new_game.end_turn()
+                game_state = "dice roll"
+
             for butt in PLACE_HOUSE_BUTTONS:
                 butt.change_color(mos_pos)
                 butt.update(SCREEN)
@@ -382,6 +395,12 @@ def play():
                             print("False")
         # implement place road state
         elif game_state == "place road":
+            if "AI" in current_player.get_name():
+                current_player.make_decision("place road")
+                time.sleep(1)
+                new_game.update_longest_road_player()
+                new_game.bank.add_bank_resources_from_placement('road')
+                game_state = "place house"
             for butt in PLACE_ROAD_BUTTONS:
                 butt.change_color(mos_pos)
                 butt.update(SCREEN)
@@ -398,7 +417,7 @@ def play():
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
                         new_game.end_turn()
-                        game_state = 'dice roll'
+                        game_state = 'place house'
                     # Check if the click is within the clickable area for any of the lines
                     for pos in road_positions:
                         start_point = pos[0]

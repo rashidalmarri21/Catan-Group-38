@@ -21,6 +21,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     ROBBER_EFFECT_RECT, \
     RED, BLUE, ORANGE, PURPLE, WHITE
 
+
 class Game:
     def __init__(self, player_names):
         self.board = board.Board()  # create a new game board
@@ -29,7 +30,8 @@ class Game:
             if "AI" in name:
                 self.players.append(AIAgent(name, COLOR_LIST[player_names.index(name)]))  # create an AI agent
             else:
-                self.players.append(player.Player(name, COLOR_LIST[player_names.index(name)]))  # create a regular player
+                self.players.append(
+                    player.Player(name, COLOR_LIST[player_names.index(name)]))  # create a regular player
         self.current_player_index = 0  # initialize the current player index
         self.game_over = False  # initialize the game over flag
         self.bank = bank.Bank()
@@ -641,4 +643,3 @@ class Game:
             flag_image = flag_list.pop(0)
             flag_rect = flag_image.get_rect(center=pos)
             screen.blit(flag_image, flag_rect)
-

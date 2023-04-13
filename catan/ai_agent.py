@@ -37,8 +37,48 @@ class AIAgent(Player):
             print(self.name,
                   "placed a road from {} to {}".format(chosen_road[0], chosen_road[1]))
 
+        elif game_state == "default":
+            if self.has_enough_resources("road"):
+                return True
+            else:
+                return False
 
+        elif game_state == "place road":
+            if self.has_enough_resources("road"):
+                possible_roads = []
+                for road in ROAD_POSITIONS:
+                    if self.is_valid_road_placement(road):
+                        possible_roads.append(road)
+                if len(possible_roads) != 0:
+                    chosen_road = random.choice(possible_roads)
 
+                    print(self.name,
+                          "placed a road from {} to {}".format(chosen_road[0], chosen_road[1]))
+                    self.add_road(chosen_road)
+                    self.remove_resources_for_placement('road')
+                    ROAD_POSITIONS.remove(chosen_road)
+                    return
+                else:
+                    print("Out of valid roads.")
+                    return
+        elif game_state == "place house":
+            if self.has_enough_resources("house"):
+                valid_positions = []
+                for pos in HOUSE_POSITIONS:
+                    if self.is_valid_house_placement(pos) and self.isnt_too_close_to_other_player_houses(pos):
+                        valid_positions.append(pos)
+                if len(valid_positions) != 0:
+                    chosen_house = random.choice(valid_positions)
+
+                    print(self.get_name(), "placed a house at", chosen_house)
+                    self.add_house(chosen_house)
+                    EVERY_HOUSE_IN_PLAY.append(chosen_house)
+                    self.add_victory_point()
+                    self.remove_resources_for_placement('house')
+                else:
+                    print("Out of valid houses")
+            else:
+                return
 
 
     def isnt_too_close_to_other_player_houses(self, pos):
