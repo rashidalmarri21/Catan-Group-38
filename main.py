@@ -1,5 +1,6 @@
+import random
 import sys
-import pygame
+import pygame, time
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
     END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
     PLACE_ROAD_BUTTONS, PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, \
@@ -8,7 +9,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
-    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV
+    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, EVERY_HOUSE_IN_PLAY
 from catan.game import Game
 from catan.player import Player
 
@@ -58,7 +59,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "Dillon", "Mike", "Sara"]
+player_names = ["Bob", "AIDillon", "AIMike", "AISara"]
 
 
 def play():
@@ -118,6 +119,7 @@ def play():
                             # remove the pos from the list
                             house_positions.remove(pos)
                             HOUSE_POSITIONS.remove(pos)
+                            EVERY_HOUSE_IN_PLAY.append(pos)
                             chosen_house_p1 = pos
                             game_state = "initial road placements P1"
         # initial ROAD placements for player 1
@@ -159,6 +161,12 @@ def play():
                                 game_state = "initial house placements P2+"
         # initial HOUSE placements for players 2+
         elif game_state == "initial house placements P2+":
+            # AI agent control
+            if "AI" in current_player.get_name():
+                current_player.make_decision("initial house placements P2+")
+                game_state = "initial road placements P2+"
+
+            # user input control
             chosen_house_P2 = None
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -175,10 +183,28 @@ def play():
                             current_player.add_victory_point()
                             # remove the pos from the list
                             house_positions.remove(pos)
+                            HOUSE_POSITIONS.remove(pos)
+                            EVERY_HOUSE_IN_PLAY.append(pos)
                             chosen_house_P2 = pos
                             game_state = "initial road placements P2+"
         # initial ROAD placements for players 2+
         elif game_state == "initial road placements P2+":
+            # AI agent control
+            if "AI" in current_player.get_name():
+                current_player.make_decision("initial road placements P2+")
+                if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
+                    time.sleep(1)
+                    new_game.end_turn()
+                    game_state = "initial house placements P2+"
+                elif len(current_player.get_roads()) == 1:
+                    time.sleep(1)
+                    game_state = "initial house placements P2+"
+                else:
+                    time.sleep(1)
+                    new_game.end_turn()
+                    game_state = "initial house placements P1"
+
+            # player input control
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -220,6 +246,16 @@ def play():
 
         # dice roll game state
         elif game_state == "dice roll":
+            if "AI" in current_player.get_name():
+                current_player.roll_dice()
+                new_game.give_resources(current_player)
+                print(current_player.get_name(), "rolled a", current_player.get_dice_number())
+                if current_player.get_dice_number() == 7:
+                    game_state = "robber"
+                else:
+                    game_state = "default"
+
+
             ROLL_DICE_BUTTON.change_color(mos_pos)
             ROLL_DICE_BUTTON.update(SCREEN)
 
@@ -239,6 +275,14 @@ def play():
                             game_state = "default"
         # robber game state
         elif game_state == "robber":
+            if "AI" in current_player.get_name():
+                robber_pos = random.choice(list(new_game.possible_robber_pos.items()))
+                print(current_player.get_name(), "placed the robber at", robber_pos[1])
+                new_game.update_robber_pos(new_game.current_board[robber_pos[0]]["position"])
+                new_game.update_robber_pos_list()
+                new_game.remove_robber_pos()
+                game_state = "default"
+
             for key, value in new_game.possible_robber_pos.copy().items():
                 pygame.draw.circle(SCREEN, (160, 32, 240), value, 15, 5)
             for event in pygame.event.get():
@@ -254,8 +298,8 @@ def play():
                             new_game.update_robber_pos(new_game.current_board[key]["position"])
                             new_game.update_robber_pos_list()
                             new_game.remove_robber_pos()
-                            # do robber effect
                             game_state = "default"
+
         # default game state
         elif game_state == "default":
             # loop through each button in the games UI
@@ -327,6 +371,7 @@ def play():
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
+                            EVERY_HOUSE_IN_PLAY.append(pos)
                             current_player.add_victory_point()
                             current_player.remove_resources_for_placement('house')
                             new_game.bank.add_bank_resources_from_placement('house')
@@ -1002,7 +1047,8 @@ def play():
 
 
 
-        # updates the board state
+
+
 
         new_game.draw_player_bank_ratios(SCREEN, current_player)
 

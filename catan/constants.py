@@ -17,10 +17,10 @@ BEIGE = (245, 245, 220)
 CYAN = (0, 255, 255)
 BROWN = (165, 42, 42)
 MAROON = (128, 255, 0)
-BLUE = "#6633FF"
-ORANGE = "#FF9901"
-RED = "#FF001A"
-PURPLE = "#BC17E5"
+BLUE = (102, 51, 255)
+ORANGE = (255, 153, 1)
+RED = (255, 0, 26)
+PURPLE = (188, 23, 229)
 COLOR_LIST = [RED, ORANGE, PURPLE, BLUE]
 
 # board constants
@@ -172,6 +172,8 @@ YEAR_OF_PLENTY_DEV = pygame.image.load("assets/UI/dev cards/year of plenty.png")
 BLACK_CARD_DEV = pygame.image.load("assets/UI/dev cards/blank card.png")
 USE_DEV = pygame.image.load("assets/UI/dev cards/use button.png")
 GREY_USE_DEV = pygame.image.load("assets/UI/dev cards/grey use button.png")
+ROBBER_EFFECT = pygame.image.load("assets/UI/dev cards buy/robber effect.png")
+ROBBER_EFFECT_RECT = ROBBER_EFFECT.get_rect(center=(960, 540))
 
 # dev cards BUY DEV CARD static rects.
 KNIGHT_BUY_DEV = pygame.image.load("assets/UI/dev cards buy/knight.png")
@@ -180,6 +182,7 @@ MONOPOLY_BUY_DEV = pygame.image.load("assets/UI/dev cards buy/monopoly.png")
 VICTORY_BUY_DEV = pygame.image.load("assets/UI/dev cards buy/victory.png")
 YEAR_BUY_DEV = pygame.image.load("assets/UI/dev cards buy/year of plenty.png")
 BUY_BUTTON_IMAGE = pygame.image.load("assets/UI/dev cards buy/buy button.png")
+PLAYER_ROBBER_IMAGE = pygame.image.load("assets/UI/dev cards buy/blank button.png")
 BACK_BUTTON_IMAGE = pygame.image.load("assets/UI/dev cards buy/back button.png")
 BUY_BUTTON_BUY_DEV = button.Button(image=BUY_BUTTON_IMAGE, pos=(851, 685), text_input="", font=NUMBER_FONT,
                               base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
@@ -546,3 +549,5 @@ FLAG_HOUSE_CHECK = {
     8: [(682.1539030917347, 700.0), (682.8718707889797, 620.0)],
     9: [(682.8718707889797, 460.0), (682.8718707889797, 380.0)]
 }
+
+EVERY_HOUSE_IN_PLAY = []

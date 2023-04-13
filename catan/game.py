@@ -1,4 +1,5 @@
 import pygame, math, random
+from catan.ai_agent import AIAgent
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
     QUESTION_MARK_DICE, \
@@ -16,14 +17,19 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     YEAR_EFFECT_RECT, \
     FLAG_POSITIONS, FLAG_LIST, FLAG_HOUSE_CHECK, WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG, \
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
-    ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV
-
+    ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
+    ROBBER_EFFECT_RECT, \
+    RED, BLUE, ORANGE, PURPLE, WHITE
 
 class Game:
     def __init__(self, player_names):
         self.board = board.Board()  # create a new game board
-        self.players = [player.Player(name, COLOR_LIST[player_names.index(name)]) for name in
-                        player_names]  # create a new player list
+        self.players = []
+        for name in player_names:
+            if "AI" in name:
+                self.players.append(AIAgent(name, COLOR_LIST[player_names.index(name)]))  # create an AI agent
+            else:
+                self.players.append(player.Player(name, COLOR_LIST[player_names.index(name)]))  # create a regular player
         self.current_player_index = 0  # initialize the current player index
         self.game_over = False  # initialize the game over flag
         self.bank = bank.Bank()
@@ -95,8 +101,21 @@ class Game:
                 self.possible_robber_pos.pop(key)
                 break
 
-    def robber_effect(self):
-        pass
+    def list_of_players_with_house_at_robber(self):
+        tile = None
+        for key, values in self.board.get_grid().items():
+            if values["position"] == self.robber_pos:
+                tile = key
+        player_list = {tile: []}
+        for p in self.players:
+            for house in p.get_house():
+                for key, value in HOUSE_TILE_CHECK.items():
+                    if key == tile:
+                        for v in value:
+                            if house == v:
+                                if self.players[self.current_player_index] != p:
+                                    player_list[tile].append(p)
+        return player_list
 
     def get_robber_pos(self):
         return self.robber_pos
@@ -574,6 +593,17 @@ class Game:
 
             current_player.draw_dev_card_num_in_bank_trade(screen)
 
+        elif game_state == "robber effect":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, pick a resource!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(ROBBER_EFFECT, ROBBER_EFFECT_RECT)
+
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
@@ -611,3 +641,4 @@ class Game:
             flag_image = flag_list.pop(0)
             flag_rect = flag_image.get_rect(center=pos)
             screen.blit(flag_image, flag_rect)
+

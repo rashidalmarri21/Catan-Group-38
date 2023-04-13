@@ -1,6 +1,9 @@
 import pygame
 
-
+BLUE = (102, 51, 255)
+ORANGE = (255, 153, 1)
+RED = (255, 0, 26)
+PURPLE = (188, 23, 229)
 class Button:
     def __init__(self, image, pos, text_input, font, base_color, hovering_color, border=False, border_width=0,
                  border_color=None):
