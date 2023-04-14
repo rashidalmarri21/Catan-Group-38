@@ -7,6 +7,7 @@ class AIAgent(Player):
     def __init__(self, name, color):
         super().__init__(name, color)
         self.chosen_house = None
+        self.last_road_placed = None
 
     def make_decision(self, game_state):
         if game_state == "initial house placements P2+":
@@ -46,16 +47,33 @@ class AIAgent(Player):
         elif game_state == "place road":
             if self.has_enough_resources("road"):
                 possible_roads = []
+                possible_roads_weighted_to_last_road = []
                 for road in ROAD_POSITIONS:
                     if self.is_valid_road_placement(road):
                         possible_roads.append(road)
-                if len(possible_roads) != 0:
+                        if self.last_road_placed is not None:
+                            if road[0] == self.last_road_placed[0] or road[0] == self.last_road_placed[1]\
+                                    or road[1] == self.last_road_placed[0] or road[1] == self.last_road_placed[1]:
+                                possible_roads_weighted_to_last_road.append(road)
+                if len(possible_roads) != 0 and len(possible_roads_weighted_to_last_road) == 0:
                     chosen_road = random.choice(possible_roads)
+                    print(self.name,
+                          "placed a road from {} to {}".format(chosen_road[0], chosen_road[1]))
+                    self.add_road(chosen_road)
+                    self.remove_resources_for_placement('road')
+                    self.last_road_placed = chosen_road
+                    ROAD_POSITIONS.remove(chosen_road)
+                    return
+                elif len(possible_roads) != 0 and len(possible_roads_weighted_to_last_road) != 0:
+                    chosen_road_random = random.choice(possible_roads)
+                    chosen_road_weighted = random.choice(possible_roads_weighted_to_last_road)
+                    chosen_road = random.choice([chosen_road_random, chosen_road_weighted])
 
                     print(self.name,
                           "placed a road from {} to {}".format(chosen_road[0], chosen_road[1]))
                     self.add_road(chosen_road)
                     self.remove_resources_for_placement('road')
+                    self.last_road_placed = chosen_road
                     ROAD_POSITIONS.remove(chosen_road)
                     return
                 else:
