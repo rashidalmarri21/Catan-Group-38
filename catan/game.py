@@ -19,7 +19,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
-    RED, BLUE, ORANGE, PURPLE, WHITE
+    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI
 
 
 class Game:
@@ -39,6 +39,7 @@ class Game:
         self.robber_pos = ()
         self.longest_road_player = None
         self.largest_army_player = None
+        self.trade_player_list = None
 
         self.current_board = self.board.get_grid()
         for pos, tile in self.current_board.items():
@@ -57,6 +58,14 @@ class Game:
             current_player.draw_roads(screen)
 
         self.check_game_over()  # check if the game is over
+
+    def update_trade_player_list(self, current_player):
+        player_list = []
+        for p in self.players:
+            if p != current_player:
+                player_list.append(p)
+        self.trade_player_list = player_list
+
 
     def update_largest_army_player(self):
         for p in self.players:
@@ -606,6 +615,21 @@ class Game:
 
             screen.blit(ROBBER_EFFECT, ROBBER_EFFECT_RECT)
 
+        elif game_state == "pick player for trade":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, pick a player to trade with!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            dev_cards_rect = pygame.Rect(DEV_CARDS_BUTTON)
+            dev_cards_rect.inflate_ip(20, 20)
+            pygame.draw.rect(screen, BLACK, dev_cards_rect)
+            screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
+
+            player_trade_UI_rect = PLAYER_TRADING_UI.get_rect(topright=(1920, 486))
+            screen.blit(PLAYER_TRADING_UI, player_trade_UI_rect)
+
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
@@ -643,3 +667,16 @@ class Game:
             flag_image = flag_list.pop(0)
             flag_rect = flag_image.get_rect(center=pos)
             screen.blit(flag_image, flag_rect)
+
+
+    def make_buttons_for_player_trading(self, current_player):
+        player_buttons = []
+        y_pos = 675
+        for p in self.players:
+            if p != current_player:
+                player_button = button.Button(image=NAME_PLATE, pos=(1628, y_pos),text_input="{}".format(p.get_name()),
+                                              font=NUMBER_FONT, base_color=p.get_color(), hovering_color=p.get_color(),
+                                              border=True, border_width=5, border_color=(127, 127, 127))
+                player_buttons.append(player_button)
+                y_pos += 97
+        return player_buttons

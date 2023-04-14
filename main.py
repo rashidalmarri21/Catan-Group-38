@@ -9,7 +9,8 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
-    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, EVERY_HOUSE_IN_PLAY
+    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, EVERY_HOUSE_IN_PLAY,\
+    PLAYER_TRADING_BUTTON
 from catan.game import Game
 from catan.player import Player
 
@@ -59,7 +60,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "AIDillon", "AIMike", "AISara"]
+player_names = ["Bob", "Dillon", "Mike", "Sara"]
 
 
 def play():
@@ -349,6 +350,8 @@ def play():
                         game_state = "bank brick"
                     if DEV_BUTTON.check_for_input(mos_pos):
                         game_state = "bank dev"
+                    if PLAYER_TRADING_BUTTON.check_for_input(mos_pos):
+                        game_state = "pick player for trade"
 
         # implement place house state
         elif game_state == "place house":
@@ -745,7 +748,7 @@ def play():
                             resource_counter = 0
                             game_state = "default"
 
-        # bank game states
+        # bank trading game states
         elif game_state == "bank sheep":
             for butt in MONOPOLY_EFFECT_BUTTON_LIST:
                 butt.change_color(mos_pos)
@@ -1064,7 +1067,42 @@ def play():
                         if card == "victory":
                             current_player.add_victory_point()
 
+        # player trading game states
+        elif game_state == "pick player for trade":
+            button_list = new_game.make_buttons_for_player_trading(current_player)
+            for butt in button_list:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+            BACK_DEV_TRADE_BUTTON.change_color(mos_pos)
+            BACK_DEV_TRADE_BUTTON.update(SCREEN)
 
+            new_game.update_trade_player_list(current_player)
+            player_list = new_game.trade_player_list
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
+                        game_state = "default"
+                    if button_list[0].check_for_input(mos_pos):
+                        print(current_player.get_name(),"wants to trade with", player_list[0].get_name())
+                        #game_state = "trade player 1"
+                    if len(button_list) > 1 and button_list[1].check_for_input(mos_pos):
+                        print(current_player.get_name(),"wants to trade with", player_list[1].get_name())
+                        #game_state = "trade player 2"
+                    if len(button_list) > 2  and button_list[2].check_for_input(mos_pos):
+                        print(current_player.get_name(),"wants to trade with", player_list[2].get_name())
+                        #game_state = "trade player 3"
+
+        elif game_state == "trade player 1":
+            pass
+        elif game_state == "trade player 2":
+            pass
+        elif game_state == "trade player 3":
+            pass
 
 
 

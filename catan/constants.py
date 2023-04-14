@@ -255,6 +255,10 @@ MONOPOLY_INFO_DEV_RECT = MONOPOLY_INFO_DEV.get_rect(center=(217, 1012))
 YEAR_INFO_DEV_RECT = YEAR_INFO_DEV.get_rect(center=(217, 1012))
 BLANK_INFO_DEV_RECT = BLANK_INFO_DEV.get_rect(center=(217, 1012))
 
+# player trading images
+NAME_PLATE = pygame.image.load("assets/UI/player trading/name plate.png")
+PLAYER_TRADING_UI = pygame.image.load("assets/UI/player trading/player trading UI.png")
+
 # button lists
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON,
               ORE_BUTTON, BRICK_BUTTON,
