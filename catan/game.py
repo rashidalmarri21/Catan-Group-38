@@ -19,7 +19,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
-    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI
+    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT
 
 
 class Game:
@@ -40,6 +40,8 @@ class Game:
         self.longest_road_player = None
         self.largest_army_player = None
         self.trade_player_list = None
+        self.trader_x_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.trader_y_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
 
         self.current_board = self.board.get_grid()
         for pos, tile in self.current_board.items():
@@ -65,6 +67,32 @@ class Game:
             if p != current_player:
                 player_list.append(p)
         self.trade_player_list = player_list
+
+    def add_resource_x_trader(self, resource_type):
+        self.trader_x_pool[resource_type] += 1
+
+    def remove_resource_x_trader(self, resource_type):
+        self.trader_x_pool[resource_type] -= 1
+
+    def add_resource_y_trader(self, resource_type):
+        self.trader_y_pool[resource_type] += 1
+
+    def remove_resource_y_trader(self, resource_type):
+        self.trader_y_pool[resource_type] -= 1
+
+    def swap_trade_pools(self):
+        self.trader_x_pool, self.trader_y_pool = self.trader_y_pool, self.trader_x_pool
+
+    def give_pool_resources_to_players(self, current_player, trade_player):
+        for key, value in self.trader_x_pool.items():
+            current_player.resources[key] += value
+
+        for key, value in self.trader_y_pool.items():
+            trade_player.resources[key] += value
+
+    def reset_trade_pools(self):
+        self.trader_x_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.trader_y_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
 
 
     def update_largest_army_player(self):
@@ -630,6 +658,45 @@ class Game:
             player_trade_UI_rect = PLAYER_TRADING_UI.get_rect(topright=(1920, 486))
             screen.blit(PLAYER_TRADING_UI, player_trade_UI_rect)
 
+        elif game_state == "trade player 1":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, make a trade offer!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT)
+            self.draw_names_on_trade_screen(screen, current_player, 0)
+            self.draw_numbers_on_trade_menu(screen, current_player, 0)
+
+        elif game_state == "trade player 2":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, make a trade offer!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT)
+            self.draw_names_on_trade_screen(screen, current_player, 1)
+            self.draw_numbers_on_trade_menu(screen, current_player, 1)
+
+        elif game_state == "trade player 3":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("{}, make a trade offer!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+
+            screen.blit(PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT)
+            self.draw_names_on_trade_screen(screen, current_player, 2)
+            self.draw_numbers_on_trade_menu(screen, current_player, 2)
+
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
@@ -680,3 +747,112 @@ class Game:
                 player_buttons.append(player_button)
                 y_pos += 97
         return player_buttons
+
+    def draw_names_on_trade_screen(self,screen, current_player, trade_player_index):
+        if trade_player_index == 0:
+            trade_player_name = NUMBER_FONT.render("{}".format(self.trade_player_list[0].get_name()),True,self.trade_player_list[0].get_color())
+        elif trade_player_index == 1:
+            trade_player_name = NUMBER_FONT.render("{}".format(self.trade_player_list[1].get_name()),True,self.trade_player_list[1].get_color())
+        elif trade_player_index == 2:
+            trade_player_name = NUMBER_FONT.render("{}".format(self.trade_player_list[2].get_name()),True,self.trade_player_list[2].get_color())
+
+        current_player_name = NUMBER_FONT.render("{}".format(current_player.get_name()),True,current_player.get_color())
+        trade_player_name_rect = trade_player_name.get_rect(center=(1251, 669))
+        current_player_name_rect = current_player_name.get_rect(center=(675, 671))
+        screen.blit(trade_player_name,trade_player_name_rect)
+        screen.blit(current_player_name, current_player_name_rect)
+
+
+    def draw_numbers_on_trade_menu(self, screen, current_player, trade_player_index):
+        # current players resources
+        for key, value in current_player.resources.items():
+            y_pos = 845
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(472, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(574, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(676, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(778, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(880, y_pos))
+                screen.blit(resource_num, resource_rect)
+
+        for key, value in self.trade_player_list[trade_player_index].resources.items():
+            y_pos = 845
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1055, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1157, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1259, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1361, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1463, y_pos))
+                screen.blit(resource_num, resource_rect)
+
+        for key, value in self.trader_x_pool.items():
+            y_pos = 492
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(472, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(574, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(676, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(778, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(880, y_pos))
+                screen.blit(resource_num, resource_rect)
+
+        for key, value in self.trader_y_pool.items():
+            y_pos = 492
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1055, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1157, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1259, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1361, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1463, y_pos))
+                screen.blit(resource_num, resource_rect)

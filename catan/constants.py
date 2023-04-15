@@ -258,8 +258,89 @@ BLANK_INFO_DEV_RECT = BLANK_INFO_DEV.get_rect(center=(217, 1012))
 # player trading images
 NAME_PLATE = pygame.image.load("assets/UI/player trading/name plate.png")
 PLAYER_TRADING_UI = pygame.image.load("assets/UI/player trading/player trading UI.png")
+PLAYER_TRADE_UI = pygame.image.load("assets/UI/player trading/player trade UI.png")
+PLAYER_TRADE_UI_RECT = PLAYER_TRADE_UI.get_rect(center=(960, 650))
+
+
+
+BACK_TRADE_IMAGE = pygame.image.load("assets/UI/player trading/trade_back_button.png")
+BACK_BUTTON_TRADE = button.Button(image=BACK_TRADE_IMAGE, pos=(962, 947), text_input="Back", font=NUMBER_FONT,
+                             base_color=(127, 127, 127), hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=BLACK)
+TRADE_BUTTON = button.Button(image=BACK_TRADE_IMAGE, pos=(962, 630), text_input="Trade", font=NUMBER_FONT,
+                             base_color=(127, 127, 127), hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=BLACK)
+
+LEFT_PLAYER_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(574, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+LEFT_PLAYER_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(676, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+LEFT_PLAYER_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(472, 770), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+LEFT_PLAYER_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(778, 770), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+LEFT_PLAYER_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(880, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+
+RIGHT_PLAYER_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(1157, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+RIGHT_PLAYER_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(1259, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+RIGHT_PLAYER_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(1055, 770), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+RIGHT_PLAYER_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(1361, 770), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+RIGHT_PLAYER_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(1463, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+
+LEFT_TRADE_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(574, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+LEFT_TRADE_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(676, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+LEFT_TRADE_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(472, 417), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+LEFT_TRADE_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(778, 417), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+LEFT_TRADE_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(880, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+
+RIGHT_TRADE_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(1157, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+RIGHT_TRADE_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(1259, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+RIGHT_TRADE_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(1055, 417), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+RIGHT_TRADE_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(1361, 417), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+RIGHT_TRADE_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(1463, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
 
 # button lists
+TRADE_BUTTONS = [LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON, LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON,
+                 RIGHT_PLAYER_SHEEP_BUTTON, RIGHT_PLAYER_WHEAT_BUTTON, RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON,
+                 LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON,
+                 RIGHT_TRADE_SHEEP_BUTTON, RIGHT_TRADE_WHEAT_BUTTON, RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON,
+                 TRADE_BUTTON, BACK_BUTTON_TRADE]
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON,
               ORE_BUTTON, BRICK_BUTTON,
               DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON]

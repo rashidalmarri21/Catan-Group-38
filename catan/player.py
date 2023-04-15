@@ -1,4 +1,5 @@
-import pygame, random
+import pygame, \
+    random
 import math
 from catan.constants import HOUSE_POSITIONS, CYAN, VIC_POINT_THRESHOLD, BUFFER, ROAD_POSITIONS, NUMBER_FONT, BLACK, BANK_NUMBER_FONT,\
     PLAYER_NAME_FONT

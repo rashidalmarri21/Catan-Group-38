@@ -10,7 +10,11 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
     WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, EVERY_HOUSE_IN_PLAY,\
-    PLAYER_TRADING_BUTTON
+    PLAYER_TRADING_BUTTON, TRADE_BUTTONS, TRADE_BUTTON, BACK_BUTTON_TRADE, LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON,\
+    LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON, RIGHT_PLAYER_SHEEP_BUTTON, RIGHT_PLAYER_WHEAT_BUTTON, \
+    RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON, LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, \
+    LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, RIGHT_TRADE_WHEAT_BUTTON, \
+    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON
 from catan.game import Game
 from catan.player import Player
 
@@ -60,7 +64,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "Dillon", "Mike", "Sara"]
+player_names = ["Bob", "AIDillon", "AIMike", "AISara"]
 
 
 def play():
@@ -1089,20 +1093,329 @@ def play():
                         game_state = "default"
                     if button_list[0].check_for_input(mos_pos):
                         print(current_player.get_name(),"wants to trade with", player_list[0].get_name())
-                        #game_state = "trade player 1"
+                        game_state = "trade player 1"
                     if len(button_list) > 1 and button_list[1].check_for_input(mos_pos):
                         print(current_player.get_name(),"wants to trade with", player_list[1].get_name())
-                        #game_state = "trade player 2"
+                        game_state = "trade player 2"
                     if len(button_list) > 2  and button_list[2].check_for_input(mos_pos):
                         print(current_player.get_name(),"wants to trade with", player_list[2].get_name())
-                        #game_state = "trade player 3"
+                        game_state = "trade player 3"
 
         elif game_state == "trade player 1":
-            pass
+            trade_player = new_game.trade_player_list[0]
+            for butt in TRADE_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON_TRADE.check_for_input(mos_pos):
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "pick player for trade"
+                    elif TRADE_BUTTON.check_for_input(mos_pos):
+                        new_game.swap_trade_pools()
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "default"
+                    # current player
+                    if LEFT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["forest"] > 0:
+                            new_game.add_resource_x_trader("forest")
+                            current_player.remove_resource("forest")
+                    elif LEFT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["pasture"] > 0:
+                            new_game.add_resource_x_trader("pasture")
+                            current_player.remove_resource("pasture")
+                    elif LEFT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["fields"] > 0:
+                            new_game.add_resource_x_trader("fields")
+                            current_player.remove_resource("fields")
+                    elif LEFT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["mountains"] > 0:
+                            new_game.add_resource_x_trader("mountains")
+                            current_player.remove_resource("mountains")
+                    elif LEFT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["hills"] > 0:
+                            new_game.add_resource_x_trader("hills")
+                            current_player.remove_resource("hills")
+                    # trade player
+                    elif RIGHT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["forest"] > 0:
+                            new_game.add_resource_y_trader("forest")
+                            trade_player.remove_resource("forest")
+                    elif RIGHT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["pasture"] > 0:
+                            new_game.add_resource_y_trader("pasture")
+                            trade_player.remove_resource("pasture")
+                    elif RIGHT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["fields"] > 0:
+                            new_game.add_resource_y_trader("fields")
+                            trade_player.remove_resource("fields")
+                    elif RIGHT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["mountains"] > 0:
+                            new_game.add_resource_y_trader("mountains")
+                            trade_player.remove_resource("mountains")
+                    elif RIGHT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["hills"] > 0:
+                            new_game.add_resource_y_trader("hills")
+                            trade_player.remove_resource("hills")
+
+                    elif LEFT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["forest"] > 0:
+                            current_player.add_resource("forest")
+                            new_game.remove_resource_x_trader("forest")
+                    elif LEFT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["pasture"] > 0:
+                            current_player.add_resource("pasture")
+                            new_game.remove_resource_x_trader("pasture")
+                    elif LEFT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["fields"] > 0:
+                            current_player.add_resource("fields")
+                            new_game.remove_resource_x_trader("fields")
+                    elif LEFT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["mountains"] > 0:
+                            current_player.add_resource("mountains")
+                            new_game.remove_resource_x_trader("mountains")
+                    elif LEFT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["hills"] > 0:
+                            current_player.add_resource("hills")
+                            new_game.remove_resource_x_trader("hills")
+
+                    elif RIGHT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["forest"] > 0:
+                            trade_player.add_resource("forest")
+                            new_game.remove_resource_y_trader("forest")
+                    elif RIGHT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["pasture"] > 0:
+                            trade_player.add_resource("pasture")
+                            new_game.remove_resource_y_trader("pasture")
+                    elif RIGHT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["fields"] > 0:
+                            trade_player.add_resource("fields")
+                            new_game.remove_resource_y_trader("fields")
+                    elif RIGHT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["mountains"] > 0:
+                            trade_player.add_resource("mountains")
+                            new_game.remove_resource_y_trader("mountains")
+                    elif RIGHT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["hills"] > 0:
+                            trade_player.add_resource("hills")
+                            new_game.remove_resource_y_trader("hills")
         elif game_state == "trade player 2":
-            pass
+            trade_player = new_game.trade_player_list[1]
+            for butt in TRADE_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON_TRADE.check_for_input(mos_pos):
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "pick player for trade"
+                    elif TRADE_BUTTON.check_for_input(mos_pos):
+                        new_game.swap_trade_pools()
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "default"
+                    # current player
+                    if LEFT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["forest"] > 0:
+                            new_game.add_resource_x_trader("forest")
+                            current_player.remove_resource("forest")
+                    elif LEFT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["pasture"] > 0:
+                            new_game.add_resource_x_trader("pasture")
+                            current_player.remove_resource("pasture")
+                    elif LEFT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["fields"] > 0:
+                            new_game.add_resource_x_trader("fields")
+                            current_player.remove_resource("fields")
+                    elif LEFT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["mountains"] > 0:
+                            new_game.add_resource_x_trader("mountains")
+                            current_player.remove_resource("mountains")
+                    elif LEFT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["hills"] > 0:
+                            new_game.add_resource_x_trader("hills")
+                            current_player.remove_resource("hills")
+                    # trade player
+                    elif RIGHT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["forest"] > 0:
+                            new_game.add_resource_y_trader("forest")
+                            trade_player.remove_resource("forest")
+                    elif RIGHT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["pasture"] > 0:
+                            new_game.add_resource_y_trader("pasture")
+                            trade_player.remove_resource("pasture")
+                    elif RIGHT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["fields"] > 0:
+                            new_game.add_resource_y_trader("fields")
+                            trade_player.remove_resource("fields")
+                    elif RIGHT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["mountains"] > 0:
+                            new_game.add_resource_y_trader("mountains")
+                            trade_player.remove_resource("mountains")
+                    elif RIGHT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["hills"] > 0:
+                            new_game.add_resource_y_trader("hills")
+                            trade_player.remove_resource("hills")
+
+                    elif LEFT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["forest"] > 0:
+                            current_player.add_resource("forest")
+                            new_game.remove_resource_x_trader("forest")
+                    elif LEFT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["pasture"] > 0:
+                            current_player.add_resource("pasture")
+                            new_game.remove_resource_x_trader("pasture")
+                    elif LEFT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["fields"] > 0:
+                            current_player.add_resource("fields")
+                            new_game.remove_resource_x_trader("fields")
+                    elif LEFT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["mountains"] > 0:
+                            current_player.add_resource("mountains")
+                            new_game.remove_resource_x_trader("mountains")
+                    elif LEFT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["hills"] > 0:
+                            current_player.add_resource("hills")
+                            new_game.remove_resource_x_trader("hills")
+
+                    elif RIGHT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["forest"] > 0:
+                            trade_player.add_resource("forest")
+                            new_game.remove_resource_y_trader("forest")
+                    elif RIGHT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["pasture"] > 0:
+                            trade_player.add_resource("pasture")
+                            new_game.remove_resource_y_trader("pasture")
+                    elif RIGHT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["fields"] > 0:
+                            trade_player.add_resource("fields")
+                            new_game.remove_resource_y_trader("fields")
+                    elif RIGHT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["mountains"] > 0:
+                            trade_player.add_resource("mountains")
+                            new_game.remove_resource_y_trader("mountains")
+                    elif RIGHT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["hills"] > 0:
+                            trade_player.add_resource("hills")
+                            new_game.remove_resource_y_trader("hills")
         elif game_state == "trade player 3":
-            pass
+            trade_player = new_game.trade_player_list[2]
+            for butt in TRADE_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON_TRADE.check_for_input(mos_pos):
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "pick player for trade"
+                    elif TRADE_BUTTON.check_for_input(mos_pos):
+                        new_game.swap_trade_pools()
+                        new_game.give_pool_resources_to_players(current_player, trade_player)
+                        new_game.reset_trade_pools()
+                        game_state = "default"
+                    # current player
+                    if LEFT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["forest"] > 0:
+                            new_game.add_resource_x_trader("forest")
+                            current_player.remove_resource("forest")
+                    elif LEFT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["pasture"] > 0:
+                            new_game.add_resource_x_trader("pasture")
+                            current_player.remove_resource("pasture")
+                    elif LEFT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["fields"] > 0:
+                            new_game.add_resource_x_trader("fields")
+                            current_player.remove_resource("fields")
+                    elif LEFT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["mountains"] > 0:
+                            new_game.add_resource_x_trader("mountains")
+                            current_player.remove_resource("mountains")
+                    elif LEFT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if current_player.resources["hills"] > 0:
+                            new_game.add_resource_x_trader("hills")
+                            current_player.remove_resource("hills")
+                    # trade player
+                    elif RIGHT_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["forest"] > 0:
+                            new_game.add_resource_y_trader("forest")
+                            trade_player.remove_resource("forest")
+                    elif RIGHT_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["pasture"] > 0:
+                            new_game.add_resource_y_trader("pasture")
+                            trade_player.remove_resource("pasture")
+                    elif RIGHT_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["fields"] > 0:
+                            new_game.add_resource_y_trader("fields")
+                            trade_player.remove_resource("fields")
+                    elif RIGHT_PLAYER_ORE_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["mountains"] > 0:
+                            new_game.add_resource_y_trader("mountains")
+                            trade_player.remove_resource("mountains")
+                    elif RIGHT_PLAYER_BRICK_BUTTON.check_for_input(mos_pos):
+                        if trade_player.resources["hills"] > 0:
+                            new_game.add_resource_y_trader("hills")
+                            trade_player.remove_resource("hills")
+
+                    elif LEFT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["forest"] > 0:
+                            current_player.add_resource("forest")
+                            new_game.remove_resource_x_trader("forest")
+                    elif LEFT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["pasture"] > 0:
+                            current_player.add_resource("pasture")
+                            new_game.remove_resource_x_trader("pasture")
+                    elif LEFT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["fields"] > 0:
+                            current_player.add_resource("fields")
+                            new_game.remove_resource_x_trader("fields")
+                    elif LEFT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["mountains"] > 0:
+                            current_player.add_resource("mountains")
+                            new_game.remove_resource_x_trader("mountains")
+                    elif LEFT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_x_pool["hills"] > 0:
+                            current_player.add_resource("hills")
+                            new_game.remove_resource_x_trader("hills")
+
+                    elif RIGHT_TRADE_WOOD_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["forest"] > 0:
+                            trade_player.add_resource("forest")
+                            new_game.remove_resource_y_trader("forest")
+                    elif RIGHT_TRADE_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["pasture"] > 0:
+                            trade_player.add_resource("pasture")
+                            new_game.remove_resource_y_trader("pasture")
+                    elif RIGHT_TRADE_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["fields"] > 0:
+                            trade_player.add_resource("fields")
+                            new_game.remove_resource_y_trader("fields")
+                    elif RIGHT_TRADE_ORE_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["mountains"] > 0:
+                            trade_player.add_resource("mountains")
+                            new_game.remove_resource_y_trader("mountains")
+                    elif RIGHT_TRADE_BRICK_BUTTON.check_for_input(mos_pos):
+                        if new_game.trader_y_pool["hills"] > 0:
+                            trade_player.add_resource("hills")
+                            new_game.remove_resource_y_trader("hills")
 
 
 
