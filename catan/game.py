@@ -94,7 +94,28 @@ class Game:
         self.trader_x_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.trader_y_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
 
+    def robber_take_resource_from_rand_player(self, current_player):
+        tile = None
+        resource_to_take = None
+        for key, value in self.board.get_grid().items():
+            if self.robber_pos == value["position"]:
+                tile = key
+                resource_to_take = value["resource_type"][0]
 
+        players_on_tile = []
+        for p in self.players:
+            if p is not current_player:
+                for house in p.houses:
+                    for tiles, houses in HOUSE_TILE_CHECK.items():
+                        if tiles == tile:
+                            for h in houses:
+                                if house == h:
+                                    players_on_tile.append(p)
+
+        chosen_player = random.choice(players_on_tile)
+        if chosen_player.resources[resource_to_take] > 1:
+            chosen_player.remove_resource(resource_to_take)
+            current_player.add_resource(resource_to_take)
     def update_largest_army_player(self):
         for p in self.players:
             if p.knights_played >= 3:

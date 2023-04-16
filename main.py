@@ -64,7 +64,7 @@ def main_menu():
 
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 NUM_PLAYERS = 2
-player_names = ["Bob", "AIDillon", "AIMike", "AISara"]
+player_names = ["Bob", "Dillon", "Mike", "Sara"]
 
 
 def play():
@@ -301,6 +301,7 @@ def play():
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
                             print(current_player.get_name(), "placed the robber at", pos)
                             new_game.update_robber_pos(new_game.current_board[key]["position"])
+                            new_game.robber_take_resource_from_rand_player(current_player)
                             new_game.update_robber_pos_list()
                             new_game.remove_robber_pos()
                             game_state = "default"
