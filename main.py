@@ -1,4 +1,4 @@
-import random
+import random, json
 import sys
 import pygame, time
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
@@ -14,7 +14,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON, RIGHT_PLAYER_SHEEP_BUTTON, RIGHT_PLAYER_WHEAT_BUTTON, \
     RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON, LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, \
     LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, RIGHT_TRADE_WHEAT_BUTTON, \
-    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON
+    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON
 from catan.game import Game
 from catan.player import Player
 
@@ -54,30 +54,39 @@ def main_menu():
                 if MENU_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
                     play()
                 if MENU_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
-                    options()
+                    with open('player_data.txt') as player_file:
+                        player_data = json.load(player_file)
+                        # load player names
+                        player_names = list(player_data.keys())
+                    play(True, player_names)
+
                 if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
         clock.tick(FPS)
 
-
 # THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
-NUM_PLAYERS = 2
-player_names = ["Bob", "Dillon", "Mike", "Sara"]
 
 
-def play():
+def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
+
     run = True
+
     # static road and house position lists.
     house_positions = HOUSE_POSITIONS.copy()
     road_positions = ROAD_POSITIONS.copy()
 
     # create players
-    new_game = Game(player_names)
-
-    # initialise game_state
-    game_state = "initial house placements P1"
+    new_game = Game(players_names)
+    if load_game:
+        new_game.load_player_data()
+        new_game.load_board_data()
+        new_game.load_bank_data()
+        new_game.load_game_data()
+        game_state = "default"
+    else:
+        game_state = "initial house placements P1"
 
     # dev card helpers. Road Building and Year of Plenty
     road_counter = 0
@@ -357,6 +366,8 @@ def play():
                         game_state = "bank dev"
                     if PLAYER_TRADING_BUTTON.check_for_input(mos_pos):
                         game_state = "pick player for trade"
+                    if PAUSE_BUTTON.check_for_input(mos_pos):
+                        game_state = "pause menu"
 
         # implement place house state
         elif game_state == "place house":
@@ -753,6 +764,35 @@ def play():
                             resource_counter = 0
                             game_state = "default"
 
+        elif game_state == "pause menu":
+            for butt in [SAVE_BUTTON, RESUME_BUTTON]:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if RESUME_BUTTON.check_for_input(mos_pos):
+                        game_state = "default"
+                    if SAVE_BUTTON.check_for_input(mos_pos):
+                        players_data = new_game.generate_players_save_data()
+                        board_data = new_game.board.generate_grid_save()
+                        bank_data = new_game.bank.generate_bank_save()
+                        game_data = new_game.generate_game_save()
+                        with open('player_data.txt', 'w') as player_file:
+                            json.dump(players_data, player_file)
+                        with open('board_data.txt', 'w') as board_file:
+                            json.dump(board_data, board_file)
+                        with open('bank_data.txt', 'w') as bank_file:
+                            json.dump(bank_data, bank_file)
+                        with open('game_data.txt', 'w') as game_file:
+                            json.dump(game_data, game_file)
+
+
+
         # bank trading game states
         elif game_state == "bank sheep":
             for butt in MONOPOLY_EFFECT_BUTTON_LIST:
@@ -1101,7 +1141,6 @@ def play():
                     if len(button_list) > 2  and button_list[2].check_for_input(mos_pos):
                         print(current_player.get_name(),"wants to trade with", player_list[2].get_name())
                         game_state = "trade player 3"
-
         elif game_state == "trade player 1":
             trade_player = new_game.trade_player_list[0]
             for butt in TRADE_BUTTONS:
@@ -1435,4 +1474,4 @@ def options():
 
 
 # run game
-play()
+main_menu()

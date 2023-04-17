@@ -1,4 +1,8 @@
+import json
+
 import pygame, math, random
+
+import catan
 from catan.ai_agent import AIAgent
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
@@ -19,7 +23,8 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
-    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT
+    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT,\
+    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, EVERY_HOUSE_IN_PLAY
 
 
 class Game:
@@ -50,7 +55,102 @@ class Game:
                     self.robber_pos = tile["position"]
         self.possible_robber_pos = {}
         self.update_robber_pos_list()
-        random.shuffle(FLAG_LIST)
+        self.flag_list = FLAG_LIST
+        random.shuffle(self.flag_list)
+
+    def generate_game_save(self):
+        flag_list_to_str = []
+        for flag in FLAG_LIST:
+            if flag == WOOD_FLAG:
+                flag_list_to_str.append("WOOD")
+            elif flag == WHEAT_FLAG:
+                flag_list_to_str.append("WHEAT")
+            elif flag == ORE_FLAG:
+                flag_list_to_str.append("ORE")
+            elif flag == BRICK_FLAG:
+                flag_list_to_str.append("BRICK")
+            elif flag == SHEEP_FLAG:
+                flag_list_to_str.append("SHEEP")
+            elif flag == ANY_FLAG:
+                flag_list_to_str.append("ANY")
+        game_save = {
+            "current player index": self.current_player_index,
+            "robber pos": self.robber_pos,
+            "flag list": flag_list_to_str,
+            "house pos": HOUSE_POSITIONS,
+            "road pos": ROAD_POSITIONS,
+            "every house": EVERY_HOUSE_IN_PLAY
+        }
+        return game_save
+
+    def load_player_data(self):
+        player_data = None
+        with open("player_data.txt") as player_file:
+            player_data = json.load(player_file)
+
+        for px, data in player_data.items():
+            for py in self.players:
+                if py.get_name() == px:
+                    py.color = data["color"]
+                    py.victory_points = data["victory points"]
+                    py.houses = data["houses"]
+                    py.cities = data["cities"]
+                    py.roads = data["roads"]
+                    py.resources = data["resources"]
+                    py.development_cards = data["dev cards"]
+                    py.knights_played = data["knights played"]
+                    py.dice_roll = data["dice roll"]
+                    py.trade_ratios = data["trade ratios"]
+
+    def load_board_data(self):
+        board_data = None
+        with open("board_data.txt") as board_file:
+            board_data = json.load(board_file)
+
+        for k, data in board_data.items():
+            for key, value in self.board.grid.items():
+                if str(key) == k:
+                    value["number"] = data["number"]
+
+        self.board.update_resources_from_load(board_data["resource_list"])
+
+    def load_bank_data(self):
+        bank_data = None
+        with open("bank_data.txt") as bank_file:
+            bank_data = json.load(bank_file)
+
+        self.bank.dev_cards = bank_data["dev cards"]
+        for key, value in bank_data.items():
+            for pee, palue in self.bank.bank_resources.items():
+                if key == pee:
+                    self.bank.bank_resources[pee] = value
+
+    def load_game_data(self):
+        game_data = None
+        with open("game_data.txt") as game_file:
+            game_data = json.load(game_file)
+
+        self.current_player_index = game_data["current player index"]
+        self.robber_pos = game_data["robber pos"]
+        temp_flag_list = game_data["flag list"]
+        self.flag_list = []
+        for flag in temp_flag_list:
+            if flag == "WOOD":
+                self.flag_list.append(WOOD_FLAG)
+            elif flag == "WHEAT":
+                self.flag_list.append(WHEAT_FLAG)
+            elif flag == "SHEEP":
+                self.flag_list.append(SHEEP_FLAG)
+            elif flag == "ORE":
+                self.flag_list.append(ORE_FLAG)
+            elif flag == "BRICK":
+                self.flag_list.append(BRICK_FLAG)
+            elif flag == "ANY":
+                self.flag_list.append(ANY_FLAG)
+
+        catan.HOUSE_POSITIONS = game_data["house pos"]
+        catan.ROAD_POSITIONS = game_data["road pos"]
+        catan.EVERY_HOUSE_IN_PLAY = game_data["every house"]
 
     def update_state(self, screen):
         # update the game board
@@ -111,11 +211,14 @@ class Game:
                             for h in houses:
                                 if house == h:
                                     players_on_tile.append(p)
+        if len(players_on_tile) != 0:
+            chosen_player = random.choice(players_on_tile)
+            if chosen_player.resources[resource_to_take] > 1:
+                chosen_player.remove_resource(resource_to_take)
+                current_player.add_resource(resource_to_take)
 
-        chosen_player = random.choice(players_on_tile)
-        if chosen_player.resources[resource_to_take] > 1:
-            chosen_player.remove_resource(resource_to_take)
-            current_player.add_resource(resource_to_take)
+    def discard_if_7(self):
+        pass
     def update_largest_army_player(self):
         for p in self.players:
             if p.knights_played >= 3:
@@ -718,6 +821,16 @@ class Game:
             self.draw_names_on_trade_screen(screen, current_player, 2)
             self.draw_numbers_on_trade_menu(screen, current_player, 2)
 
+        elif game_state == "pause menu":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+            screen.blit(PAUSE_MENU_UI, PAUSE_MENU_RECT)
+
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
@@ -750,7 +863,7 @@ class Game:
                             p.update_all_trade_ratios((3, 1))
 
     def draw_flags(self, screen):
-        flag_list = FLAG_LIST.copy()
+        flag_list = self.flag_list.copy()
         for pos in FLAG_POSITIONS.copy():
             flag_image = flag_list.pop(0)
             flag_rect = flag_image.get_rect(center=pos)
@@ -877,3 +990,20 @@ class Game:
                 resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
                 resource_rect = resource_num.get_rect(center=(1463, y_pos))
                 screen.blit(resource_num, resource_rect)
+
+    def generate_players_save_data(self):
+        players_data = {}
+        for p in self.players:
+            players_data[p.get_name()] = {
+                "color": p.get_color(),
+                "victory points": p.get_victory_points(),
+                "houses": p.get_house(),
+                "cities": p.get_cities(),
+                "roads": p.get_roads(),
+                "resources": p.get_resources(),
+                "dev cards": p.get_development_cards(),
+                "knights played": p.get_knights_played(),
+                "dice roll": p.get_dice_roll(),
+                "trade ratios": p.get_trade_ratios()
+            }
+        return players_data

@@ -23,6 +23,8 @@ RED = (255, 0, 26)
 PURPLE = (188, 23, 229)
 COLOR_LIST = [RED, ORANGE, PURPLE, BLUE]
 
+
+
 # board constants
 HEXAGON_RADIUS = 75
 BUFFER = 5
@@ -79,13 +81,13 @@ MENU_TITLE_TEXT = TITLE_FONT.render("The SETTLERS of CATAN", True, "#b68f40")
 MENU_TITLE_RECT = MENU_TITLE_TEXT.get_rect(center=(960, 150))
 
 # menu buttons
-PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=BLACK,
-                            hovering_color=WHITE)
-OPTIONS_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="OPTIONS", font=FONT, base_color=BLACK,
-                               hovering_color=WHITE)
-QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=BLACK,
-                            hovering_color=WHITE)
-MENU_BUTTON_LIST = [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]
+PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=WHITE,
+                            hovering_color=(160, 32, 220))
+LOAD_GAME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="LOAD GAME", font=FONT, base_color=WHITE,
+                               hovering_color=(160, 32, 220))
+QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=WHITE,
+                            hovering_color=(160, 32, 220))
+MENU_BUTTON_LIST = [PLAY_BUTTON, LOAD_GAME_BUTTON, QUIT_BUTTON]
 
 # game images
 DEV_CARDS_IMAGE = pygame.image.load("assets/UI/dev cards.png")
@@ -104,7 +106,22 @@ DEV_CARDS_YEAR_UI_IMAGE = pygame.image.load("assets/UI/dev cards/year UI static.
 DEV_CARDS_YEAR_UI_RECT = DEV_CARDS_YEAR_UI_IMAGE.get_rect(topleft=(0, 486))
 ROBBER = pygame.image.load("assets/UI/robber/robber.png")
 
+
+# pause menu
+PAUSE_IMAGE = pygame.image.load("assets/UI/pause/pause button.png")
+PAUSE_MENU_UI = pygame.image.load("assets/UI/pause/pause menu.png")
+PAUSE_MENU_RECT = PAUSE_MENU_UI.get_rect(center=(960, 550))
+PAUSE_BUTTON = button.Button(image=PAUSE_IMAGE, pos=(65, 272), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+SAVE_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="SAVE", font=NUMBER_FONT,
+                                base_color=(160, 32, 220),
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+RESUME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="RESUME", font=NUMBER_FONT,
+                                base_color=(160, 32, 220),
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
 # game buttons
+
 END_TURN_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="End Turn", font=NUMBER_FONT,
                                 base_color=(160, 32, 220),
                                 hovering_color=(160, 32, 220), border=True, border_width=10, border_color=BLACK)
@@ -343,7 +360,7 @@ TRADE_BUTTONS = [LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON, LEFT_PLAYER
                  TRADE_BUTTON, BACK_BUTTON_TRADE]
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON,
               ORE_BUTTON, BRICK_BUTTON,
-              DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON]
+              DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON, PAUSE_BUTTON]
 PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 DEV_CARDS_BUTTONS_LIST = [KNIGHT_BUTTON, VICTORY_POINT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON,

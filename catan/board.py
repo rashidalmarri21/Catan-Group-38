@@ -9,9 +9,11 @@ class Board:
     def __init__(self):
         self.grid = {}
         self.resources = RESOURCE_TYPES.copy()
+        self.resource_list = None
         self.generate_hex_positions(GRID_SIZE, HEXAGON_RADIUS)
         self.update_numbers()
         self.update_resources()
+
 
     def draw_house(self, surface, position):
         pygame.draw.circle(surface, CYAN, position, 15)
@@ -30,10 +32,23 @@ class Board:
         if not self.resources:
             return
 
-        random.shuffle(self.resources)  # Shuffle the list of resources
+        resource_list = self.resources.copy()
+        random.shuffle(resource_list)
+        self.resource_list = resource_list.copy()
         for pos, values in self.grid.items():
             if pos not in EXCLUDED_INDICES:
-                resource_type_name = self.resources.pop(0)  # Remove the first resource from the list and assign it
+                resource_type_name = resource_list.pop(0)  # Remove the first resource from the list and assign it
+                resource_type_surface = pygame.image.load(f"assets/tile/{resource_type_name}.png")  # Load image
+                values["resource_type"] = (resource_type_name, resource_type_surface)  # Store (name, image_surface)
+
+    def update_resources_from_load(self, resource_list):
+        if not resource_list:
+            return
+
+        self.resource_list = resource_list.copy()
+        for pos, values in self.grid.items():
+            if pos not in EXCLUDED_INDICES:
+                resource_type_name = resource_list.pop(0)  # Remove the first resource from the list and assign it
                 resource_type_surface = pygame.image.load(f"assets/tile/{resource_type_name}.png")  # Load image
                 values["resource_type"] = (resource_type_name, resource_type_surface)  # Store (name, image_surface)
 
@@ -97,3 +112,14 @@ class Board:
                 number_text = NUMBER_FONT.render(str(values["number"]), True, BLACK)
                 number_rect = number_text.get_rect(center=(values["position"][0], values['position'][1] - 29.5))
                 screen.blit(number_text, number_rect)
+
+
+    def generate_grid_save(self):
+        save_grid = {"resource_list": self.resource_list}
+        for key, value in self.grid.items():
+            save_grid[str(key)] = {
+                "position": value["position"],
+                "resource_type": None,
+                "number": value["number"]
+            }
+        return save_grid

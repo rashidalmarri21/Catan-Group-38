@@ -3,7 +3,7 @@ from catan import BLACK, BANK_NUMBER_FONT, DEV_CARDS
 
 class Bank:
     def __init__(self):
-        self.bank_resources ={'forest': 19, 'hills': 19, 'pasture': 19, 'fields': 19, 'mountains': 19}
+        self.bank_resources = {'forest': 19, 'hills': 19, 'pasture': 19, 'fields': 19, 'mountains': 19}
         self.dev_cards = self.shuffled_dev_cards(DEV_CARDS)
 
     def get_bank_resources(self):
@@ -83,3 +83,8 @@ class Bank:
 
 
 
+    def generate_bank_save(self):
+        save_bank = {"dev cards": self.get_dev_cards()}
+        for key, value in self.bank_resources.items():
+            save_bank[key] = value
+        return save_bank

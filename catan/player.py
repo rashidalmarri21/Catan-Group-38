@@ -30,6 +30,9 @@ class Player:
     def add_knight(self):
         self.knights_played += 1
 
+    def get_knights_played(self):
+        return self.knights_played
+
     def get_trade_ratios(self):
         return self.trade_ratios
 
@@ -206,6 +209,9 @@ class Player:
 
     def get_dice_number(self):
         return sum(self.dice_roll)
+
+    def get_dice_roll(self):
+        return self.dice_roll
 
     def draw_dice(self, screen):
         dice_1 = pygame.image.load("assets/UI/dice/{}.png".format(self.dice_roll[0]))
