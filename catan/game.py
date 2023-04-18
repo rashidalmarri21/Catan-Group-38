@@ -2,7 +2,8 @@ import json
 
 import pygame, math, random
 
-import catan
+import catan.ai_agent
+from catan.ai_agent import every_house_in_play
 from catan.ai_agent import AIAgent
 from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
     END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
@@ -61,11 +62,14 @@ class Game:
         random.shuffle(self.flag_list)
 
     def get_AI_player(self):
+        AI_players = []
         for p in self.players:
             if "AI" in p.get_name():
-                return p
-            else:
-                return False
+                AI_players.append(p)
+        if len(AI_players) == 0:
+            return False
+        else:
+            return AI_players
 
     def generate_game_save(self):
         flag_list_to_str = []
@@ -89,7 +93,7 @@ class Game:
                 "flag list": flag_list_to_str,
                 "house pos": self.house_positions,
                 "road pos": self.road_positions,
-                "every house": self.get_AI_player().every_house_in_play
+                "every house": every_house_in_play
             }
         else:
             game_save = {
@@ -173,7 +177,7 @@ class Game:
         self.house_positions = game_data["house pos"]
         self.road_positions = game_data["road pos"]
         if self.get_AI_player() is not False:
-            self.get_AI_player().every_house_in_play = game_data["every house"]
+            catan.ai_agent.every_house_in_play = game_data["every house"]
 
     def update_state(self, screen):
         # update the game board

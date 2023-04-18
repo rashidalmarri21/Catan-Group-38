@@ -12,7 +12,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.resources = {'forest': 100, 'hills': 100, 'pasture':100, 'fields': 100, 'mountains': 100}
         self.development_cards = []
         self.houses = []
         self.cities = []
@@ -43,6 +43,25 @@ class Player:
         for key, value in self.trade_ratios.items():
             if value == (4, 1):
                 self.trade_ratios[key] = (3, 1)
+
+    def house_allowance(self):
+        if len(self.houses) >= 5:
+            return False
+        else:
+            return True
+
+    def road_allowance(self):
+        if len(self.roads) >= 15:
+            return False
+        else:
+            return True
+
+    def city_allowance(self):
+        if len(self.cities) >= 4:
+            return False
+        else:
+            return True
+
 
     def draw_trade_ratio_maritime(self, screen):
         y_pos = 650

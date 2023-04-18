@@ -9,14 +9,18 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
-    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV,\
-    PLAYER_TRADING_BUTTON, TRADE_BUTTONS, TRADE_BUTTON, BACK_BUTTON_TRADE, LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON,\
-    LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON, RIGHT_PLAYER_SHEEP_BUTTON, RIGHT_PLAYER_WHEAT_BUTTON, \
-    RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON, LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, \
-    LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, RIGHT_TRADE_WHEAT_BUTTON, \
+    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, \
+    PLAYER_TRADING_BUTTON, TRADE_BUTTONS, TRADE_BUTTON, BACK_BUTTON_TRADE, LEFT_PLAYER_SHEEP_BUTTON, \
+    LEFT_PLAYER_WHEAT_BUTTON, \
+    LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON, RIGHT_PLAYER_SHEEP_BUTTON, \
+    RIGHT_PLAYER_WHEAT_BUTTON, \
+    RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON, LEFT_TRADE_SHEEP_BUTTON, \
+    LEFT_TRADE_WHEAT_BUTTON, \
+    LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, \
+    RIGHT_TRADE_WHEAT_BUTTON, \
     RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON
 from catan.game import Game
-from catan.player import Player
+from catan.ai_agent import every_house_in_play
 
 # Set up the screen
 
@@ -66,11 +70,8 @@ def main_menu():
         pygame.display.update()
         clock.tick(FPS)
 
-# THIS WILL GET EXTRACTED FROM THE MAIN MENU FUNCTION BUT FOR TESTING PURPOSES IT IS MANUALLY ENTERED HERE
 
-
-def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
-
+def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST")):
     run = True
 
     # create players
@@ -129,7 +130,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                             # remove the pos from the list
                             new_game.house_positions.remove(pos)
                             if new_game.get_AI_player() is not False:
-                                new_game.get_AI_player().every_house_in_play.append(pos)
+                                every_house_in_play.append(pos)
                             chosen_house_p1 = pos
                             game_state = "initial road placements P1"
         # initial ROAD placements for player 1
@@ -172,7 +173,8 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         elif game_state == "initial house placements P2+":
             # AI agent control
             if "AI" in current_player.get_name():
-                road_pos, house_pos = current_player.make_decision("initial house placements P2+", new_game.road_positions, new_game.house_positions)
+                road_pos, house_pos = current_player.make_decision("initial house placements P2+",
+                                                                   new_game.road_positions, new_game.house_positions)
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 game_state = "initial road placements P2+"
@@ -195,14 +197,15 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                             # remove the pos from the list
                             new_game.house_positions.remove(pos)
                             if new_game.get_AI_player() is not False:
-                                new_game.get_AI_player().every_house_in_play.append(pos)
+                                every_house_in_play.append(pos)
                             chosen_house_P2 = pos
                             game_state = "initial road placements P2+"
         # initial ROAD placements for players 2+
         elif game_state == "initial road placements P2+":
             # AI agent control
             if "AI" in current_player.get_name():
-                road_pos, house_pos = current_player.make_decision("initial road placements P2+", new_game.road_positions, new_game.house_positions)
+                road_pos, house_pos = current_player.make_decision("initial road placements P2+",
+                                                                   new_game.road_positions, new_game.house_positions)
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
@@ -266,7 +269,6 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                     game_state = "robber"
                 else:
                     game_state = "default"
-
 
             ROLL_DICE_BUTTON.change_color(mos_pos)
             ROLL_DICE_BUTTON.update(SCREEN)
@@ -370,7 +372,8 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         # implement place house state
         elif game_state == "place house":
             if "AI" in current_player.get_name():
-                road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions, new_game.house_positions)
+                road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions,
+                                                                   new_game.house_positions)
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 new_game.bank.add_bank_resources_from_placement('house')
@@ -398,13 +401,14 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in new_game.house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and current_player.house_allowance()\
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("house") \
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
                             if new_game.get_AI_player() is not False:
-                                new_game.get_AI_player().every_house_in_play.append(pos)
+                                every_house_in_play.append(pos)
                             current_player.add_victory_point()
                             current_player.remove_resources_for_placement('house')
                             new_game.bank.add_bank_resources_from_placement('house')
@@ -416,7 +420,8 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         # implement place road state
         elif game_state == "place road":
             if "AI" in current_player.get_name():
-                road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions, new_game.house_positions)
+                road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions,
+                                                                   new_game.house_positions)
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 time.sleep(1)
@@ -453,6 +458,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
+                                and current_player.road_allowance()\
                                 and current_player.is_valid_road_placement(pos) \
                                 and current_player.has_enough_resources('road'):
                             # Add the road to the player's list of roads
@@ -486,6 +492,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in current_player.get_house():
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
+                                and current_player.city_allowance()\
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("city"):
                             print(current_player.get_name(), "placed a city at", pos)
@@ -595,6 +602,8 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                     sys.exit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    if not current_player.road_allowance():
+                        game_state = "default"
                     # Check if the click is within the clickable area for any of the lines
 
                     for pos in new_game.road_positions:
@@ -791,8 +800,6 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                             json.dump(bank_data, bank_file)
                         with open('game_data.txt', 'w') as game_file:
                             json.dump(game_data, game_file)
-
-
 
         # bank trading game states
         elif game_state == "bank sheep":
@@ -1105,7 +1112,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_BUTTON_BUY_DEV.check_for_input(mos_pos):
                         game_state = "default"
-                    if BUY_BUTTON_BUY_DEV.check_for_input(mos_pos) and current_player.has_enough_resources("dev card")\
+                    if BUY_BUTTON_BUY_DEV.check_for_input(mos_pos) and current_player.has_enough_resources("dev card") \
                             and len(new_game.bank.dev_cards) > 0:
                         card = new_game.bank.remove_dev_card()
                         current_player.remove_resources_for_placement("dev card")
@@ -1134,13 +1141,13 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                     if BACK_DEV_TRADE_BUTTON.check_for_input(mos_pos):
                         game_state = "default"
                     if button_list[0].check_for_input(mos_pos):
-                        print(current_player.get_name(),"wants to trade with", player_list[0].get_name())
+                        print(current_player.get_name(), "wants to trade with", player_list[0].get_name())
                         game_state = "trade player 1"
                     if len(button_list) > 1 and button_list[1].check_for_input(mos_pos):
-                        print(current_player.get_name(),"wants to trade with", player_list[1].get_name())
+                        print(current_player.get_name(), "wants to trade with", player_list[1].get_name())
                         game_state = "trade player 2"
-                    if len(button_list) > 2  and button_list[2].check_for_input(mos_pos):
-                        print(current_player.get_name(),"wants to trade with", player_list[2].get_name())
+                    if len(button_list) > 2 and button_list[2].check_for_input(mos_pos):
+                        print(current_player.get_name(), "wants to trade with", player_list[2].get_name())
                         game_state = "trade player 3"
         elif game_state == "trade player 1":
             trade_player = new_game.trade_player_list[0]
@@ -1457,9 +1464,6 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                         if new_game.trader_y_pool["hills"] > 0:
                             trade_player.add_resource("hills")
                             new_game.remove_resource_y_trader("hills")
-
-
-
 
         new_game.draw_player_bank_ratios(SCREEN, current_player)
 
