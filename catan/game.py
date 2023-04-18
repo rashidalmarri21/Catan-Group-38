@@ -61,11 +61,14 @@ class Game:
         random.shuffle(self.flag_list)
 
     def get_AI_player(self):
+        AI_players = []
         for p in self.players:
             if "AI" in p.get_name():
-                return p
-            else:
-                return False
+                AI_players.append(p)
+        if len(AI_players) == 0:
+            return False
+        else:
+            return AI_players
 
     def generate_game_save(self):
         flag_list_to_str = []
