@@ -12,7 +12,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
+        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.development_cards = []
         self.houses = []
         self.cities = []

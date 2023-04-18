@@ -2,14 +2,14 @@ import random, json
 import sys
 import pygame, time
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
-    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, HOUSE_POSITIONS, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
-    PLACE_ROAD_BUTTONS, PLACE_ROAD_BUTTON, ROAD_POSITIONS, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, \
+    END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
+    PLACE_ROAD_BUTTONS, PLACE_ROAD_BUTTON, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, \
     BACK_DEV_TRADE_BUTTON, \
     DEV_CARDS_BUTTONS_LIST, KNIGHT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON, YEAR_OF_PLENTY_BUTTON, \
     VICTORY_POINT_BUTTON, \
     USE_BUTTON, GREY_USE_RECT, GREY_USE_DEV, MONOPOLY_EFFECT_BUTTON_LIST, SHEEP_BUTTON_MONOPOLY, WHEAT_BUTTON_MONOPOLY, \
     WOOD_BUTTON_MONOPOLY, ORE_BUTTON_MONOPOLY, BRICK_BUTTON_MONOPOLY, PLACE_CITY_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, \
-    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV, EVERY_HOUSE_IN_PLAY,\
+    WOOD_BUTTON, ORE_BUTTON, BRICK_BUTTON, DEV_BUTTON, BUY_BUTTON_BUY_DEV, BACK_BUTTON_BUY_DEV,\
     PLAYER_TRADING_BUTTON, TRADE_BUTTONS, TRADE_BUTTON, BACK_BUTTON_TRADE, LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON,\
     LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON, RIGHT_PLAYER_SHEEP_BUTTON, RIGHT_PLAYER_WHEAT_BUTTON, \
     RIGHT_PLAYER_WOOD_BUTTON, RIGHT_PLAYER_ORE_BUTTON, RIGHT_PLAYER_BRICK_BUTTON, LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, \
@@ -73,10 +73,6 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
     run = True
 
-    # static road and house position lists.
-    house_positions = HOUSE_POSITIONS.copy()
-    road_positions = ROAD_POSITIONS.copy()
-
     # create players
     new_game = Game(players_names)
     if load_game:
@@ -124,16 +120,16 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
-                    for pos in house_positions:
+                    for pos in new_game.house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
                             current_player.add_victory_point()
                             # remove the pos from the list
-                            house_positions.remove(pos)
-                            HOUSE_POSITIONS.remove(pos)
-                            EVERY_HOUSE_IN_PLAY.append(pos)
+                            new_game.house_positions.remove(pos)
+                            if new_game.get_AI_player() is not False:
+                                new_game.get_AI_player().every_house_in_play.append(pos)
                             chosen_house_p1 = pos
                             game_state = "initial road placements P1"
         # initial ROAD placements for player 1
@@ -146,7 +142,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     roads_next_to_house = []
-                    for road in ROAD_POSITIONS:
+                    for road in new_game.road_positions:
                         if road[0] == chosen_house_p1 or road[1] == chosen_house_p1:
                             roads_next_to_house.append(road)
 
@@ -164,8 +160,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
                             # Add the road to the player's list of roads
                             current_player.add_road(pos_2)
-                            ROAD_POSITIONS.remove(pos_2)
-                            road_positions.remove(pos_2)
+                            new_game.road_positions.remove(pos_2)
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
                             if len(current_player.get_roads()) == 2:
@@ -177,7 +172,9 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         elif game_state == "initial house placements P2+":
             # AI agent control
             if "AI" in current_player.get_name():
-                current_player.make_decision("initial house placements P2+")
+                road_pos, house_pos = current_player.make_decision("initial house placements P2+", new_game.road_positions, new_game.house_positions)
+                new_game.road_positions = road_pos
+                new_game.house_positions = house_pos
                 game_state = "initial road placements P2+"
 
             # user input control
@@ -189,23 +186,25 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
-                    for pos in house_positions:
+                    for pos in new_game.house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
                             current_player.add_victory_point()
                             # remove the pos from the list
-                            house_positions.remove(pos)
-                            HOUSE_POSITIONS.remove(pos)
-                            EVERY_HOUSE_IN_PLAY.append(pos)
+                            new_game.house_positions.remove(pos)
+                            if new_game.get_AI_player() is not False:
+                                new_game.get_AI_player().every_house_in_play.append(pos)
                             chosen_house_P2 = pos
                             game_state = "initial road placements P2+"
         # initial ROAD placements for players 2+
         elif game_state == "initial road placements P2+":
             # AI agent control
             if "AI" in current_player.get_name():
-                current_player.make_decision("initial road placements P2+")
+                road_pos, house_pos = current_player.make_decision("initial road placements P2+", new_game.road_positions, new_game.house_positions)
+                new_game.road_positions = road_pos
+                new_game.house_positions = house_pos
                 if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
                     time.sleep(1)
                     new_game.end_turn()
@@ -226,7 +225,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     roads_next_to_house = []
-                    for road in ROAD_POSITIONS:
+                    for road in new_game.road_positions:
                         if road[0] == chosen_house_P2 or road[1] == chosen_house_P2:
                             roads_next_to_house.append(road)
 
@@ -244,8 +243,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
                             # Add the road to the player's list of roads
                             current_player.add_road(pos_2)
-                            ROAD_POSITIONS.remove(pos_2)
-                            road_positions.remove(pos_2)
+                            new_game.road_positions.remove(pos_2)
                             print(current_player.get_name(),
                                   "placed a road from {} to {}".format(start_point, end_point))
                             if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[
@@ -318,7 +316,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         # default game state
         elif game_state == "default":
             if "AI" in current_player.get_name():
-                if current_player.make_decision("default"):
+                if current_player.make_decision("default", new_game.road_positions, new_game.house_positions):
                     game_state = "place road"
                 else:
                     new_game.end_turn()
@@ -372,7 +370,9 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
         # implement place house state
         elif game_state == "place house":
             if "AI" in current_player.get_name():
-                current_player.make_decision("place house")
+                road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions, new_game.house_positions)
+                new_game.road_positions = road_pos
+                new_game.house_positions = house_pos
                 new_game.bank.add_bank_resources_from_placement('house')
                 new_game.end_turn()
                 game_state = "dice roll"
@@ -396,26 +396,29 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                         game_state = "default"
 
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
-                    for pos in house_positions:
+                    for pos in new_game.house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("house") \
                                 and new_game.isnt_to_close_to_other_houses(pos):
                             print(current_player.get_name(), "placed a house at", pos)
                             current_player.add_house(pos)
-                            EVERY_HOUSE_IN_PLAY.append(pos)
+                            if new_game.get_AI_player() is not False:
+                                new_game.get_AI_player().every_house_in_play.append(pos)
                             current_player.add_victory_point()
                             current_player.remove_resources_for_placement('house')
                             new_game.bank.add_bank_resources_from_placement('house')
 
                             # remove the pos from the list
-                            house_positions.remove(pos)
+                            new_game.house_positions.remove(pos)
                         else:
                             print("False")
         # implement place road state
         elif game_state == "place road":
             if "AI" in current_player.get_name():
-                current_player.make_decision("place road")
+                road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions, new_game.house_positions)
+                new_game.road_positions = road_pos
+                new_game.house_positions = house_pos
                 time.sleep(1)
                 new_game.update_longest_road_player()
                 new_game.bank.add_bank_resources_from_placement('road')
@@ -438,7 +441,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                         new_game.end_turn()
                         game_state = 'place house'
                     # Check if the click is within the clickable area for any of the lines
-                    for pos in road_positions:
+                    for pos in new_game.road_positions:
                         start_point = pos[0]
                         end_point = pos[1]
 
@@ -459,8 +462,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                             new_game.update_longest_road_player()
                             current_player.remove_resources_for_placement('road')
                             new_game.bank.add_bank_resources_from_placement('road')
-                            road_positions.remove(pos)
-                            ROAD_POSITIONS.remove(pos)
+                            new_game.road_positions.remove(pos)
         # place city state
         elif game_state == "place city":
             for butt in PLACE_HOUSE_BUTTONS:
@@ -595,7 +597,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Check if the click is within the clickable area for any of the lines
 
-                    for pos in road_positions:
+                    for pos in new_game.road_positions:
                         start_point = pos[0]
                         end_point = pos[1]
 
@@ -613,8 +615,7 @@ def play(load_game=False, players_names=("THIS", "IS", "A", "TEST")):
                                   "placed a road from {} to {}".format(start_point, end_point))
                             current_player.add_road(pos)
                             new_game.update_longest_road_player()
-                            road_positions.remove(pos)
-                            ROAD_POSITIONS.remove(pos)
+                            new_game.road_positions.remove(pos)
                             road_counter += 1
                             if road_counter == 2:
                                 road_counter = 0

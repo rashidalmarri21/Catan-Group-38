@@ -24,7 +24,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
     RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT,\
-    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, EVERY_HOUSE_IN_PLAY
+    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS
 
 
 class Game:
@@ -47,6 +47,8 @@ class Game:
         self.trade_player_list = None
         self.trader_x_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.trader_y_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.house_positions = HOUSE_POSITIONS.copy()
+        self.road_positions = ROAD_POSITIONS.copy()
 
         self.current_board = self.board.get_grid()
         for pos, tile in self.current_board.items():
@@ -57,6 +59,13 @@ class Game:
         self.update_robber_pos_list()
         self.flag_list = FLAG_LIST
         random.shuffle(self.flag_list)
+
+    def get_AI_player(self):
+        for p in self.players:
+            if "AI" in p.get_name():
+                return p
+            else:
+                return False
 
     def generate_game_save(self):
         flag_list_to_str = []
@@ -73,15 +82,26 @@ class Game:
                 flag_list_to_str.append("SHEEP")
             elif flag == ANY_FLAG:
                 flag_list_to_str.append("ANY")
-        game_save = {
-            "current player index": self.current_player_index,
-            "robber pos": self.robber_pos,
-            "flag list": flag_list_to_str,
-            "house pos": HOUSE_POSITIONS,
-            "road pos": ROAD_POSITIONS,
-            "every house": EVERY_HOUSE_IN_PLAY
-        }
+        if self.get_AI_player() is not False:
+            game_save = {
+                "current player index": self.current_player_index,
+                "robber pos": self.robber_pos,
+                "flag list": flag_list_to_str,
+                "house pos": self.house_positions,
+                "road pos": self.road_positions,
+                "every house": self.get_AI_player().every_house_in_play
+            }
+        else:
+            game_save = {
+                "current player index": self.current_player_index,
+                "robber pos": self.robber_pos,
+                "flag list": flag_list_to_str,
+                "house pos": self.house_positions,
+                "road pos": self.road_positions,
+                "every house": None
+            }
         return game_save
+
 
     def load_player_data(self):
         player_data = None
@@ -132,6 +152,8 @@ class Game:
 
         self.current_player_index = game_data["current player index"]
         self.robber_pos = game_data["robber pos"]
+        self.update_robber_pos_list()
+        self.remove_robber_pos()
         temp_flag_list = game_data["flag list"]
         self.flag_list = []
         for flag in temp_flag_list:
@@ -148,9 +170,10 @@ class Game:
             elif flag == "ANY":
                 self.flag_list.append(ANY_FLAG)
 
-        catan.HOUSE_POSITIONS = game_data["house pos"]
-        catan.ROAD_POSITIONS = game_data["road pos"]
-        catan.EVERY_HOUSE_IN_PLAY = game_data["every house"]
+        self.house_positions = game_data["house pos"]
+        self.road_positions = game_data["road pos"]
+        if self.get_AI_player() is not False:
+            self.get_AI_player().every_house_in_play = game_data["every house"]
 
     def update_state(self, screen):
         # update the game board
@@ -359,7 +382,7 @@ class Game:
         for payer in self.players:
             for house in payer.get_house():
                 for house_pos in house_pos_with_number:
-                    if house in house_pos["vertices"]:
+                    if (house[0], house[1]) in house_pos["vertices"]:
                         players_to_receive.append((payer, house_pos["pos"]))
 
         for p in self.players:
