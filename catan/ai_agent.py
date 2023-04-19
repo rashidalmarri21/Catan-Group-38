@@ -5,7 +5,6 @@ from catan.player import Player
 every_house_in_play = []
 
 
-
 class AIAgent(Player):
     def __init__(self, name, color):
         super().__init__(name, color)

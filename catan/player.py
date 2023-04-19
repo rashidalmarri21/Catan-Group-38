@@ -333,7 +333,7 @@ class Player:
 
     def draw_player_name(self, screen, y_pos):
         player_name = PLAYER_NAME_FONT.render("{}".format(self.name), True, self.color)
-        player_name_rect = player_name.get_rect(center=(1315, y_pos))
+        player_name_rect = player_name.get_rect(center=(1300, y_pos))
         screen.blit(player_name, player_name_rect)
 
     def draw_dev_card_numbers(self, screen):

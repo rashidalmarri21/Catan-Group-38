@@ -76,14 +76,81 @@ PLAYER_NAME_FONT = pygame.font.SysFont("comicsansms", 23)
 # menu assets
 MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
 MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')
+LEFT_ARROW = pygame.image.load('assets/menu/arrows/left arrow.png')
+RIGHT_ARROW = pygame.image.load('assets/menu/arrows/right arrow.png')
+CLASSIC_GAME_MODE = pygame.image.load('assets/menu/play options/classic.png')
+TIME_TRIAL_GAME_MODE = pygame.image.load('assets/menu/play options/time trial.png')
+NUM_PLAYERS_ONE = pygame.image.load('assets/menu/play options/one.png')
+NUM_PLAYERS_TWO = pygame.image.load('assets/menu/play options/two.png')
+NUM_PLAYERS_THREE = pygame.image.load('assets/menu/play options/three.png')
+NUM_PLAYERS_FOUR = pygame.image.load('assets/menu/play options/four.png')
+AI_YES = pygame.image.load('assets/menu/play options/yes.png')
+AI_NO = pygame.image.load('assets/menu/play options/no.png')
+PALETTE = pygame.image.load('assets/menu/play options/palette.png')
+EDIT_PLAYERS_UI = pygame.image.load('assets/menu/edit players/edit players UI.png')
+EDIT_PLAYERS_UI_RECT = EDIT_PLAYERS_UI.get_rect(center=(960, 620))
+EDIT_NAME_PLATE = pygame.image.load('assets/menu/edit players/edit name plate.png')
+
+
+# play options images
+GAME_MODES = [CLASSIC_GAME_MODE, TIME_TRIAL_GAME_MODE]
+NUM_OF_PLAYERS = [NUM_PLAYERS_ONE, NUM_PLAYERS_TWO, NUM_PLAYERS_THREE, NUM_PLAYERS_FOUR]
+AI_OPTION = [AI_YES, AI_NO]
+
+GAME_MODE_TEXT = NUMBER_FONT.render("Game Mode", True, BLACK)
+NUM_PLAYERS_TEXT = NUMBER_FONT.render("# of Players", True, BLACK)
+AI_TEXT = NUMBER_FONT.render("AI Player", True, BLACK)
+GAME_MODE_TEXT_RECT = GAME_MODE_TEXT.get_rect(center=(961, 498))
+NUM_PLAYERS_TEXT_RECT = NUM_PLAYERS_TEXT.get_rect(center=(961, 653))
+AI_TEXT_RECT = AI_TEXT.get_rect(center=(961, 808))
+
+LEFT_ARROW_1_BUTTON = button.Button(image=LEFT_ARROW, pos=(773, 548), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+
+RIGHT_ARROW_1_BUTTON = button.Button(image=RIGHT_ARROW, pos=(1148, 548), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+
+LEFT_ARROW_2_BUTTON = button.Button(image=LEFT_ARROW, pos=(773, 703), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+
+RIGHT_ARROW_2_BUTTON = button.Button(image=RIGHT_ARROW, pos=(1148, 703), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+
+LEFT_ARROW_3_BUTTON = button.Button(image=LEFT_ARROW, pos=(773, 858), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+
+RIGHT_ARROW_3_BUTTON = button.Button(image=RIGHT_ARROW, pos=(1148, 858), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+ARROW_BUTTON_LIST = [LEFT_ARROW_1_BUTTON, RIGHT_ARROW_1_BUTTON, LEFT_ARROW_2_BUTTON, RIGHT_ARROW_2_BUTTON, LEFT_ARROW_3_BUTTON,
+                     RIGHT_ARROW_3_BUTTON]
+
+PALETTE_BUTTON = button.Button(image=PALETTE, pos=(961, 958), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+GAME_OPTIONS_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 400), text_input="GAME OPTIONS", font=FONT, base_color=WHITE,
+                            hovering_color=WHITE)
+START_GAME_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="START GAME", font=NUMBER_FONT,
+                                base_color=WHITE,hovering_color=(160, 32, 220))
+BACK_PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="BACK", font=NUMBER_FONT,
+                            base_color=WHITE,
+                            hovering_color=(160, 32, 220))
+PLAY_OPTIONS_BUTTONS = [GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PALETTE_BUTTON]
+
+
 # menu title
 MENU_TITLE_TEXT = TITLE_FONT.render("The SETTLERS of CATAN", True, "#b68f40")
 MENU_TITLE_RECT = MENU_TITLE_TEXT.get_rect(center=(960, 150))
 
 # menu buttons
-PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="PLAY", font=FONT, base_color=WHITE,
+PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 400), text_input="PLAY", font=FONT, base_color=WHITE,
                             hovering_color=(160, 32, 220))
-LOAD_GAME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="LOAD GAME", font=FONT, base_color=WHITE,
+LOAD_GAME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 600), text_input="LOAD GAME", font=FONT, base_color=WHITE,
                                hovering_color=(160, 32, 220))
 QUIT_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 800), text_input="QUIT", font=FONT, base_color=WHITE,
                             hovering_color=(160, 32, 220))
@@ -114,10 +181,13 @@ PAUSE_MENU_RECT = PAUSE_MENU_UI.get_rect(center=(960, 550))
 PAUSE_BUTTON = button.Button(image=PAUSE_IMAGE, pos=(65, 272), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK,
                                 hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
-SAVE_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 650), text_input="SAVE", font=NUMBER_FONT,
+SAVE_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 560), text_input="SAVE", font=NUMBER_FONT,
                                 base_color=(160, 32, 220),
                                 hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
-RESUME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 500), text_input="RESUME", font=NUMBER_FONT,
+RESUME_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 400), text_input="RESUME", font=NUMBER_FONT,
+                                base_color=(160, 32, 220),
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+MAIN_MENU_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 720), text_input="MAIN MENU", font=NUMBER_FONT,
                                 base_color=(160, 32, 220),
                                 hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
 # game buttons

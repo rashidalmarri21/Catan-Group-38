@@ -18,7 +18,10 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     LEFT_TRADE_WHEAT_BUTTON, \
     LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, \
     RIGHT_TRADE_WHEAT_BUTTON, \
-    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON
+    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON,\
+    ARROW_BUTTON_LIST, GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PLAY_OPTIONS_BUTTONS, GAME_MODES,\
+    NUM_OF_PLAYERS, AI_OPTION, PALETTE_BUTTON, GAME_MODE_TEXT,GAME_MODE_TEXT_RECT, NUM_PLAYERS_TEXT,NUM_PLAYERS_TEXT_RECT,\
+    AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, MAIN_MENU_BUTTON
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 
@@ -36,8 +39,39 @@ clock = pygame.time.Clock()
 FPS = 60
 
 
+
+
 def main_menu():
     pygame.display.set_caption("Menu")
+    game_state = "main menu"
+
+    # play options helper counters
+    game_mode_index = 0
+    num_players_index = 0
+    ai_option_index = 0
+    name_plate_y_pos = 430
+
+    # play option values
+    game_modes = ["classic", "time trial"]
+    num_players = [1, 2, 3, 4]
+    ai_option = ["yes", "no"]
+
+    # running play option values
+    current_game_mode = "classic"
+    current_num_players = 1
+    current_ai_options = "yes"
+
+    # edit players values
+    P1_name = "Bob"
+    P2_name = "Jack"
+    P3_name = "Sara"
+    P4_name = "Mike"
+    default_player_list = [P1_name, P2_name, P3_name, P4_name]
+    AI_1 = "AI Jack"
+    AI_2 = "AI Sara"
+    AI_3 = "AI Mike"
+    default_ai_list = [AI_1, AI_2, AI_3]
+    player_list = []
 
     while True:
         SCREEN.blit(MENU_BG.convert(), (0, 0))
@@ -46,36 +80,193 @@ def main_menu():
 
         SCREEN.blit(MENU_TITLE_TEXT, MENU_TITLE_RECT)
 
-        for butt in MENU_BUTTON_LIST:
-            butt.change_color(menu_mouse_pos)
-            butt.update(SCREEN)
+        if game_state == "main menu":
+            for butt in MENU_BUTTON_LIST:
+                butt.change_color(menu_mouse_pos)
+                butt.update(SCREEN)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if MENU_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
-                    play()
-                if MENU_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
-                    with open('player_data.txt') as player_file:
-                        player_data = json.load(player_file)
-                        # load player names
-                        player_names = list(player_data.keys())
-                    play(True, player_names)
-
-                if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if MENU_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
+                        game_state = "play options"
+                    if MENU_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
+                        with open('player_data.txt') as player_file:
+                            player_data = json.load(player_file)
+                            # load player names
+                            player_names = list(player_data.keys())
+                        play(True, player_names)
+
+                    if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
+                        pygame.quit()
+                        sys.exit()
+
+        elif game_state == "play options":
+            SCREEN.blit(GAME_MODE_TEXT, GAME_MODE_TEXT_RECT)
+            SCREEN.blit(NUM_PLAYERS_TEXT, NUM_PLAYERS_TEXT_RECT)
+            SCREEN.blit(AI_TEXT, AI_TEXT_RECT)
+            for butt in ARROW_BUTTON_LIST:
+                butt.change_color(menu_mouse_pos)
+                butt.update(SCREEN)
+
+            for b in PLAY_OPTIONS_BUTTONS:
+                b.change_color(menu_mouse_pos)
+                b.update(SCREEN)
+            game_mode_rect = GAME_MODES[game_mode_index].get_rect(center=(961, 548))
+            SCREEN.blit(GAME_MODES[game_mode_index], game_mode_rect)
+
+            num_players_rect = NUM_OF_PLAYERS[num_players_index].get_rect(center=(961, 703))
+            SCREEN.blit(NUM_OF_PLAYERS[num_players_index], num_players_rect)
+
+            ai_options_rect = NUM_OF_PLAYERS[num_players_index].get_rect(center=(961, 858))
+            SCREEN.blit(AI_OPTION[ai_option_index], ai_options_rect)
+
+            for i in range(current_num_players):
+                if len(player_list) < current_num_players:
+                    current_name = default_player_list.pop(0)
+                    player_list.append(current_name)
+                elif len(player_list) > current_num_players:
+                    removed_name = player_list.pop(-1)
+                    default_player_list = [removed_name] + default_player_list
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_PLAY_BUTTON.check_for_input(menu_mouse_pos):
+                        game_state = "main menu"
+                    if START_GAME_BUTTON.check_for_input(menu_mouse_pos):
+                        if current_num_players < 4 and current_ai_options == "yes":
+                            if current_num_players == 3:
+                                player_list.append(default_ai_list[-1])
+                            elif current_num_players == 2:
+                                player_list.append(default_ai_list[1])
+                                player_list.append(default_ai_list[-1])
+                            elif current_num_players == 1:
+                                player_list.append(default_ai_list[0])
+                                player_list.append(default_ai_list[1])
+                                player_list.append(default_ai_list[-1])
+                        play(False, player_list)
+                    if PALETTE_BUTTON.check_for_input(menu_mouse_pos):
+                        game_state = "edit players"
+                        print(player_list)
+                    if ARROW_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
+                        if game_mode_index == 0:
+                            game_mode_index = 1
+                            current_game_mode = game_modes[game_mode_index]
+                            print(current_game_mode)
+                        else:
+                            game_mode_index -= 1
+                            current_game_mode = game_modes[game_mode_index]
+                            print(current_game_mode)
+                    if ARROW_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
+                        if game_mode_index == 1:
+                            game_mode_index = 0
+                            current_game_mode = game_modes[game_mode_index]
+                            print(current_game_mode)
+                        else:
+                            game_mode_index += 1
+                            current_game_mode = game_modes[game_mode_index]
+                            print(current_game_mode)
+
+                    if ARROW_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
+                        if num_players_index == 0:
+                            num_players_index = 3
+                            current_num_players = num_players[num_players_index]
+                            print(current_num_players)
+                        else:
+                            num_players_index -= 1
+                            current_num_players = num_players[num_players_index]
+                            print(current_num_players)
+                    if ARROW_BUTTON_LIST[3].check_for_input(menu_mouse_pos):
+                        if num_players_index == 3:
+                            num_players_index = 0
+                            current_num_players = num_players[num_players_index]
+                            print(current_num_players)
+                        else:
+                            num_players_index += 1
+                            current_num_players = num_players[num_players_index]
+                            print(current_num_players)
+
+                    if ARROW_BUTTON_LIST[4].check_for_input(menu_mouse_pos):
+                        if ai_option_index == 0:
+                            ai_option_index = 1
+                            current_ai_options = ai_option[ai_option_index]
+                            print(current_ai_options)
+                        else:
+                            ai_option_index -= 1
+                            current_ai_options = ai_option[ai_option_index]
+                            print(current_ai_options)
+                    if ARROW_BUTTON_LIST[5].check_for_input(menu_mouse_pos):
+                        if ai_option_index == 1:
+                            ai_option_index = 0
+                            current_ai_options = ai_option[ai_option_index]
+                            print(current_ai_options)
+                        else:
+                            ai_option_index += 1
+                            current_ai_options = ai_option[ai_option_index]
+                            print(current_ai_options)
+
+        elif game_state == "edit players":
+            SCREEN.blit(EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT)
+            BACK_PLAY_BUTTON.change_color(menu_mouse_pos)
+            BACK_PLAY_BUTTON.update(SCREEN)
+            START_GAME_BUTTON.change_color(menu_mouse_pos)
+            START_GAME_BUTTON.update(SCREEN)
+
+            for i in range(current_num_players):
+                name_text = NUMBER_FONT.render(player_list[i], True, BLACK)
+
+                if i == 0:
+                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos))
+                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos))
+                elif i == 1:
+                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 150))
+                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 150))
+                elif i == 2:
+                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 300))
+                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 300))
+                elif i == 3:
+                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 450))
+                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 450))
+
+                SCREEN.blit(EDIT_NAME_PLATE, frame_rect)
+                SCREEN.blit(name_text, name_plate_rect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_PLAY_BUTTON.check_for_input(menu_mouse_pos):
+                        game_state = "play options"
+                    if START_GAME_BUTTON.check_for_input(menu_mouse_pos):
+                        if current_num_players < 4 and current_ai_options == "yes":
+                            if current_num_players == 3:
+                                player_list.append(default_ai_list[-1])
+                            elif current_num_players == 2:
+                                player_list.append(default_ai_list[1])
+                                player_list.append(default_ai_list[-1])
+                            elif current_num_players == 1:
+                                player_list.append(default_ai_list[0])
+                                player_list.append(default_ai_list[1])
+                                player_list.append(default_ai_list[-1])
+                        play(False, player_list)
+
+
         pygame.display.update()
         clock.tick(FPS)
 
 
-def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST")):
+def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST"), color_list=COLOR_LIST):
     run = True
 
     # create players
-    new_game = Game(players_names)
+    new_game = Game(players_names, color_list)
     if load_game:
         new_game.load_player_data()
         new_game.load_board_data()
@@ -775,7 +966,7 @@ def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST")):
                             game_state = "default"
 
         elif game_state == "pause menu":
-            for butt in [SAVE_BUTTON, RESUME_BUTTON]:
+            for butt in [SAVE_BUTTON, RESUME_BUTTON, MAIN_MENU_BUTTON]:
                 butt.change_color(mos_pos)
                 butt.update(SCREEN)
 
@@ -787,6 +978,8 @@ def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST")):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if RESUME_BUTTON.check_for_input(mos_pos):
                         game_state = "default"
+                    if MAIN_MENU_BUTTON.check_for_input(mos_pos):
+                        main_menu()
                     if SAVE_BUTTON.check_for_input(mos_pos):
                         players_data = new_game.generate_players_save_data()
                         board_data = new_game.board.generate_grid_save()

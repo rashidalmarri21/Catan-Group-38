@@ -29,15 +29,15 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
 
 
 class Game:
-    def __init__(self, player_names):
+    def __init__(self, player_names, color_list):
         self.board = board.Board()  # create a new game board
         self.players = []
         for name in player_names:
             if "AI" in name:
-                self.players.append(AIAgent(name, COLOR_LIST[player_names.index(name)]))  # create an AI agent
+                self.players.append(AIAgent(name, color_list[player_names.index(name)]))  # create an AI agent
             else:
                 self.players.append(
-                    player.Player(name, COLOR_LIST[player_names.index(name)]))  # create a regular player
+                    player.Player(name, color_list[player_names.index(name)]))  # create a regular player
         self.current_player_index = 0  # initialize the current player index
         self.game_over = False  # initialize the game over flag
         self.bank = bank.Bank()
@@ -93,7 +93,7 @@ class Game:
                 "flag list": flag_list_to_str,
                 "house pos": self.house_positions,
                 "road pos": self.road_positions,
-                "every house": every_house_in_play
+                "every house": catan.ai_agent.every_house_in_play
             }
         else:
             game_save = {
