@@ -18,12 +18,16 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     LEFT_TRADE_WHEAT_BUTTON, \
     LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON, RIGHT_TRADE_SHEEP_BUTTON, \
     RIGHT_TRADE_WHEAT_BUTTON, \
-    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON,\
-    ARROW_BUTTON_LIST, GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PLAY_OPTIONS_BUTTONS, GAME_MODES,\
-    NUM_OF_PLAYERS, AI_OPTION, PALETTE_BUTTON, GAME_MODE_TEXT,GAME_MODE_TEXT_RECT, NUM_PLAYERS_TEXT,NUM_PLAYERS_TEXT_RECT,\
-    AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, MAIN_MENU_BUTTON
+    RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON, PAUSE_BUTTON, RESUME_BUTTON, SAVE_BUTTON, \
+    ARROW_BUTTON_LIST, GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PLAY_OPTIONS_BUTTONS, GAME_MODES, \
+    NUM_OF_PLAYERS, AI_OPTION, PALETTE_BUTTON, GAME_MODE_TEXT, GAME_MODE_TEXT_RECT, NUM_PLAYERS_TEXT, \
+    NUM_PLAYERS_TEXT_RECT, \
+    AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, \
+    MAIN_MENU_BUTTON, \
+    EDIT_NAME_PLATE_HOVER
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
+from catan.button import Button
 
 # Set up the screen
 
@@ -37,8 +41,6 @@ pygame.display.set_icon(ICON_32x)
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60
-
-
 
 
 def main_menu():
@@ -67,6 +69,21 @@ def main_menu():
     P3_name = "Sara"
     P4_name = "Mike"
     default_player_list = [P1_name, P2_name, P3_name, P4_name]
+    default_player_list_2 = [P1_name, P2_name, P3_name, P4_name]
+
+    # edit players name buttons
+    player_1_button = None
+    player_2_button = None
+    player_3_button = None
+    player_4_button = None
+
+    player_button_list = []
+
+    player_1_edit = False
+    player_2_edit = False
+    player_3_edit = False
+    player_4_edit = False
+
     AI_1 = "AI Jack"
     AI_2 = "AI Sara"
     AI_3 = "AI Mike"
@@ -217,26 +234,45 @@ def main_menu():
             START_GAME_BUTTON.change_color(menu_mouse_pos)
             START_GAME_BUTTON.update(SCREEN)
 
+            player_button_list = []
             for i in range(current_num_players):
-                name_text = NUMBER_FONT.render(player_list[i], True, BLACK)
 
                 if i == 0:
-                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos))
-                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos))
+                    player_1_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos),
+                                             text_input="{}".format(P1_name), font=NUMBER_FONT, base_color=BLACK,
+                                             hovering_color=(160, 32, 220))
+                    player_button_list.append(player_1_button)
                 elif i == 1:
-                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 150))
-                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 150))
+                    player_2_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 150),
+                                             text_input="{}".format(P2_name), font=NUMBER_FONT, base_color=BLACK,
+                                             hovering_color=(160, 32, 220))
+                    player_button_list.append(player_2_button)
                 elif i == 2:
-                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 300))
-                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 300))
+                    player_3_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 300),
+                                             text_input="{}".format(P3_name), font=NUMBER_FONT, base_color=BLACK,
+                                             hovering_color=(160, 32, 220))
+                    player_button_list.append(player_3_button)
                 elif i == 3:
-                    name_plate_rect = name_text.get_rect(center=(697, name_plate_y_pos + 450))
-                    frame_rect = EDIT_NAME_PLATE.get_rect(center=(697, name_plate_y_pos + 450))
+                    player_4_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 450),
+                                             text_input="{}".format(P4_name), font=NUMBER_FONT, base_color=BLACK,
+                                             hovering_color=(160, 32, 220))
+                    player_button_list.append(player_4_button)
 
-                SCREEN.blit(EDIT_NAME_PLATE, frame_rect)
-                SCREEN.blit(name_text, name_plate_rect)
+            for butt in player_button_list:
+                butt.change_color(menu_mouse_pos)
+                butt.update(SCREEN)
+
+            if player_1_edit:
+                pygame.draw.rect(SCREEN, (160, 32, 220), player_1_button, 5)
+            if player_2_edit:
+                pygame.draw.rect(SCREEN, (160, 32, 220), player_2_button, 5)
+            if player_3_edit:
+                pygame.draw.rect(SCREEN, (160, 32, 220), player_3_button, 5)
+            if player_4_edit:
+                pygame.draw.rect(SCREEN, (160, 32, 220), player_4_button, 5)
 
             for event in pygame.event.get():
+
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -244,7 +280,68 @@ def main_menu():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_PLAY_BUTTON.check_for_input(menu_mouse_pos):
                         game_state = "play options"
+                    if player_1_button is not None:
+                        if player_1_button.check_for_input(menu_mouse_pos):
+                            player_1_edit = True
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = False
+                            break
+                        else:
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = False
+                    if player_2_button is not None:
+                        if player_2_button.check_for_input(menu_mouse_pos):
+                            player_1_edit = False
+                            player_2_edit = True
+                            player_3_edit = False
+                            player_4_edit = False
+                            break
+                        else:
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = False
+                    if player_3_button is not None:
+                        if player_3_button.check_for_input(menu_mouse_pos):
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = True
+                            player_4_edit = False
+                            break
+                        else:
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = False
+                    if player_4_button is not None:
+                        if player_4_button.check_for_input(menu_mouse_pos):
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = True
+                            break
+                        else:
+                            player_1_edit = False
+                            player_2_edit = False
+                            player_3_edit = False
+                            player_4_edit = False
+
                     if START_GAME_BUTTON.check_for_input(menu_mouse_pos):
+                        player_list = []
+                        for i in range(current_num_players + 1):
+                            if i == 1:
+                                player_list.append(P1_name)
+                            elif i == 2:
+                                player_list.append(P2_name)
+                            elif i == 3:
+                                player_list.append(P3_name)
+                            elif i == 4:
+                                player_list.append(P4_name)
+                        print(player_list)
+
                         if current_num_players < 4 and current_ai_options == "yes":
                             if current_num_players == 3:
                                 player_list.append(default_ai_list[-1])
@@ -257,6 +354,44 @@ def main_menu():
                                 player_list.append(default_ai_list[-1])
                         play(False, player_list)
 
+                if event.type == pygame.KEYDOWN:
+                    if player_1_edit:
+                        if event.key == pygame.K_BACKSPACE:
+                            P1_name = P1_name[:-1]
+                            print(P1_name)
+                            print(player_list)
+                            break
+                        else:
+                            P1_name += event.unicode
+                            print(P1_name)
+                            break
+                    elif player_2_edit:
+                        if event.key == pygame.K_BACKSPACE:
+                            P2_name = P2_name[:-1]
+                            print(P2_name)
+                            break
+                        else:
+                            P2_name += event.unicode
+                            print(P2_name)
+                            break
+                    elif player_3_edit:
+                        if event.key == pygame.K_BACKSPACE:
+                            P3_name = P3_name[:-1]
+                            print(P3_name)
+                            break
+                        else:
+                            P3_name += event.unicode
+                            print(P3_name)
+                            break
+                    elif player_4_edit:
+                        if event.key == pygame.K_BACKSPACE:
+                            P4_name = P4_name[:-1]
+                            print(P4_name)
+                            break
+                        else:
+                            P4_name += event.unicode
+                            print(P4_name)
+                            break
 
         pygame.display.update()
         clock.tick(FPS)
@@ -592,7 +727,7 @@ def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST"), color_l
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in new_game.house_positions:
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and current_player.house_allowance()\
+                                and current_player.house_allowance() \
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("house") \
                                 and new_game.isnt_to_close_to_other_houses(pos):
@@ -649,7 +784,7 @@ def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST"), color_l
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
-                                and current_player.road_allowance()\
+                                and current_player.road_allowance() \
                                 and current_player.is_valid_road_placement(pos) \
                                 and current_player.has_enough_resources('road'):
                             # Add the road to the player's list of roads
@@ -683,7 +818,7 @@ def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST"), color_l
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in current_player.get_house():
                         if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and current_player.city_allowance()\
+                                and current_player.city_allowance() \
                                 and current_player.is_valid_house_placement(pos) \
                                 and current_player.has_enough_resources("city"):
                             print(current_player.get_name(), "placed a city at", pos)
