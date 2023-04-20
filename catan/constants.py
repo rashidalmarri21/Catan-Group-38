@@ -90,7 +90,7 @@ PALETTE = pygame.image.load('assets/menu/play options/palette.png')
 EDIT_PLAYERS_UI = pygame.image.load('assets/menu/edit players/edit players UI.png')
 EDIT_PLAYERS_UI_RECT = EDIT_PLAYERS_UI.get_rect(center=(960, 620))
 EDIT_NAME_PLATE = pygame.image.load('assets/menu/edit players/edit name plate.png')
-
+EDIT_NAME_PLATE_HOVER = pygame.image.load('assets/menu/edit players/edit name plate hover.png')
 
 # play options images
 GAME_MODES = [CLASSIC_GAME_MODE, TIME_TRIAL_GAME_MODE]
