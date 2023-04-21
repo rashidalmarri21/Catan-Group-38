@@ -241,9 +241,10 @@ class Player:
         screen.blit(dice_2, dice_2_rect)
 
     def draw_houses(self, screen, house_image):
-        for house in self.houses:
-            house_rect = house_image.get_rect(center=house)
-            screen.blit(house_image, house_rect)
+        if house_image is not None:
+            for house in self.houses:
+                house_rect = house_image.get_rect(center=house)
+                screen.blit(house_image, house_rect)
 
     def draw_cities(self, screen, city_image):
         for city in self.cities:

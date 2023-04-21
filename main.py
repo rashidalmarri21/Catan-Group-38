@@ -1,4 +1,4 @@
-import random, json
+import random, json, os
 import sys
 import pygame, time
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
@@ -23,8 +23,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     NUM_OF_PLAYERS, AI_OPTION, PALETTE_BUTTON, GAME_MODE_TEXT, GAME_MODE_TEXT_RECT, NUM_PLAYERS_TEXT, \
     NUM_PLAYERS_TEXT_RECT, \
     AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, \
-    MAIN_MENU_BUTTON, \
-    EDIT_NAME_PLATE_HOVER
+    MAIN_MENU_BUTTON, EDIT_NAME_PLATE_HOVER, EDIT_ARROWS_LIST, COLOR_IMAGE_LIST
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 from catan.button import Button
@@ -41,7 +40,8 @@ pygame.display.set_icon(ICON_32x)
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60
-
+def doesFileExists(filePathAndName):
+    return os.path.exists(filePathAndName)
 
 def main_menu():
     pygame.display.set_caption("Menu")
@@ -57,11 +57,26 @@ def main_menu():
     game_modes = ["classic", "time trial"]
     num_players = [1, 2, 3, 4]
     ai_option = ["yes", "no"]
+    color_list = COLOR_LIST.copy()
+    color_image_list = COLOR_IMAGE_LIST.copy()
 
     # running play option values
     current_game_mode = "classic"
     current_num_players = 1
     current_ai_options = "yes"
+
+    # edit players colors
+    P1_color = color_list.pop(0)
+    P2_color = color_list.pop(0)
+    P3_color = color_list.pop(0)
+    P4_color = color_list.pop(0)
+    current_players_color_list = [P1_color, P2_color, P3_color, P4_color]
+
+    P1_color_image = color_image_list.pop(0)
+    P2_color_image = color_image_list.pop(0)
+    P3_color_image = color_image_list.pop(0)
+    P4_color_image = color_image_list.pop(0)
+
 
     # edit players values
     P1_name = "Bob"
@@ -89,6 +104,7 @@ def main_menu():
     AI_3 = "AI Mike"
     default_ai_list = [AI_1, AI_2, AI_3]
     player_list = []
+    edit_arrow_button_list = []
 
     while True:
         SCREEN.blit(MENU_BG.convert(), (0, 0))
@@ -110,11 +126,31 @@ def main_menu():
                     if MENU_BUTTON_LIST[0].check_for_input(menu_mouse_pos):
                         game_state = "play options"
                     if MENU_BUTTON_LIST[1].check_for_input(menu_mouse_pos):
-                        with open('player_data.txt') as player_file:
-                            player_data = json.load(player_file)
-                            # load player names
-                            player_names = list(player_data.keys())
-                        play(True, player_names)
+                        if doesFileExists('./game_data.txt'):
+                            with open('player_data.txt') as player_file:
+                                player_data = json.load(player_file)
+                                # load player names
+                                load_player_names = list(player_data.keys())
+                                load_color_list = []
+                                for key, value in player_data.items():
+                                    if value["color"] == [255, 0, 26]:
+                                        load_color_list.append(COLOR_LIST[0])
+                                    elif value["color"] == [255, 153, 1]:
+                                        load_color_list.append(COLOR_LIST[1])
+                                    elif value["color"] == [188, 23, 229]:
+                                        load_color_list.append(COLOR_LIST[2])
+                                    elif value["color"] == [102, 51, 255]:
+                                        load_color_list.append(COLOR_LIST[3])
+                                    elif value["color"] == [0, 255, 255]:
+                                        load_color_list.append(COLOR_LIST[4])
+                                    elif value["color"] == [165, 42, 42]:
+                                        load_color_list.append(COLOR_LIST[5])
+                                    elif value["color"] == [0, 0, 0]:
+                                        load_color_list.append(COLOR_LIST[6])
+                                    elif value["color"] == [255, 0, 255]:
+                                        load_color_list.append(COLOR_LIST[7])
+
+                            play(True, load_player_names, load_color_list)
 
                     if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
                         pygame.quit()
@@ -167,6 +203,7 @@ def main_menu():
                             elif i == 4:
                                 player_list.append(P4_name)
                         print(player_list)
+                        print(current_players_color_list)
 
                         if current_num_players < 4 and current_ai_options == "yes":
                             if current_num_players == 3:
@@ -178,7 +215,7 @@ def main_menu():
                                 player_list.append(default_ai_list[0])
                                 player_list.append(default_ai_list[1])
                                 player_list.append(default_ai_list[-1])
-                        play(False, player_list)
+                        play(False, player_list,current_players_color_list)
                     if PALETTE_BUTTON.check_for_input(menu_mouse_pos):
                         game_state = "edit players"
                         print(player_list)
@@ -246,7 +283,9 @@ def main_menu():
             START_GAME_BUTTON.change_color(menu_mouse_pos)
             START_GAME_BUTTON.update(SCREEN)
 
+
             player_button_list = []
+            edit_arrow_button_list = []
             for i in range(current_num_players):
 
                 if i == 0:
@@ -254,25 +293,49 @@ def main_menu():
                                              text_input="{}".format(P1_name), font=NUMBER_FONT, base_color=BLACK,
                                              hovering_color=(160, 32, 220))
                     player_button_list.append(player_1_button)
+
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[0])
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[1])
+                    color_rect = P1_color_image.get_rect(center=(1214, 430))
+                    SCREEN.blit(P1_color_image, color_rect)
                 elif i == 1:
                     player_2_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 150),
                                              text_input="{}".format(P2_name), font=NUMBER_FONT, base_color=BLACK,
                                              hovering_color=(160, 32, 220))
                     player_button_list.append(player_2_button)
+
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[2])
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[3])
+                    color_rect = P2_color_image.get_rect(center=(1214, 580))
+                    SCREEN.blit(P2_color_image, color_rect)
                 elif i == 2:
                     player_3_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 300),
                                              text_input="{}".format(P3_name), font=NUMBER_FONT, base_color=BLACK,
                                              hovering_color=(160, 32, 220))
                     player_button_list.append(player_3_button)
+
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[4])
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[5])
+                    color_rect = P3_color_image.get_rect(center=(1214, 730))
+                    SCREEN.blit(P3_color_image, color_rect)
                 elif i == 3:
                     player_4_button = Button(image=EDIT_NAME_PLATE, pos=(697, name_plate_y_pos + 450),
                                              text_input="{}".format(P4_name), font=NUMBER_FONT, base_color=BLACK,
                                              hovering_color=(160, 32, 220))
                     player_button_list.append(player_4_button)
 
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[6])
+                    edit_arrow_button_list.append(EDIT_ARROWS_LIST[7])
+                    color_rect = P4_color_image.get_rect(center=(1214, 880))
+                    SCREEN.blit(P4_color_image, color_rect)
+
             for butt in player_button_list:
                 butt.change_color(menu_mouse_pos)
                 butt.update(SCREEN)
+
+            for b in edit_arrow_button_list:
+                b.change_color(menu_mouse_pos)
+                b.update(SCREEN)
 
             if player_1_edit:
                 pygame.draw.rect(SCREEN, (160, 32, 220), player_1_button, 5)
@@ -292,6 +355,28 @@ def main_menu():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_PLAY_BUTTON.check_for_input(menu_mouse_pos):
                         game_state = "play options"
+
+                    if EDIT_ARROWS_LIST[0].check_for_input(menu_mouse_pos) or EDIT_ARROWS_LIST[1].check_for_input(menu_mouse_pos):
+                        color_list.append(P1_color)
+                        P1_color = color_list.pop(0)
+                        color_image_list.append(P1_color_image)
+                        P1_color_image = color_image_list.pop(0)
+                    if EDIT_ARROWS_LIST[2].check_for_input(menu_mouse_pos) or EDIT_ARROWS_LIST[3].check_for_input(menu_mouse_pos):
+                        color_list.append(P2_color)
+                        P2_color = color_list.pop(0)
+                        color_image_list.append(P2_color_image)
+                        P2_color_image = color_image_list.pop(0)
+                    if EDIT_ARROWS_LIST[4].check_for_input(menu_mouse_pos) or EDIT_ARROWS_LIST[5].check_for_input(menu_mouse_pos):
+                        color_list.append(P3_color)
+                        P3_color = color_list.pop(0)
+                        color_image_list.append(P3_color_image)
+                        P3_color_image = color_image_list.pop(0)
+                    if EDIT_ARROWS_LIST[6].check_for_input(menu_mouse_pos) or EDIT_ARROWS_LIST[7].check_for_input(menu_mouse_pos):
+                        color_list.append(P4_color)
+                        P4_color = color_list.pop(0)
+                        color_image_list.append(P4_color_image)
+                        P4_color_image = color_image_list.pop(0)
+
                     if player_1_button is not None:
                         if player_1_button.check_for_input(menu_mouse_pos):
                             player_1_edit = True
@@ -343,28 +428,40 @@ def main_menu():
 
                     if START_GAME_BUTTON.check_for_input(menu_mouse_pos):
                         player_list = []
+                        current_players_color_list = []
                         for i in range(current_num_players + 1):
                             if i == 1:
                                 player_list.append(P1_name)
+                                current_players_color_list.append(P1_color)
                             elif i == 2:
                                 player_list.append(P2_name)
+                                current_players_color_list.append(P2_color)
                             elif i == 3:
                                 player_list.append(P3_name)
+                                current_players_color_list.append(P3_color)
                             elif i == 4:
                                 player_list.append(P4_name)
+                                current_players_color_list.append(P4_color)
                         print(player_list)
+                        print(current_players_color_list)
 
                         if current_num_players < 4 and current_ai_options == "yes":
                             if current_num_players == 3:
                                 player_list.append(default_ai_list[-1])
+                                current_players_color_list.append(color_list.pop(0))
                             elif current_num_players == 2:
                                 player_list.append(default_ai_list[1])
                                 player_list.append(default_ai_list[-1])
+                                current_players_color_list.append(color_list.pop(0))
+                                current_players_color_list.append(color_list.pop(0))
                             elif current_num_players == 1:
                                 player_list.append(default_ai_list[0])
                                 player_list.append(default_ai_list[1])
                                 player_list.append(default_ai_list[-1])
-                        play(False, player_list)
+                                current_players_color_list.append(color_list.pop(0))
+                                current_players_color_list.append(color_list.pop(0))
+                                current_players_color_list.append(color_list.pop(0))
+                        play(False, player_list, current_players_color_list)
 
                 if event.type == pygame.KEYDOWN:
                     if player_1_edit:
@@ -409,7 +506,7 @@ def main_menu():
         clock.tick(FPS)
 
 
-def play(load_game=False, players_names=("THIS", "AIS", "AI", "AITEST"), color_list=COLOR_LIST):
+def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_list=COLOR_LIST):
     run = True
 
     # create players

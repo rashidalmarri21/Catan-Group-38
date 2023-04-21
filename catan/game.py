@@ -24,8 +24,8 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
-    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT,\
-    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS
+    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT, \
+    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, CYAN, BROWN, PINK
 
 
 class Game:
@@ -115,7 +115,6 @@ class Game:
         for px, data in player_data.items():
             for py in self.players:
                 if py.get_name() == px:
-                    py.color = data["color"]
                     py.victory_points = data["victory points"]
                     py.houses = data["houses"]
                     py.cities = data["cities"]
@@ -313,14 +312,22 @@ class Game:
     def draw_house(self, screen):
         house_image = None
         for current_player in self.players:
-            if current_player == self.players[0]:
-                house_image = pygame.image.load("assets/UI/house/P1.png")
-            elif current_player == self.players[1]:
-                house_image = pygame.image.load("assets/UI/house/P2.png")
-            elif current_player == self.players[2]:
-                house_image = pygame.image.load("assets/UI/house/P3.png")
-            elif current_player == self.players[3]:
-                house_image = pygame.image.load("assets/UI/house/P4.png")
+            if current_player.get_color() == RED:
+                house_image = pygame.image.load('assets/UI/house/red.png')
+            elif current_player.get_color() == ORANGE:
+                house_image = pygame.image.load('assets/UI/house/orange.png')
+            elif current_player.get_color() == PURPLE:
+                house_image = pygame.image.load('assets/UI/house/purple.png')
+            elif current_player.get_color() == BLUE:
+                house_image = pygame.image.load('assets/UI/house/blue.png')
+            elif current_player.get_color() == CYAN:
+                house_image = pygame.image.load('assets/UI/house/cyan.png')
+            elif current_player.get_color() == BROWN:
+                house_image = pygame.image.load('assets/UI/house/brown.png')
+            elif current_player.get_color() == BLACK:
+                house_image = pygame.image.load('assets/UI/house/black.png')
+            elif current_player.get_color() == PINK:
+                house_image = pygame.image.load('assets/UI/house/pink.png')
             current_player.draw_houses(screen, house_image)
 
     def draw_city(self, screen):

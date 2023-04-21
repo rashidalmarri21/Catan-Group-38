@@ -21,9 +21,8 @@ BLUE = (102, 51, 255)
 ORANGE = (255, 153, 1)
 RED = (255, 0, 26)
 PURPLE = (188, 23, 229)
-COLOR_LIST = [RED, ORANGE, PURPLE, BLUE]
-
-
+PINK = (255, 0, 255)
+COLOR_LIST = [RED, ORANGE, PURPLE, BLUE, CYAN, BROWN, BLACK, PINK]
 
 # board constants
 HEXAGON_RADIUS = 75
@@ -78,6 +77,8 @@ MENU_BG = pygame.image.load('assets/menu/Catan_BG.jpg')
 MENU_BUTTON = pygame.image.load('assets/menu/Play Rect.png')
 LEFT_ARROW = pygame.image.load('assets/menu/arrows/left arrow.png')
 RIGHT_ARROW = pygame.image.load('assets/menu/arrows/right arrow.png')
+EDIT_LEFT_ARROW = pygame.image.load('assets/menu/edit players/left arrow.png')
+EDIT_RIGHT_ARROW = pygame.image.load('assets/menu/edit players/right arrow.png')
 CLASSIC_GAME_MODE = pygame.image.load('assets/menu/play options/classic.png')
 TIME_TRIAL_GAME_MODE = pygame.image.load('assets/menu/play options/time trial.png')
 NUM_PLAYERS_ONE = pygame.image.load('assets/menu/play options/one.png')
@@ -91,6 +92,17 @@ EDIT_PLAYERS_UI = pygame.image.load('assets/menu/edit players/edit players UI.pn
 EDIT_PLAYERS_UI_RECT = EDIT_PLAYERS_UI.get_rect(center=(960, 620))
 EDIT_NAME_PLATE = pygame.image.load('assets/menu/edit players/edit name plate.png')
 EDIT_NAME_PLATE_HOVER = pygame.image.load('assets/menu/edit players/edit name plate hover.png')
+
+# color images
+BLACK_IMAGE = pygame.image.load('assets/menu/edit players/colors/black.png')
+BLUE_IMAGE = pygame.image.load('assets/menu/edit players/colors/blue.png')
+BROWN_IMAGE = pygame.image.load('assets/menu/edit players/colors/brown.png')
+CYAN_IMAGE = pygame.image.load('assets/menu/edit players/colors/cyan.png')
+ORANGE_IMAGE = pygame.image.load('assets/menu/edit players/colors/orange.png')
+PINK_IMAGE = pygame.image.load('assets/menu/edit players/colors/pink.png')
+PURPLE_IMAGE = pygame.image.load('assets/menu/edit players/colors/purple.png')
+RED_IMAGE = pygame.image.load('assets/menu/edit players/colors/red.png')
+COLOR_IMAGE_LIST = [RED_IMAGE, ORANGE_IMAGE, PURPLE_IMAGE, BLUE_IMAGE, CYAN_IMAGE, BROWN_IMAGE, BLACK_IMAGE, PINK_IMAGE]
 
 # play options images
 GAME_MODES = [CLASSIC_GAME_MODE, TIME_TRIAL_GAME_MODE]
@@ -141,6 +153,38 @@ BACK_PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="
                             base_color=WHITE,
                             hovering_color=(160, 32, 220))
 PLAY_OPTIONS_BUTTONS = [GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PALETTE_BUTTON]
+
+# edit players buttons
+EDIT_LEFT_ARROW_1 = button.Button(image=EDIT_LEFT_ARROW, pos=(1133, 430), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+EDIT_RIGHT_ARROW_1 = button.Button(image=EDIT_RIGHT_ARROW, pos=(1296, 430), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+
+EDIT_LEFT_ARROW_2 = button.Button(image=EDIT_LEFT_ARROW, pos=(1133, 580), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+EDIT_RIGHT_ARROW_2 = button.Button(image=EDIT_RIGHT_ARROW, pos=(1296, 580), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+
+EDIT_LEFT_ARROW_3 = button.Button(image=EDIT_LEFT_ARROW, pos=(1133, 730), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+EDIT_RIGHT_ARROW_3 = button.Button(image=EDIT_RIGHT_ARROW, pos=(1296, 730), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+
+EDIT_LEFT_ARROW_4 = button.Button(image=EDIT_LEFT_ARROW, pos=(1133, 880), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+EDIT_RIGHT_ARROW_4 = button.Button(image=EDIT_RIGHT_ARROW, pos=(1296, 880), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=3, border_color=BLACK)
+
+EDIT_ARROWS_LIST = [EDIT_LEFT_ARROW_1, EDIT_RIGHT_ARROW_1, EDIT_LEFT_ARROW_2, EDIT_RIGHT_ARROW_2, EDIT_LEFT_ARROW_3, EDIT_RIGHT_ARROW_3,
+                    EDIT_LEFT_ARROW_4, EDIT_RIGHT_ARROW_4]
 
 
 # menu title
