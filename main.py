@@ -27,6 +27,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 from catan.button import Button
+from catan.timer import  Timer
 
 # Set up the screen
 
@@ -40,8 +41,11 @@ pygame.display.set_icon(ICON_32x)
 # Set up the clock
 clock = pygame.time.Clock()
 FPS = 60
+
+
 def doesFileExists(filePathAndName):
     return os.path.exists(filePathAndName)
+
 
 def main_menu():
     pygame.display.set_caption("Menu")
@@ -62,6 +66,7 @@ def main_menu():
 
     # running play option values
     current_game_mode = "classic"
+    time_trial = False
     current_num_players = 1
     current_ai_options = "yes"
 
@@ -76,7 +81,6 @@ def main_menu():
     P2_color_image = color_image_list.pop(0)
     P3_color_image = color_image_list.pop(0)
     P4_color_image = color_image_list.pop(0)
-
 
     # edit players values
     P1_name = "Bob"
@@ -150,7 +154,10 @@ def main_menu():
                                     elif value["color"] == [255, 0, 255]:
                                         load_color_list.append(COLOR_LIST[7])
 
-                            play(True, load_player_names, load_color_list)
+                                if doesFileExists("./timer_data.txt"):
+                                    time_trial = True
+
+                            play(True, load_player_names, load_color_list, time_trial)
 
                     if MENU_BUTTON_LIST[2].check_for_input(menu_mouse_pos):
                         pygame.quit()
@@ -215,7 +222,10 @@ def main_menu():
                                 player_list.append(default_ai_list[0])
                                 player_list.append(default_ai_list[1])
                                 player_list.append(default_ai_list[-1])
-                        play(False, player_list,current_players_color_list)
+
+                        if current_game_mode == "time trial":
+                            time_trial = True
+                        play(False, player_list, current_players_color_list, time_trial)
                     if PALETTE_BUTTON.check_for_input(menu_mouse_pos):
                         game_state = "edit players"
                         print(player_list)
@@ -461,7 +471,10 @@ def main_menu():
                                 current_players_color_list.append(color_list.pop(0))
                                 current_players_color_list.append(color_list.pop(0))
                                 current_players_color_list.append(color_list.pop(0))
-                        play(False, player_list, current_players_color_list)
+
+                            if current_game_mode == "time trial":
+                                time_trial = True
+                        play(False, player_list, current_players_color_list, time_trial)
 
                 if event.type == pygame.KEYDOWN:
                     if player_1_edit:
@@ -506,8 +519,10 @@ def main_menu():
         clock.tick(FPS)
 
 
-def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_list=COLOR_LIST):
+def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_list=COLOR_LIST, time_trial = False):
     run = True
+    if time_trial:
+        timer = Timer(SCREEN)
 
     # create players
     new_game = Game(players_names, color_list)
@@ -516,6 +531,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         new_game.load_board_data()
         new_game.load_bank_data()
         new_game.load_game_data()
+        if time_trial:
+            timer.load()
+            timer.unpause()
         game_state = "default"
     else:
         game_state = "initial house placements P1"
@@ -526,6 +544,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
 
     # Game loop
     while run:
+        # Limit the frame rate
+        dt = clock.tick(FPS)
+
         current_player = new_game.get_current_player()
         # draw everything
         new_game.draw_board(SCREEN)
@@ -536,6 +557,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         new_game.draw_robber(SCREEN)
         new_game.draw_flags(SCREEN)
         new_game.ui_Messages(SCREEN, game_state, current_player)
+        new_game.draw_player_bank_ratios(SCREEN, current_player)
+        if time_trial:
+            timer.update(dt)
 
         # get mouse position
         mos_pos = pygame.mouse.get_pos()
@@ -590,7 +614,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
 
                         # Define the radius of the buffer zone
-                        buffer_radius = 15
+                        buffer_radius = 20
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
@@ -603,6 +627,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                                 game_state = "dice roll"
                             else:
                                 new_game.end_turn()
+
                                 game_state = "initial house placements P2+"
         # initial HOUSE placements for players 2+
         elif game_state == "initial house placements P2+":
@@ -644,14 +669,14 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 if len(current_player.get_roads()) == 2 and current_player is not new_game.get_players()[-1]:
-                    time.sleep(1)
+
                     new_game.end_turn()
                     game_state = "initial house placements P2+"
                 elif len(current_player.get_roads()) == 1:
-                    time.sleep(1)
+
                     game_state = "initial house placements P2+"
                 else:
-                    time.sleep(1)
+
                     new_game.end_turn()
                     game_state = "initial house placements P1"
 
@@ -675,7 +700,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
 
                         # Define the radius of the buffer zone
-                        buffer_radius = 15
+                        buffer_radius = 20
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
@@ -889,7 +914,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
 
                         # Define the radius of the buffer zone
-                        buffer_radius = 15
+                        buffer_radius = 20
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
@@ -1049,7 +1074,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
 
                         # Define the radius of the buffer zone
-                        buffer_radius = 15
+                        buffer_radius = 20
 
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
@@ -1210,6 +1235,8 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             game_state = "default"
 
         elif game_state == "pause menu":
+            if time_trial:
+                timer.pause()
             for butt in [SAVE_BUTTON, RESUME_BUTTON, MAIN_MENU_BUTTON]:
                 butt.change_color(mos_pos)
                 butt.update(SCREEN)
@@ -1222,9 +1249,13 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if RESUME_BUTTON.check_for_input(mos_pos):
                         game_state = "default"
+                        if time_trial:
+                            timer.unpause()
                     if MAIN_MENU_BUTTON.check_for_input(mos_pos):
                         main_menu()
                     if SAVE_BUTTON.check_for_input(mos_pos):
+                        if time_trial:
+                            timer.save()
                         players_data = new_game.generate_players_save_data()
                         board_data = new_game.board.generate_grid_save()
                         bank_data = new_game.bank.generate_bank_save()
@@ -1902,18 +1933,19 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             trade_player.add_resource("hills")
                             new_game.remove_resource_y_trader("hills")
 
-        new_game.draw_player_bank_ratios(SCREEN, current_player)
+
+
+
 
         # Update the screen
         pygame.display.update()
 
-        # Limit the frame rate
-        clock.tick(FPS)
-
-
-def options():
-    pass
-
+"""
+def victory(players_list, victory_point_list, time_trial = False):
+    if time_trial and current_player == new_game.players[-1]:
+        if timer.remaining_time == 0:
+            victory(True, new_game.get_players(), new_game.generate_victory_point_list())
+"""
 
 # run game
 main_menu()

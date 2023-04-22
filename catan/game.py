@@ -1025,6 +1025,13 @@ class Game:
                 resource_rect = resource_num.get_rect(center=(1463, y_pos))
                 screen.blit(resource_num, resource_rect)
 
+    def generate_victory_point_list(self):
+        vic_list = []
+        for p in self.players:
+            vic_list.append(p.victory_points)
+        return vic_list
+
+
     def generate_players_save_data(self):
         players_data = {}
         for p in self.players:
