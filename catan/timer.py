@@ -9,7 +9,6 @@ import json
 class Timer:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.Font("freesansbold.ttf", 36)
         self.time = 1 * 60 * 1000  # 15 minutes in milliseconds
         self.paused = False
         self.remaining_time = self.time
@@ -30,7 +29,7 @@ class Timer:
         time_str = "{:02d}:{:02d}.{:03d}".format(minutes, seconds, milliseconds)
 
         # Render the time as text
-        text = self.font.render(time_str, True, BLACK)
+        text = NUMBER_FONT.render(time_str, True, BLACK)
 
         # Display the time on the screen
         self.screen.blit(text, (1550, 250))
