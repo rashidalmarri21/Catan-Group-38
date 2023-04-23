@@ -1,1 +1,0 @@
-{"dev cards": ["knight", "victory", "knight", "knight", "victory", "knight", "road", "build", "knight", "knight", "knight", "victory", "monopoly", "knight", "year", "year", "knight", "knight", "road", "monopoly", "knight", "knight", "build", "knight", "knight"], "forest": 19, "hills": 19, "pasture": 19, "fields": 19, "mountains": 19}

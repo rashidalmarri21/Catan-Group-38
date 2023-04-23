@@ -185,7 +185,7 @@ class Game:
         for current_player in self.players:
             current_player.draw_roads(screen)
 
-        self.check_game_over()  # check if the game is over
+
 
     def update_trade_player_list(self, current_player):
         player_list = []
@@ -363,11 +363,12 @@ class Game:
     def get_players(self):
         return self.players
 
-    def check_game_over(self):
+    def check_game_over(self, current_player):
         # check if any player has reached 10 victory points
-        for current_player in self.players:
-            if current_player.victory_points >= 10:
-                self.game_over = True
+        if current_player.get_victory_points() >= 10:
+            return True
+        else:
+            return False
 
     def get_current_player(self):
         return self.players[self.current_player_index]
@@ -1028,9 +1029,25 @@ class Game:
     def generate_victory_point_list(self):
         vic_list = []
         for p in self.players:
-            vic_list.append(p.victory_points)
+            vic_list.append(p.get_victory_points())
         return vic_list
 
+    def generate_player_name_list(self):
+        name_list = []
+        for p in self.players:
+            name_list.append(p.get_name())
+        return name_list
+
+    def generate_sorted_player_score(self):
+        vic_list = self.generate_victory_point_list()
+        name_list = self.generate_player_name_list()
+
+        name_score_dict = {}
+        for score, name in zip(vic_list, name_list):
+            name_score_dict[name] = score
+
+        sorted_name_score_dict = dict(sorted(name_score_dict.items(), key=lambda item: item[1], reverse=True))
+        return sorted_name_score_dict
 
     def generate_players_save_data(self):
         players_data = {}

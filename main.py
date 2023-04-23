@@ -1,6 +1,6 @@
 import random, json, os
 import sys
-import pygame, time
+import pygame, operator
 from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_TEXT, MENU_TITLE_RECT, MENU_BUTTON_LIST, \
     END_TURN_BUTTON, UI_BUTTONS, PLACE_HOUSE_BUTTON, PLACE_HOUSE_BUTTONS, BACK_BUTTON, \
     PLACE_ROAD_BUTTONS, PLACE_ROAD_BUTTON, ICON_32x, ROLL_DICE_BUTTON, DEV_CARDS_BUTTON, \
@@ -23,11 +23,12 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     NUM_OF_PLAYERS, AI_OPTION, PALETTE_BUTTON, GAME_MODE_TEXT, GAME_MODE_TEXT_RECT, NUM_PLAYERS_TEXT, \
     NUM_PLAYERS_TEXT_RECT, \
     AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, \
-    MAIN_MENU_BUTTON, EDIT_NAME_PLATE_HOVER, EDIT_ARROWS_LIST, COLOR_IMAGE_LIST
+    MAIN_MENU_BUTTON, EDIT_NAME_PLATE_HOVER, EDIT_ARROWS_LIST, COLOR_IMAGE_LIST, BEIGE, VICTORY_IMAGE, VICTORY_IMAGE_RECT,\
+    MAIN_MENU_VICTORY_BUTTON, QUIT_VICTORY_BUTTON, VICTORY_UI, VICTORY_UI_RECT
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 from catan.button import Button
-from catan.timer import  Timer
+from catan.timer import Timer
 
 # Set up the screen
 
@@ -560,6 +561,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         new_game.draw_player_bank_ratios(SCREEN, current_player)
         if time_trial:
             timer.update(dt)
+        else:
+            if new_game.check_game_over(current_player):
+                game_state = "victory screen"
 
         # get mouse position
         mos_pos = pygame.mouse.get_pos()
@@ -781,8 +785,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if current_player.make_decision("default", new_game.road_positions, new_game.house_positions):
                     game_state = "place road"
                 else:
-                    new_game.end_turn()
-                    game_state = "dice roll"
+                    if time_trial and current_player == new_game.players[-1]:
+                        if timer.remaining_time == 0:
+                            game_state = "victory screen"
+                        else:
+                            new_game.end_turn()
+                            game_state = "dice roll"
+                    else:
+                        new_game.end_turn()
+                        game_state = "dice roll"
 
             # loop through each button in the games UI
             for butt in UI_BUTTONS:
@@ -798,8 +809,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
-                        new_game.end_turn()
-                        game_state = 'dice roll'
+                        if time_trial and current_player == new_game.players[-1]:
+                            if timer.remaining_time == 0:
+                                game_state = "victory screen"
+                            else:
+                                new_game.end_turn()
+                                game_state = "dice roll"
+                        else:
+                            new_game.end_turn()
+                            game_state = "dice roll"
                     if PLACE_HOUSE_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "wants to place a HOUSE")
                         game_state = "place house"
@@ -837,8 +855,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
                 new_game.bank.add_bank_resources_from_placement('house')
-                new_game.end_turn()
-                game_state = "dice roll"
+                if time_trial and current_player == new_game.players[-1]:
+                    if timer.remaining_time == 0:
+                        game_state = "victory screen"
+                    else:
+                        new_game.end_turn()
+                        game_state = "dice roll"
+                else:
+                    new_game.end_turn()
+                    game_state = "dice roll"
 
             for butt in PLACE_HOUSE_BUTTONS:
                 butt.change_color(mos_pos)
@@ -852,8 +877,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
-                        new_game.end_turn()
-                        game_state = 'dice roll'
+                        if time_trial and current_player == new_game.players[-1]:
+                            if timer.remaining_time == 0:
+                                game_state = "victory screen"
+                            else:
+                                new_game.end_turn()
+                                game_state = "dice roll"
+                        else:
+                            new_game.end_turn()
+                            game_state = "dice roll"
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
                         game_state = "default"
@@ -884,7 +916,6 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                                                                    new_game.house_positions)
                 new_game.road_positions = road_pos
                 new_game.house_positions = house_pos
-                time.sleep(1)
                 new_game.update_longest_road_player()
                 new_game.bank.add_bank_resources_from_placement('road')
                 game_state = "place house"
@@ -903,8 +934,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         game_state = 'default'
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
-                        new_game.end_turn()
-                        game_state = 'place house'
+                        if time_trial and current_player == new_game.players[-1]:
+                            if timer.remaining_time == 0:
+                                game_state = "victory screen"
+                            else:
+                                new_game.end_turn()
+                                game_state = "dice roll"
+                        else:
+                            new_game.end_turn()
+                            game_state = "dice roll"
                     # Check if the click is within the clickable area for any of the lines
                     for pos in new_game.road_positions:
                         start_point = pos[0]
@@ -943,8 +981,15 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
-                        new_game.end_turn()
-                        game_state = 'dice roll'
+                        if time_trial and current_player == new_game.players[-1]:
+                            if timer.remaining_time == 0:
+                                game_state = "victory screen"
+                            else:
+                                new_game.end_turn()
+                                game_state = "dice roll"
+                        else:
+                            new_game.end_turn()
+                            game_state = "dice roll"
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
                         game_state = "default"
@@ -1256,6 +1301,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                     if SAVE_BUTTON.check_for_input(mos_pos):
                         if time_trial:
                             timer.save()
+                        else:
+                            if doesFileExists("timer_data.txt"):
+                                os.remove("timer_data.txt")
                         players_data = new_game.generate_players_save_data()
                         board_data = new_game.board.generate_grid_save()
                         bank_data = new_game.bank.generate_bank_save()
@@ -1933,19 +1981,65 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             trade_player.add_resource("hills")
                             new_game.remove_resource_y_trader("hills")
 
+        elif game_state == "victory screen":
+            SCREEN.fill(BEIGE)
+            SCREEN.blit(VICTORY_UI, VICTORY_UI_RECT)
+            SCREEN.blit(VICTORY_IMAGE, VICTORY_IMAGE_RECT)
 
+            MAIN_MENU_VICTORY_BUTTON.change_color(mos_pos)
+            MAIN_MENU_VICTORY_BUTTON.update(SCREEN)
+            QUIT_VICTORY_BUTTON.change_color(mos_pos)
+            QUIT_VICTORY_BUTTON.update(SCREEN)
 
+            sorted_player_score = new_game.generate_sorted_player_score()
+            y_pos = 462
+
+            for name, score in sorted_player_score.items():
+                for p in new_game.players:
+                    if p.get_name() == name:
+                        name_text = NUMBER_FONT.render("{}".format(name), True, p.color)
+                        score_text = NUMBER_FONT.render("{}".format(score), True, p.color)
+                        name_text_rect = name_text.get_rect(center=(687, y_pos))
+                        score_text_rect = score_text.get_rect(center=(1213, y_pos))
+                        SCREEN.blit(name_text, name_text_rect)
+                        SCREEN.blit(score_text, score_text_rect)
+                        y_pos += 100
+            y_pos = 462
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if MAIN_MENU_VICTORY_BUTTON.check_for_input(mos_pos):
+                        main_menu()
+                    if QUIT_VICTORY_BUTTON.check_for_input(mos_pos):
+                        pygame.quit()
+                        sys.exit()
 
 
         # Update the screen
         pygame.display.update()
 
+
+
+
+"""        
+d = {1: 2, 3: 4, 4: 3, 2: 1, 0: 0}
+print('Original dictionary : ', d)
+sorted_d = sorted(d.items(), key=operator.itemgetter(1))
+print('Dictionary in ascending order by value : ', sorted_d)
+sorted_d = dict(sorted(d.items(), key=operator.itemgetter(1), reverse=True))
+print('Dictionary in descending order by value : ', sorted_d)
 """
-def victory(players_list, victory_point_list, time_trial = False):
-    if time_trial and current_player == new_game.players[-1]:
-        if timer.remaining_time == 0:
-            victory(True, new_game.get_players(), new_game.generate_victory_point_list())
-"""
+
+
+
+
+
+
+
 
 # run game
 main_menu()

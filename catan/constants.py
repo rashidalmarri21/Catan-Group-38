@@ -92,6 +92,10 @@ EDIT_PLAYERS_UI = pygame.image.load('assets/menu/edit players/edit players UI.pn
 EDIT_PLAYERS_UI_RECT = EDIT_PLAYERS_UI.get_rect(center=(960, 620))
 EDIT_NAME_PLATE = pygame.image.load('assets/menu/edit players/edit name plate.png')
 EDIT_NAME_PLATE_HOVER = pygame.image.load('assets/menu/edit players/edit name plate hover.png')
+VICTORY_IMAGE = pygame.image.load('assets/menu/victory screen/victory.png')
+VICTORY_IMAGE_RECT = VICTORY_IMAGE.get_rect(center=(960, 200))
+VICTORY_UI = pygame.image.load('assets/menu/victory screen/victory UI.png')
+VICTORY_UI_RECT = VICTORY_UI.get_rect(center=(960, 650))
 
 # color images
 BLACK_IMAGE = pygame.image.load('assets/menu/edit players/colors/black.png')
@@ -152,6 +156,11 @@ START_GAME_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input
 BACK_PLAY_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="BACK", font=NUMBER_FONT,
                             base_color=WHITE,
                             hovering_color=(160, 32, 220))
+MAIN_MENU_VICTORY_BUTTON = button.Button(image=MENU_BUTTON, pos=(269, 967), text_input="MAIN MENU", font=NUMBER_FONT,
+                            base_color=WHITE,
+                            hovering_color=(160, 32, 220))
+QUIT_VICTORY_BUTTON = button.Button(image=MENU_BUTTON, pos=(1656, 967), text_input="QUIT", font=NUMBER_FONT,
+                                base_color=WHITE,hovering_color=(160, 32, 220))
 PLAY_OPTIONS_BUTTONS = [GAME_OPTIONS_BUTTON, START_GAME_BUTTON, BACK_PLAY_BUTTON, PALETTE_BUTTON]
 
 # edit players buttons
