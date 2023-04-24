@@ -9,7 +9,7 @@ import json
 class Timer:
     def __init__(self, screen):
         self.screen = screen
-        self.time = 1 * 60 * 1000  # 15 minutes in milliseconds
+        self.time = 15 * 60 * 1000  # 15 minutes in milliseconds
         self.paused = False
         self.remaining_time = self.time
 

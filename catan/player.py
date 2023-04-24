@@ -12,7 +12,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 100, 'hills': 100, 'pasture':100, 'fields': 100, 'mountains': 100}
+        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.development_cards = []
         self.houses = []
         self.cities = []
@@ -183,7 +183,7 @@ class Player:
             else:
                 return False
         elif placement_type == "city":
-            if self.resources['fields'] >= 3 and self.resources['mountains'] >= 2:
+            if self.resources['fields'] >= 2 and self.resources['mountains'] >= 3:
                 return True
             else:
                 return False
