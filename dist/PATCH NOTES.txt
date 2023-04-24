@@ -1,0 +1,11 @@
+AI now has a 50% chance to deny player trade requests.
+
+AI now trades from bank (watching as still buggy in some cases.
+
+Added Help Guide for players new to catan. 
+
+Fixed bug that caused Road Buliding dev card to ignore Road Allowances. 
+
+Fixed bug that did not give the proper amount of resources to the bank when a player bought a dev card. 
+
+Minor AI improvments.  

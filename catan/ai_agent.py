@@ -61,12 +61,12 @@ class AIAgent(Player):
                     self.add_road(chosen_road)
                     self.remove_resources_for_placement('road')
                     road_positions.remove(chosen_road)
-                    return road_positions, house_positions
+                    return True, road_positions, house_positions
                 else:
                     print("Out of valid roads.")
-                    return road_positions, house_positions
+                    return False, road_positions, house_positions
             else:
-                return road_positions, house_positions
+                return False, road_positions, house_positions
         elif game_state == "place house":
             if self.has_enough_resources("house") and self.house_allowance():
                 valid_positions = []
@@ -82,12 +82,32 @@ class AIAgent(Player):
                     self.add_victory_point()
                     self.remove_resources_for_placement('house')
                     house_positions.remove(chosen_house)
-                    return road_positions, house_positions
+                    return True, road_positions, house_positions
                 else:
                     print("Out of valid houses")
-                    return road_positions, house_positions
+                    return False, road_positions, house_positions
             else:
-                return road_positions, house_positions
+                return False, road_positions, house_positions
+
+    def trade_with_bank(self):
+        tradeable_resources = []
+        needed_resources = []
+        for resource, value in self.resources.items():
+            if value >= 5:
+                tradeable_resources.append(resource)
+            elif value <= 2:
+                needed_resources.append(resource)
+
+        return tradeable_resources, needed_resources
+
+
+    def player_trade_50_50(self):
+        nums = [1, 2]
+        x = random.choice(nums)
+        if x == 1:
+            return True
+        else:
+            return False
 
     def isnt_too_close_to_other_player_houses(self, pos):
         """

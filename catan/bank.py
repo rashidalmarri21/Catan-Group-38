@@ -43,6 +43,10 @@ class Bank:
         elif placement_type == "city":
             self.bank_resources['fields'] += 2
             self.bank_resources['mountains'] += 3
+        elif placement_type == "dev card":
+            self.bank_resources["pasture"] += 1
+            self.bank_resources["fields"] += 1
+            self.bank_resources["mountains"] += 1
 
     def remove_resources(self, resource_type):
         if resource_type == 'desert':
