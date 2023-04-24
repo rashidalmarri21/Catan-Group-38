@@ -66,6 +66,7 @@ class AIAgent(Player):
                     print("Out of valid roads.")
                     return False, road_positions, house_positions
             else:
+                print("not enough resources or allowance limit")
                 return False, road_positions, house_positions
         elif game_state == "place house":
             if self.has_enough_resources("house") and self.house_allowance():
@@ -87,13 +88,14 @@ class AIAgent(Player):
                     print("Out of valid houses")
                     return False, road_positions, house_positions
             else:
+                print("not enough resources or allowance limit")
                 return False, road_positions, house_positions
 
     def trade_with_bank(self):
         tradeable_resources = []
         needed_resources = []
         for resource, value in self.resources.items():
-            if value >= 5:
+            if value >= 6:
                 tradeable_resources.append(resource)
             elif value <= 2:
                 needed_resources.append(resource)

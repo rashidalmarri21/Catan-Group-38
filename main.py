@@ -782,8 +782,10 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         # default game state
         elif game_state == "default":
             if "AI" in current_player.get_name():
-                if current_player.resources["hills"] >= 2 and current_player.resources["forest"] >= 2:
+                if current_player.has_enough_resources('road') and not current_player.has_enough_resources('house'):
                     game_state = "place road"
+                elif current_player.has_enough_resources('road') and current_player.has_enough_resources('house'):
+                    game_state = "place house"
                 else:
                     surplus_resources, needed_resources = current_player.trade_with_bank()
                     if surplus_resources and needed_resources:
@@ -888,9 +890,10 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         # implement place house state
         elif game_state == "place house":
             if "AI" in current_player.get_name():
-                if current_player.make_decision("place house", new_game.road_positions, new_game.house_positions):
-                    place_bool, road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions,
-                                                                       new_game.house_positions)
+                place_bool, road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions,
+                                                                               new_game.house_positions)
+                if place_bool:
+
                     new_game.road_positions = road_pos
                     new_game.house_positions = house_pos
                     new_game.bank.add_bank_resources_from_placement('house')
@@ -904,15 +907,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         new_game.end_turn()
                         game_state = "dice roll"
                 else:
-                    if time_trial and current_player == new_game.players[-1]:
-                        if timer.remaining_time == 0:
-                            game_state = "victory screen"
-                        else:
-                            new_game.end_turn()
-                            game_state = "dice roll"
-                    else:
-                        new_game.end_turn()
-                        game_state = "dice roll"
+                    game_state = "place road"
 
             for butt in PLACE_HOUSE_BUTTONS:
                 butt.change_color(mos_pos)
@@ -961,24 +956,23 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         # implement place road state
         elif game_state == "place road":
             if "AI" in current_player.get_name():
-                if current_player.make_decision("place road", new_game.road_positions, new_game.house_positions):
-                    place_bool, road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions, new_game.house_positions)
+                place_bool, road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions,
+                                                                               new_game.house_positions)
+                if place_bool:
+
                     new_game.road_positions = road_pos
                     new_game.house_positions = house_pos
                     new_game.update_longest_road_player()
                     new_game.bank.add_bank_resources_from_placement('road')
-                    if current_player.has_enough_resources("house") and current_player.house_allowance():
-                        game_state = "place house"
-                    else:
-                        if time_trial and current_player == new_game.players[-1]:
-                            if timer.remaining_time == 0:
-                                game_state = "victory screen"
-                            else:
-                                new_game.end_turn()
-                                game_state = "dice roll"
+                    if time_trial and current_player == new_game.players[-1]:
+                        if timer.remaining_time == 0:
+                            game_state = "victory screen"
                         else:
                             new_game.end_turn()
                             game_state = "dice roll"
+                    else:
+                        new_game.end_turn()
+                        game_state = "dice roll"
                 else:
                     if time_trial and current_player == new_game.players[-1]:
                         if timer.remaining_time == 0:

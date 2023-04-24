@@ -239,9 +239,10 @@ class Game:
                                     players_on_tile.append(p)
         if len(players_on_tile) != 0:
             chosen_player = random.choice(players_on_tile)
-            if chosen_player.resources[resource_to_take] > 1:
-                chosen_player.remove_resource(resource_to_take)
-                current_player.add_resource(resource_to_take)
+            if resource_to_take != 'desert':
+                if chosen_player.resources[resource_to_take] > 1:
+                    chosen_player.remove_resource(resource_to_take)
+                    current_player.add_resource(resource_to_take)
 
     def discard_if_7(self):
         pass
