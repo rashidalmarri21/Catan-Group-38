@@ -401,7 +401,7 @@ class Game:
         for p in self.players:
             for pp, tile in players_to_receive:
                 if pp == p:
-                    print("adding resources to", p.get_name())
+                    print("adding resource: {} to".format(tile_grid[tile]["resource_type"][0]), p.get_name())
                     test = tile_grid[tile]["resource_type"][0]
                     if self.bank.get_bank_resource(test) > 0:
                         p.add_resource(test)

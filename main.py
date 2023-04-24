@@ -801,6 +801,16 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                                     new_game.bank.add_bank_resources_with_amount(surplus,
                                                                                  current_player.get_trade_ratios()[surplus][0])
                                     new_game.bank.remove_resources(needed)
+                                    if time_trial and current_player == new_game.players[-1]:
+                                        if timer.remaining_time == 0:
+                                            game_state = "victory screen"
+                                        else:
+                                            new_game.end_turn()
+                                            game_state = "dice roll"
+                                    else:
+                                        new_game.end_turn()
+                                        game_state = "dice roll"
+
                                 else:
                                     if time_trial and current_player == new_game.players[-1]:
                                         if timer.remaining_time == 0:
@@ -974,15 +984,63 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         new_game.end_turn()
                         game_state = "dice roll"
                 else:
-                    if time_trial and current_player == new_game.players[-1]:
-                        if timer.remaining_time == 0:
-                            game_state = "victory screen"
+                    surplus_resources, needed_resources = current_player.trade_with_bank()
+                    if surplus_resources and needed_resources:
+                        for surplus in surplus_resources:
+                            if len(needed_resources) >= 1:
+                                needed = needed_resources.pop(-1)
+                                if new_game.bank.get_bank_resource(needed) > 0:
+                                    print(current_player.get_name(),
+                                          "traded {} {} for 1 {}".format(current_player.get_trade_ratios()[surplus][0],
+                                                                         surplus, needed))
+                                    current_player.add_resource(needed)
+                                    current_player.remove_resource_with_amount(surplus,
+                                                                               current_player.get_trade_ratios()[
+                                                                                   surplus][0])
+                                    new_game.bank.add_bank_resources_with_amount(surplus,
+                                                                                 current_player.get_trade_ratios()[
+                                                                                     surplus][0])
+                                    new_game.bank.remove_resources(needed)
+                                    if time_trial and current_player == new_game.players[-1]:
+                                        if timer.remaining_time == 0:
+                                            game_state = "victory screen"
+                                        else:
+                                            new_game.end_turn()
+                                            game_state = "dice roll"
+                                    else:
+                                        new_game.end_turn()
+                                        game_state = "dice roll"
+
+                                else:
+                                    if time_trial and current_player == new_game.players[-1]:
+                                        if timer.remaining_time == 0:
+                                            game_state = "victory screen"
+                                        else:
+                                            new_game.end_turn()
+                                            game_state = "dice roll"
+                                    else:
+                                        new_game.end_turn()
+                                        game_state = "dice roll"
+                            else:
+                                if time_trial and current_player == new_game.players[-1]:
+                                    if timer.remaining_time == 0:
+                                        game_state = "victory screen"
+                                    else:
+                                        new_game.end_turn()
+                                        game_state = "dice roll"
+                                else:
+                                    new_game.end_turn()
+                                    game_state = "dice roll"
+                    else:
+                        if time_trial and current_player == new_game.players[-1]:
+                            if timer.remaining_time == 0:
+                                game_state = "victory screen"
+                            else:
+                                new_game.end_turn()
+                                game_state = "dice roll"
                         else:
                             new_game.end_turn()
                             game_state = "dice roll"
-                    else:
-                        new_game.end_turn()
-                        game_state = "dice roll"
 
             for butt in PLACE_ROAD_BUTTONS:
                 butt.change_color(mos_pos)
