@@ -96,6 +96,9 @@ VICTORY_IMAGE = pygame.image.load('assets/menu/victory screen/victory.png')
 VICTORY_IMAGE_RECT = VICTORY_IMAGE.get_rect(center=(960, 200))
 VICTORY_UI = pygame.image.load('assets/menu/victory screen/victory UI.png')
 VICTORY_UI_RECT = VICTORY_UI.get_rect(center=(960, 650))
+GAME_HELP_IMAGE = pygame.image.load('assets/menu/help/help.png')
+GAME_HELP_IMAGE_RECT = GAME_HELP_IMAGE.get_rect(center=(960, 540))
+HELP_IMAGE = pygame.image.load('assets/menu/help/help button.png')
 
 # color images
 BLACK_IMAGE = pygame.image.load('assets/menu/edit players/colors/black.png')
@@ -232,6 +235,9 @@ PAUSE_IMAGE = pygame.image.load("assets/UI/pause/pause button.png")
 PAUSE_MENU_UI = pygame.image.load("assets/UI/pause/pause menu.png")
 PAUSE_MENU_RECT = PAUSE_MENU_UI.get_rect(center=(960, 550))
 PAUSE_BUTTON = button.Button(image=PAUSE_IMAGE, pos=(65, 272), text_input="", font=NUMBER_FONT,
+                                base_color=BLACK,
+                                hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
+HELP_BUTTON = button.Button(image=HELP_IMAGE, pos=(1855, 272), text_input="", font=NUMBER_FONT,
                                 base_color=BLACK,
                                 hovering_color=(160, 32, 220), border=True, border_width=5, border_color=BLACK)
 SAVE_BUTTON = button.Button(image=MENU_BUTTON, pos=(960, 560), text_input="SAVE", font=NUMBER_FONT,
@@ -483,7 +489,7 @@ TRADE_BUTTONS = [LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON, LEFT_PLAYER
                  TRADE_BUTTON, BACK_BUTTON_TRADE]
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON,
               ORE_BUTTON, BRICK_BUTTON,
-              DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON, PAUSE_BUTTON]
+              DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON, PAUSE_BUTTON, HELP_BUTTON]
 PLACE_HOUSE_BUTTONS = [END_TURN_BUTTON, BACK_BUTTON]
 PLACE_ROAD_BUTTONS = [BACK_BUTTON, END_TURN_BUTTON]
 DEV_CARDS_BUTTONS_LIST = [KNIGHT_BUTTON, VICTORY_POINT_BUTTON, ROAD_BUILDING_BUTTON, MONOPOLY_BUTTON,
@@ -491,6 +497,11 @@ DEV_CARDS_BUTTONS_LIST = [KNIGHT_BUTTON, VICTORY_POINT_BUTTON, ROAD_BUILDING_BUT
 
 # ui elements
 BACKGROUND_UI_IMAGE = pygame.image.load("assets/UI/UI_Background_ship.png")
+
+# error messages
+AI_TRADE_FAIL = NUMBER_FONT.render("AI player declined the player", True, BLACK)
+AI_TRADE_FAIL_REXT = AI_TRADE_FAIL.get_rect(center=(960, 540))
+
 
 # houses
 EXCLUDED_INTERSECTIONS = []

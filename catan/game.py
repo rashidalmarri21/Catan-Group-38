@@ -25,7 +25,7 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
     RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT, \
-    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, CYAN, BROWN, PINK
+    PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, CYAN, BROWN, PINK, GAME_HELP_IMAGE, GAME_HELP_IMAGE_RECT
 
 
 class Game:
@@ -239,9 +239,10 @@ class Game:
                                     players_on_tile.append(p)
         if len(players_on_tile) != 0:
             chosen_player = random.choice(players_on_tile)
-            if chosen_player.resources[resource_to_take] > 1:
-                chosen_player.remove_resource(resource_to_take)
-                current_player.add_resource(resource_to_take)
+            if resource_to_take != 'desert':
+                if chosen_player.resources[resource_to_take] > 1:
+                    chosen_player.remove_resource(resource_to_take)
+                    current_player.add_resource(resource_to_take)
 
     def discard_if_7(self):
         pass
@@ -400,7 +401,7 @@ class Game:
         for p in self.players:
             for pp, tile in players_to_receive:
                 if pp == p:
-                    print("adding resources to", p.get_name())
+                    print("adding resource: {} to".format(tile_grid[tile]["resource_type"][0]), p.get_name())
                     test = tile_grid[tile]["resource_type"][0]
                     if self.bank.get_bank_resource(test) > 0:
                         p.add_resource(test)
@@ -865,6 +866,16 @@ class Game:
 
             self.draw_trade_dev_buttons(screen)
             screen.blit(PAUSE_MENU_UI, PAUSE_MENU_RECT)
+
+        elif game_state == "help menu":
+            self.players[self.current_player_index].draw_dice(screen)
+            message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
+                                         current_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            screen.blit(message, message_rect)
+
+            self.draw_trade_dev_buttons(screen)
+            screen.blit(GAME_HELP_IMAGE, GAME_HELP_IMAGE_RECT)
 
     def draw_trade_dev_buttons(self, screen):
         # Draw the player trading button with a border
