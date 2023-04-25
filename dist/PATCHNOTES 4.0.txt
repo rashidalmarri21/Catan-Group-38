@@ -1,0 +1,9 @@
+Patch 4.0:
+
+Greatly improved AI resource mgmt.
+
+Added proper colors to the cities. 
+
+Added dynamic player feedback. 
+
+Other small bug fixes a QOL changes. 
