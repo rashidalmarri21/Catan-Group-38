@@ -42,7 +42,7 @@ class Player:
     def update_all_trade_ratios(self, ratio):
         for key, value in self.trade_ratios.items():
             if value == (4, 1):
-                self.trade_ratios[key] = (3, 1)
+                self.trade_ratios[key] = ratio
 
     def house_allowance(self):
         if len(self.houses) >= 5:
