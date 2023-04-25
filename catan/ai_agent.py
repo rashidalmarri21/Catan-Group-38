@@ -95,13 +95,23 @@ class AIAgent(Player):
         tradeable_resources = []
         needed_resources = []
         for resource, value in self.resources.items():
-            if value >= 6:
+            if value >= 5:
                 tradeable_resources.append(resource)
-            elif value <= 2:
+            elif value <= 0 and resource != "mountains":
                 needed_resources.append(resource)
 
         return tradeable_resources, needed_resources
 
+    def make_list_of_resources_to_str(self):
+        string_list = []
+        for key, value in self.resources.items():
+            for i in range(value):
+                string_list.append(key)
+        return string_list
+
+    def remove_resources_from_list(self, resource_list):
+        for resource in resource_list:
+            self.remove_resource(resource)
 
     def player_trade_50_50(self):
         nums = [1, 2]

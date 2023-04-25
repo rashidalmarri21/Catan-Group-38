@@ -12,7 +12,7 @@ class Player:
         self.color = color
 
         self.victory_points = 0
-        self.resources = {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10}
+        self.resources = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.development_cards = []
         self.houses = []
         self.cities = []
@@ -20,6 +20,8 @@ class Player:
         self.knights_played = 0
         self.dice_roll = [1, 1]
         self.trade_ratios = {'forest': (4, 1), 'hills': (4, 1), 'pasture': (4, 1), 'fields': (4, 1), 'mountains': (4, 1)}
+        self.discard_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+        self.discard_amount = 0
 
     def get_name(self):
         return self.name
@@ -121,9 +123,15 @@ class Player:
             self.resources['mountains'] -= 1
             self.resources['pasture'] -= 1
 
-    def remove_resources_for_discard(self):
-        pass  # this will allow the player to pick which resources to discard when a player rolls a 7 and
-        pass  # the player has more than 7 cards
+    def remove_resource_from_discard_pool(self, resource_type):
+        self.discard_pool[resource_type] -= 1
+
+    def add_resource_to_discard_pool(self, resource_type):
+        self.discard_pool[resource_type] += 1
+
+    def reset_discard_pool(self):
+        self.discard_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
+
 
     def get_resources(self):
         return self.resources
@@ -163,6 +171,20 @@ class Player:
 
     def get_cities(self):
         return self.cities
+
+    def sum_resource(self):
+        summed_resources = sum(self.resources.values())
+        return summed_resources
+
+    def update_discard_amount(self):
+        summed = self.sum_resource()
+        self.discard_amount = summed // 2
+
+    def remove_discard_amount(self):
+        self.discard_amount -= 1
+
+    def add_discard_amount(self):
+        self.discard_amount += 1
 
     def is_valid_house_placement(self, house_pos):
         p_roads = self.get_roads()

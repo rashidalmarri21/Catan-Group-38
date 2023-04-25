@@ -4,7 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50672599-dbe3-4626-b5b5-eee0fb82f9d5" name="Changes" comment="Updated city colors and dynamic error feedback to user." />
+    <list default="true" id="50672599-dbe3-4626-b5b5-eee0fb82f9d5" name="Changes" comment="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder.">
+      <change afterPath="$PROJECT_DIR$/assets/UI/discard/discard UI.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/PATCHNOTES 4.1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/assets/UI/discard/discard UI.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PYZ-00.pyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/base_library.zip" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/base_library.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/main.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/warn-main.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/warn-main.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catan/ai_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/ai_agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catan/bank.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/bank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catan/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catan/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catan/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PATCHNOTES 4.0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/main.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,21 +51,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Catan-Group-38" />
@@ -93,7 +113,7 @@
       <workItem from="1682303499088" duration="866000" />
       <workItem from="1682344230420" duration="22964000" />
       <workItem from="1682376977161" duration="561000" />
-      <workItem from="1682423062804" duration="5949000" />
+      <workItem from="1682423062804" duration="23447000" />
     </task>
     <task id="LOCAL-00001" summary="Victory Screen implemented for classic and time trial.">
       <created>1682264090995</created>
@@ -158,11 +178,36 @@
       <option name="project" value="LOCAL" />
       <updated>1682428851727</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder.">
+      <created>1682429271519</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1682429271519</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder.">
+      <created>1682429283803</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1682429283803</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -173,9 +218,10 @@
     <MESSAGE value="AI resource mgmt improvements" />
     <MESSAGE value="Improved AI. AI Cities placement WIP" />
     <MESSAGE value="Updated city colors and dynamic error feedback to user." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated city colors and dynamic error feedback to user." />
+    <MESSAGE value="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Catan_Group_38$main.coverage" NAME="main Coverage Results" MODIFIED="1682428653766" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Catan_Group_38$main.coverage" NAME="main Coverage Results" MODIFIED="1682446722543" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
