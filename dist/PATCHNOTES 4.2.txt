@@ -14,3 +14,5 @@ Gameplay Update 4.1:
 Added DISCARD WHEN 7 IS ROLLED for players and AI (AI only discards at 10 resources or more. Player at 7 or more.)
 
 
+Patch 4.2:
+Fixed bug with robber not giving the current player a resource from a random enemy on the tile. 

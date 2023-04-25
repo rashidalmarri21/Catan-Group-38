@@ -4,26 +4,179 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50672599-dbe3-4626-b5b5-eee0fb82f9d5" name="Changes" comment="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder.">
-      <change afterPath="$PROJECT_DIR$/assets/UI/discard/discard UI.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/PATCHNOTES 4.1.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/assets/UI/discard/discard UI.png" afterDir="false" />
+    <list default="true" id="50672599-dbe3-4626-b5b5-eee0fb82f9d5" name="Changes" comment="Added new build with DISCARD implementation build can be found in dist folder patch 4.1.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/Analysis-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/EXE-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PKG-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PYZ-00.pyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/base_library.zip" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/base_library.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/main.pkg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/warn-main.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/warn-main.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catan/ai_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/ai_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catan/bank.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/bank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catan/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.pyz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/base_library.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main.exe.manifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/warn-main.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/xref-main.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/catan/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catan/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/catan/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/PATCHNOTES 4.0.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/main.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PATCHNOTES 4.1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/Icon/honeycomb128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/Icon/honeycomb256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/Icon/honeycomb32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/Icon/honeycomb64.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/brick-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/cactus.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/card-random.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/mounted-knight.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/robber.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/sheep.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/stone-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/tumbleweed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/wheat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/50px/wood-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/brick-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/card-random.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/sheep.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/stone-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/trade.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/wheat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/75px/wood-pile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/UI_Background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/UI_Background_ship.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/bricks.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/buy dev card.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/dev.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/maritime trade.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/ore.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/sheep.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/wheat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank buttons/wood.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/bank.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/building_costs/city_cost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/building_costs/dev_cost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/building_costs/house_cost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/building_costs/road_cost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/brown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/cyan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/orange.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/pink.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/purple.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/city/red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/back button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/blank button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/buy button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/knight.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/monopoly.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/road building.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/robber effect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/victory.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards buy/year of plenty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/blank card.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/blank info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/grey use button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/knight UI static.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/knight info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/knight.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/monopoly UI static.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/monopoly effect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/monopoly info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/monopoly.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/road building UI static.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/road building info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/road building.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/use button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/victory UI static.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/victory info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/victory.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/year UI static.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/year effect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/year of plenty info.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dev cards/year of plenty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/dice/dice_roll.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/discard/discard UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/any flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/brick flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/ore flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/sheep flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/wheat flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/flags/wood flag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/brown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/cyan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/orange.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/pink.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/purple.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/house/red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/pause/pause button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/pause/pause menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/name plate.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/player trade UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/player trading UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/pos_ref.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/ref.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/player trading/trade_back_button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/robber/robber.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/UI/ship.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/Catan_BG.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/Options Rect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/Play Rect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/Quit Rect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/arrows/left arrow hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/arrows/left arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/arrows/right arrow hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/arrows/right arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/brown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/cyan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/orange.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/pink.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/purple.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/colors/red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/edit name plate hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/edit name plate.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/edit players UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/left arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/edit players/right arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/help/help button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/help/help.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/classic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/four.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/no.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/one.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/palette.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/three.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/time trial.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/two.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/play options/yes.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/victory screen/victory UI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/menu/victory screen/victory.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/brick.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/corn.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/knight.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/lumber.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/monopoly.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/ore.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/roadbuilding.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/wool.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/ref/yearofplenty.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/desert.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/fields.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/forest.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/hills.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/mountains.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/assets/tile/pasture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main.exe" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +266,8 @@
       <workItem from="1682303499088" duration="866000" />
       <workItem from="1682344230420" duration="22964000" />
       <workItem from="1682376977161" duration="561000" />
-      <workItem from="1682423062804" duration="23447000" />
+      <workItem from="1682423062804" duration="24719000" />
+      <workItem from="1682450139052" duration="1990000" />
     </task>
     <task id="LOCAL-00001" summary="Victory Screen implemented for classic and time trial.">
       <created>1682264090995</created>
@@ -192,7 +346,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682429283803</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added new build with DISCARD implementation build can be found in dist folder patch 4.1.">
+      <created>1682447325688</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1682447325688</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,9 +380,10 @@
     <MESSAGE value="Improved AI. AI Cities placement WIP" />
     <MESSAGE value="Updated city colors and dynamic error feedback to user." />
     <MESSAGE value="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added new build with PATCHNOTES 4.0.txt. build can be found in dist folder." />
+    <MESSAGE value="Added new build with DISCARD implementation build can be found in dist folder patch 4.1." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new build with DISCARD implementation build can be found in dist folder patch 4.1." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Catan_Group_38$main.coverage" NAME="main Coverage Results" MODIFIED="1682446722543" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Catan_Group_38$main.coverage" NAME="main Coverage Results" MODIFIED="1682451403194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

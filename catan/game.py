@@ -240,9 +240,9 @@ class Game:
 
         players_on_tile = []
         for p in self.players:
-            if p is not current_player:
-                for house in p.houses:
-                    for tiles, houses in HOUSE_TILE_CHECK.items():
+            for house in p.houses:
+                for tiles, houses in HOUSE_TILE_CHECK.items():
+                    if p is not current_player:
                         if tiles == tile:
                             for h in houses:
                                 if house == h:
@@ -250,7 +250,7 @@ class Game:
         if len(players_on_tile) != 0:
             chosen_player = random.choice(players_on_tile)
             if resource_to_take != 'desert':
-                if chosen_player.resources[resource_to_take] > 1:
+                if chosen_player.resources[resource_to_take] >= 1:
                     chosen_player.remove_resource(resource_to_take)
                     current_player.add_resource(resource_to_take)
 
