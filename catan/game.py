@@ -334,14 +334,23 @@ class Game:
     def draw_city(self, screen):
         city_image = None
         for current_player in self.players:
-            if current_player == self.players[0]:
-                city_image = pygame.image.load("assets/UI/city/P1.png")
-            elif current_player == self.players[1]:
-                city_image = pygame.image.load("assets/UI/city/P2.png")
-            elif current_player == self.players[2]:
-                city_image = pygame.image.load("assets/UI/city/P3.png")
-            elif current_player == self.players[3]:
-                city_image = pygame.image.load("assets/UI/city/P4.png")
+            if current_player.color == RED:
+                city_image = pygame.image.load("assets/UI/city/red.png")
+            elif current_player.color == BLUE:
+                city_image = pygame.image.load("assets/UI/city/blue.png")
+            elif current_player.color == PURPLE:
+                city_image = pygame.image.load("assets/UI/city/purple.png")
+            elif current_player.color == ORANGE:
+                city_image = pygame.image.load("assets/UI/city/orange.png")
+            elif current_player.color == PINK:
+                city_image = pygame.image.load("assets/UI/city/pink.png")
+            elif current_player.color == BLACK:
+                city_image = pygame.image.load("assets/UI/city/black.png")
+            elif current_player.color == CYAN:
+                city_image = pygame.image.load("assets/UI/city/cyan.png")
+            elif current_player.color == BROWN:
+                city_image = pygame.image.load("assets/UI/city/brown.png")
+
             current_player.draw_cities(screen, city_image)
 
     def isnt_to_close_to_other_houses(self, pos):
