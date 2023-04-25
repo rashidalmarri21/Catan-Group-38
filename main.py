@@ -24,7 +24,7 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     NUM_PLAYERS_TEXT_RECT, \
     AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, \
     MAIN_MENU_BUTTON, EDIT_NAME_PLATE_HOVER, EDIT_ARROWS_LIST, COLOR_IMAGE_LIST, BEIGE, VICTORY_IMAGE, VICTORY_IMAGE_RECT,\
-    MAIN_MENU_VICTORY_BUTTON, QUIT_VICTORY_BUTTON, VICTORY_UI, VICTORY_UI_RECT, HELP_BUTTON,AI_TRADE_FAIL, AI_TRADE_FAIL_REXT
+    MAIN_MENU_VICTORY_BUTTON, QUIT_VICTORY_BUTTON, VICTORY_UI, VICTORY_UI_RECT, HELP_BUTTON, RED
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 from catan.button import Button
@@ -542,6 +542,17 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
     road_counter = 0
     resource_counter = 0
 
+    # error messages
+    RESOURCE_ERROR = "Not enough resources to place that!"
+    ZONE_OF_CONTROL_ERROR = "Too close to other players to place that!"
+    ALLOWANCE_ERROR = "You have run out of that placement type!"
+    ROAD_ERROR = "You must place a road off the house you just placed!"
+    ROAD_ERROR_2 = "You must place a road off an existing house or road!"
+    HOUSE_ERROR = "You must place a road off an existing road!"
+    CITY_ERROR = "Must upgrade an existing house to a city!"
+    NO_ERROR = ""
+    CURRENT_ERROR_MESSAGE = NO_ERROR
+
     # Game loop
     while run:
         # Limit the frame rate
@@ -576,6 +587,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
 
         # initial HOUSE placements for player 1
         if game_state == "initial house placements P1":
+            error_message = NUMBER_FONT.render(CURRENT_ERROR_MESSAGE, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             chosen_house_p1 = None
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -585,20 +599,25 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     for pos in new_game.house_positions:
-                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and new_game.isnt_to_close_to_other_houses(pos):
-                            print(current_player.get_name(), "placed a house at", pos)
-                            current_player.add_house(pos)
-                            current_player.add_victory_point()
-                            # remove the pos from the list
-                            new_game.house_positions.remove(pos)
-                            if new_game.get_AI_player() is not False:
-                                every_house_in_play.append(pos)
-                            chosen_house_p1 = pos
-                            game_state = "initial road placements P1"
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            if new_game.isnt_to_close_to_other_houses(pos):
+                                print(current_player.get_name(), "placed a house at", pos)
+                                current_player.add_house(pos)
+                                current_player.add_victory_point()
+                                # remove the pos from the list
+                                new_game.house_positions.remove(pos)
+                                if new_game.get_AI_player() is not False:
+                                    every_house_in_play.append(pos)
+                                chosen_house_p1 = pos
+                                CURRENT_ERROR_MESSAGE = NO_ERROR
+                                game_state = "initial road placements P1"
+                            else:
+                                CURRENT_ERROR_MESSAGE = ZONE_OF_CONTROL_ERROR
         # initial ROAD placements for player 1
         elif game_state == "initial road placements P1":
-
+            error_message = NUMBER_FONT.render(ROAD_ERROR, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -623,6 +642,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
                             # Add the road to the player's list of roads
+                            CURRENT_ERROR_MESSAGE = NO_ERROR
                             current_player.add_road(pos_2)
                             new_game.road_positions.remove(pos_2)
                             print(current_player.get_name(),
@@ -635,6 +655,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                                 game_state = "initial house placements P2+"
         # initial HOUSE placements for players 2+
         elif game_state == "initial house placements P2+":
+            error_message = NUMBER_FONT.render(CURRENT_ERROR_MESSAGE, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             # AI agent control
             if "AI" in current_player.get_name():
                 road_pos, house_pos = current_player.make_decision("initial house placements P2+",
@@ -653,19 +676,25 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     for pos in new_game.house_positions:
-                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and new_game.isnt_to_close_to_other_houses(pos):
-                            print(current_player.get_name(), "placed a house at", pos)
-                            current_player.add_house(pos)
-                            current_player.add_victory_point()
-                            # remove the pos from the list
-                            new_game.house_positions.remove(pos)
-                            if new_game.get_AI_player() is not False:
-                                every_house_in_play.append(pos)
-                            chosen_house_P2 = pos
-                            game_state = "initial road placements P2+"
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            if new_game.isnt_to_close_to_other_houses(pos):
+                                print(current_player.get_name(), "placed a house at", pos)
+                                current_player.add_house(pos)
+                                current_player.add_victory_point()
+                                # remove the pos from the list
+                                new_game.house_positions.remove(pos)
+                                if new_game.get_AI_player() is not False:
+                                    every_house_in_play.append(pos)
+                                chosen_house_P2 = pos
+                                CURRENT_ERROR_MESSAGE = NO_ERROR
+                                game_state = "initial road placements P2+"
+                            else:
+                                CURRENT_ERROR_MESSAGE = ZONE_OF_CONTROL_ERROR
         # initial ROAD placements for players 2+
         elif game_state == "initial road placements P2+":
+            error_message = NUMBER_FONT.render(ROAD_ERROR, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             # AI agent control
             if "AI" in current_player.get_name():
                 road_pos, house_pos = current_player.make_decision("initial road placements P2+",
@@ -709,6 +738,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         # Check if the mouse position is within the buffer zone
                         if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
                             # Add the road to the player's list of roads
+                            CURRENT_ERROR_MESSAGE = NO_ERROR
                             current_player.add_road(pos_2)
                             new_game.road_positions.remove(pos_2)
                             print(current_player.get_name(),
@@ -899,6 +929,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
 
         # implement place house state
         elif game_state == "place house":
+            error_message = NUMBER_FONT.render(CURRENT_ERROR_MESSAGE, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             if "AI" in current_player.get_name():
                 place_bool, road_pos, house_pos = current_player.make_decision("place house", new_game.road_positions,
                                                                                new_game.house_positions)
@@ -936,35 +969,49 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                                 game_state = "victory screen"
                             else:
                                 new_game.end_turn()
+                                CURRENT_ERROR_MESSAGE = NO_ERROR
                                 game_state = "dice roll"
                         else:
                             new_game.end_turn()
+                            CURRENT_ERROR_MESSAGE = NO_ERROR
                             game_state = "dice roll"
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
+                        CURRENT_ERROR_MESSAGE = NO_ERROR
                         game_state = "default"
 
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in new_game.house_positions:
-                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and current_player.house_allowance() \
-                                and current_player.is_valid_house_placement(pos) \
-                                and current_player.has_enough_resources("house") \
-                                and new_game.isnt_to_close_to_other_houses(pos):
-                            print(current_player.get_name(), "placed a house at", pos)
-                            current_player.add_house(pos)
-                            if new_game.get_AI_player() is not False:
-                                every_house_in_play.append(pos)
-                            current_player.add_victory_point()
-                            current_player.remove_resources_for_placement('house')
-                            new_game.bank.add_bank_resources_from_placement('house')
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            if current_player.house_allowance():
+                                if current_player.is_valid_house_placement(pos):
+                                    if current_player.has_enough_resources("house"):
+                                        if new_game.isnt_to_close_to_other_houses(pos):
+                                            print(current_player.get_name(), "placed a house at", pos)
+                                            current_player.add_house(pos)
+                                            if new_game.get_AI_player() is not False:
+                                                every_house_in_play.append(pos)
+                                            current_player.add_victory_point()
+                                            current_player.remove_resources_for_placement('house')
+                                            new_game.bank.add_bank_resources_from_placement('house')
 
-                            # remove the pos from the list
-                            new_game.house_positions.remove(pos)
-                        else:
-                            print("False")
+                                            # remove the pos from the list
+                                            new_game.house_positions.remove(pos)
+                                            CURRENT_ERROR_MESSAGE = NO_ERROR
+                                        else:
+                                            CURRENT_ERROR_MESSAGE = ZONE_OF_CONTROL_ERROR
+                                    else:
+                                        CURRENT_ERROR_MESSAGE = RESOURCE_ERROR
+                                else:
+                                    CURRENT_ERROR_MESSAGE = HOUSE_ERROR
+                            else:
+                                CURRENT_ERROR_MESSAGE = ALLOWANCE_ERROR
+
         # implement place road state
         elif game_state == "place road":
+            error_message = NUMBER_FONT.render(CURRENT_ERROR_MESSAGE, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
             if "AI" in current_player.get_name():
                 place_bool, road_pos, house_pos = current_player.make_decision("place road", new_game.road_positions,
                                                                                new_game.house_positions)
@@ -1054,9 +1101,11 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
+                        CURRENT_ERROR_MESSAGE = NO_ERROR
                         game_state = 'default'
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
+                        CURRENT_ERROR_MESSAGE = NO_ERROR
                         if time_trial and current_player == new_game.players[-1]:
                             if timer.remaining_time == 0:
                                 game_state = "victory screen"
@@ -1078,20 +1127,33 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         buffer_radius = 20
 
                         # Check if the mouse position is within the buffer zone
-                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2 \
-                                and current_player.road_allowance() \
-                                and current_player.is_valid_road_placement(pos) \
-                                and current_player.has_enough_resources('road'):
-                            # Add the road to the player's list of roads
-                            print(current_player.get_name(),
-                                  "placed a road from {} to {}".format(start_point, end_point))
-                            current_player.add_road(pos)
-                            new_game.update_longest_road_player()
-                            current_player.remove_resources_for_placement('road')
-                            new_game.bank.add_bank_resources_from_placement('road')
-                            new_game.road_positions.remove(pos)
+                        if (mos_pos[0] - center[0]) ** 2 + (mos_pos[1] - center[1]) ** 2 <= buffer_radius ** 2:
+                            if current_player.road_allowance():
+                                if current_player.is_valid_road_placement(pos):
+                                    if current_player.has_enough_resources('road'):
+                                        # Add the road to the player's list of roads
+                                        print(current_player.get_name(),
+                                              "placed a road from {} to {}".format(start_point, end_point))
+                                        current_player.add_road(pos)
+                                        new_game.update_longest_road_player()
+                                        current_player.remove_resources_for_placement('road')
+                                        new_game.bank.add_bank_resources_from_placement('road')
+                                        new_game.road_positions.remove(pos)
+                                        CURRENT_ERROR_MESSAGE = NO_ERROR
+                                    else:
+                                        CURRENT_ERROR_MESSAGE = RESOURCE_ERROR
+                                else:
+                                    CURRENT_ERROR_MESSAGE = ROAD_ERROR_2
+                            else:
+                                CURRENT_ERROR_MESSAGE = ALLOWANCE_ERROR
         # place city state
         elif game_state == "place city":
+            error_message = NUMBER_FONT.render(CITY_ERROR, True, RED)
+            error_rect = error_message.get_rect(center=(960, 980))
+            SCREEN.blit(error_message, error_rect)
+            error_message_2 = NUMBER_FONT.render(CURRENT_ERROR_MESSAGE, True, RED)
+            error_rect_2 = error_message_2.get_rect(center=(960, 1020))
+            SCREEN.blit(error_message_2, error_rect_2)
             for butt in PLACE_HOUSE_BUTTONS:
                 butt.change_color(mos_pos)
                 butt.update(SCREEN)
@@ -1104,6 +1166,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if END_TURN_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "ended their turn")
+                        CURRENT_ERROR_MESSAGE = NO_ERROR
                         if time_trial and current_player == new_game.players[-1]:
                             if timer.remaining_time == 0:
                                 game_state = "victory screen"
@@ -1115,20 +1178,28 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             game_state = "dice roll"
                     if BACK_BUTTON.check_for_input(mos_pos):
                         print(current_player.get_name(), "went back")
+                        CURRENT_ERROR_MESSAGE = NO_ERROR
                         game_state = "default"
 
                     # checks if the mouse clicked on any of the house positions within a 20 pixel buffer
                     for pos in current_player.get_house():
-                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20 \
-                                and current_player.city_allowance() \
-                                and current_player.is_valid_house_placement(pos) \
-                                and current_player.has_enough_resources("city"):
-                            print(current_player.get_name(), "placed a city at", pos)
-                            current_player.add_city(pos)
-                            current_player.remove_house(pos)
-                            current_player.add_victory_point()
-                            current_player.remove_resources_for_placement('city')
-                            new_game.bank.add_bank_resources_from_placement('city')
+                        if pos[0] - 20 <= mos_pos[0] <= pos[0] + 20 and pos[1] - 20 <= mos_pos[1] <= pos[1] + 20:
+                            if current_player.city_allowance():
+                                if current_player.is_valid_house_placement(pos):
+                                    if current_player.has_enough_resources("city"):
+                                        print(current_player.get_name(), "placed a city at", pos)
+                                        current_player.add_city(pos)
+                                        current_player.remove_house(pos)
+                                        current_player.add_victory_point()
+                                        current_player.remove_resources_for_placement('city')
+                                        new_game.bank.add_bank_resources_from_placement('city')
+                                        CURRENT_ERROR_MESSAGE = NO_ERROR
+                                    else:
+                                        CURRENT_ERROR_MESSAGE = RESOURCE_ERROR
+                                else:
+                                    CURRENT_ERROR_MESSAGE = CITY_ERROR
+                            else:
+                                CURRENT_ERROR_MESSAGE = ALLOWANCE_ERROR
 
         # dev cards game states
         elif game_state == "dev cards":
