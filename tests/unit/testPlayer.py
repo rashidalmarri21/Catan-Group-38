@@ -2,6 +2,9 @@ import unittest
 from catan.player import Player
 
 """
+    The player class is given two parameters, including a name and a color; these parameters
+    are used to initialise each active player inside the game, setting up important information
+    including victory points, amount of resources, dice rolls, etc.
 """
 
 class testPlayerClass(unittest.TestCase):
@@ -73,6 +76,7 @@ class testPlayerClass(unittest.TestCase):
         amounts of each that are possible (5, 15 and 4 respectively), each requires a certain
         combination and amount of resource. 
     """
+
     def testResources(self):
         """ The player is given 10 of each type of resource at the beginning. """
         self.assertEqual(self.player.get_resources(), {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10})
