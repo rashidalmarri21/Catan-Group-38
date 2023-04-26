@@ -29,7 +29,40 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
 
 
 class Game:
+    """
+        The Game class represents a game of Settlers of Catan.
+
+        Args:
+        - player_names (list of str): A list of names of the players in the game.
+        - color_list (list of str): A list of colors for the players' game pieces.
+
+        Attributes:
+        - board (Board): The game board for this game of Settlers of Catan.
+        - players (list of Player or AIAgent): A list of the players in the game.
+        - current_player_index (int): The index of the current player in the `players` list.
+        - game_over (bool): A flag indicating whether the game is over.
+        - bank (Bank): The bank for this game of Settlers of Catan.
+        - robber_pos (tuple of int): The current position of the robber on the game board.
+        - longest_road_player (Player or AIAgent): The player with the longest road.
+        - largest_army_player (Player or AIAgent): The player with the largest army.
+        - trade_player_list (list of Player or AIAgent): A list of players who are currently trading.
+        - trader_x_pool (dict): A dictionary mapping resource names to the number of resources in the pool for player X.
+        - trader_y_pool (dict): A dictionary mapping resource names to the number of resources in the pool for player Y.
+        - house_positions (dict): A dictionary mapping house positions to the player who owns them.
+        - road_positions (dict): A dictionary mapping road positions to the player who owns them.
+        - current_board (dict): A dictionary representation of the current state of the game board.
+        - possible_robber_pos (dict): A dictionary mapping potential robber positions to the number of resources that would be affected by the robber.
+        - flag_list (list of int): A list of flags representing resources for use in the game.
+
+        """
     def __init__(self, player_names, color_list):
+        """
+        Initializes a new instance of the Game class.
+
+        Args:
+        - player_names (list of str): A list of names of the players in the game.
+        - color_list (list of str): A list of colors for the players' game pieces.
+        """
         self.board = board.Board()  # create a new game board
         self.players = []
         for name in player_names:
@@ -62,6 +95,15 @@ class Game:
         random.shuffle(self.flag_list)
 
     def get_AI_player(self):
+        """
+        Returns a list of AI players in the game. If there are no AI players, returns False.
+
+        Args:
+        - None
+
+        Returns:
+        - AI_players: A list of Player objects representing the AI players in the game, or False if there are no AI players.
+        """
         AI_players = []
         for p in self.players:
             if "AI" in p.get_name():
@@ -72,6 +114,22 @@ class Game:
             return AI_players
 
     def generate_game_save(self):
+        """
+        Generates a dictionary containing data needed to save the current state of the game.
+
+        Args:
+        - None
+
+        Returns:
+        - game_save: A dictionary containing the following keys:
+            - "current player index": An integer representing the index of the current player.
+            - "robber pos": A tuple representing the position of the robber on the game board.
+            - "flag list": A list of strings representing the available resources on the game board.
+            - "house pos": A list of tuples representing the positions of houses on the game board.
+            - "road pos": A list of tuples representing the positions of roads on the game board.
+            - "every house": A list of tuples representing the positions of houses built by the AI player(s), or None if there are no AI players.
+
+        """
         flag_list_to_str = []
         for flag in FLAG_LIST:
             if flag == WOOD_FLAG:
@@ -108,6 +166,15 @@ class Game:
 
 
     def load_player_data(self):
+        """
+        Loads player data from a JSON file and updates the corresponding Player objects.
+
+        Args:
+        - None
+
+        Returns:
+        - None
+        """
         player_data = None
         with open("player_data.txt") as player_file:
             player_data = json.load(player_file)
@@ -126,6 +193,15 @@ class Game:
                     py.trade_ratios = data["trade ratios"]
 
     def load_board_data(self):
+        """
+        Loads board data from a JSON file and updates the corresponding Board object.
+
+        Args:
+        - None
+
+        Returns:
+        - None
+        """
         board_data = None
         with open("board_data.txt") as board_file:
             board_data = json.load(board_file)
@@ -138,6 +214,16 @@ class Game:
         self.board.update_resources_from_load(board_data["resource_list"])
 
     def load_bank_data(self):
+        """
+        Loads bank data from a JSON file and updates the corresponding Bank object.
+
+        Args:
+        - None
+
+        Returns:
+        - None
+
+        """
         bank_data = None
         with open("bank_data.txt") as bank_file:
             bank_data = json.load(bank_file)
@@ -149,6 +235,16 @@ class Game:
                     self.bank.bank_resources[pee] = value
 
     def load_game_data(self):
+        """
+        Loads game data from a JSON file and updates the current game state.
+
+        Args:
+        - None
+
+        Returns:
+        - None
+
+        """
         game_data = None
         with open("game_data.txt") as game_file:
             game_data = json.load(game_file)
@@ -179,6 +275,16 @@ class Game:
             catan.ai_agent.every_house_in_play = game_data["every house"]
 
     def update_state(self, screen):
+        """
+        Updates the game state and draws the game board on the screen.
+
+        Args:
+        - screen: A Pygame screen object representing the game window.
+
+        Returns:
+        - None
+
+        """
         # update the game board
         self.bank.draw_bank_resources(screen)
         self.flag_house_check()
@@ -186,6 +292,16 @@ class Game:
             current_player.draw_roads(screen)
 
     def player_list_with_7_resources_or_more(self):
+        """
+        Returns a list of players who have 7 or more resources (or 10 or more resources for AI players).
+
+        Args:
+        - None
+
+        Returns:
+        - player_list: A list of Player objects representing the players who have 7 or more resources.
+
+        """
         player_list = []
         for p in self.players:
             if "AI" in p.get_name():
@@ -198,6 +314,16 @@ class Game:
 
 
     def update_trade_player_list(self, current_player):
+        """
+        Updates the list of players who can be traded with, excluding the current player.
+
+        Args:
+        - current_player: A Player object representing the current player.
+
+        Returns:
+        - None
+
+        """
         player_list = []
         for p in self.players:
             if p != current_player:
@@ -205,21 +331,76 @@ class Game:
         self.trade_player_list = player_list
 
     def add_resource_x_trader(self, resource_type):
+        """
+        Add a resource of type resource_type to trader_x_pool.
+
+        Args:
+            resource_type (str): Type of resource to add.
+
+        Return:
+            None.
+        """
         self.trader_x_pool[resource_type] += 1
 
     def remove_resource_x_trader(self, resource_type):
+        """
+        Remove a resource of type resource_type from trader_x_pool.
+
+        Args:
+            resource_type (str): Type of resource to remove.
+
+        Return:
+            None.
+        """
         self.trader_x_pool[resource_type] -= 1
 
     def add_resource_y_trader(self, resource_type):
+        """
+        Add a resource of type resource_type to trader_y_pool.
+
+        Args:
+            resource_type (str): Type of resource to add.
+
+        Return:
+            None.
+        """
         self.trader_y_pool[resource_type] += 1
 
     def remove_resource_y_trader(self, resource_type):
+        """
+        Remove a resource of type resource_type from trader_y_pool.
+
+        Args:
+            resource_type (str): Type of resource to remove.
+
+        Return:
+            None.
+        """
         self.trader_y_pool[resource_type] -= 1
 
     def swap_trade_pools(self):
+        """
+        Swap the contents of trader_x_pool and trader_y_pool.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         self.trader_x_pool, self.trader_y_pool = self.trader_y_pool, self.trader_x_pool
 
     def give_pool_resources_to_players(self, current_player, trade_player):
+        """
+        Give the resources in trader_x_pool to current_player and resources in trader_y_pool to trade_player.
+
+        Args:
+            current_player (Player): The player to whom the resources in trader_x_pool will be given.
+            trade_player (Player): The player to whom the resources in trader_y_pool will be given.
+
+        Return:
+            None.
+        """
         for key, value in self.trader_x_pool.items():
             current_player.resources[key] += value
 
@@ -227,10 +408,28 @@ class Game:
             trade_player.resources[key] += value
 
     def reset_trade_pools(self):
+        """
+        Reset the contents of trader_x_pool and trader_y_pool to {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         self.trader_x_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
         self.trader_y_pool = {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0}
 
     def robber_take_resource_from_rand_player(self, current_player):
+        """
+        The robber takes a random resource from a player with a house on the tile where the robber is placed.
+        Gives the stolen resource to the current_player
+        Args:
+            current_player (Player): The player whose turn it currently is.
+
+        Return:
+            None.
+        """
         tile = None
         resource_to_take = None
         for key, value in self.board.get_grid().items():
@@ -254,9 +453,16 @@ class Game:
                     chosen_player.remove_resource(resource_to_take)
                     current_player.add_resource(resource_to_take)
 
-    def discard_if_7(self):
-        pass
     def update_largest_army_player(self):
+        """
+        Check if any player has played more than 3 knights and update the largest army player accordingly.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         for p in self.players:
             if p.knights_played >= 3:
                 if self.largest_army_player is not None:
@@ -272,6 +478,15 @@ class Game:
                     self.largest_army_player = p
 
     def update_longest_road_player(self):
+        """
+        Check if any player has built more than 3 roads and update the longest road player accordingly.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         for p in self.players:
             if len(p.roads) >= 3:
                 if self.longest_road_player is not None:
@@ -287,21 +502,54 @@ class Game:
                     self.longest_road_player = p
 
     def update_robber_pos_list(self):
+        """
+        Update the list of possible robber positions.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         for pos, tile in self.current_board.items():
             if tile["resource_type"] is not None:
                 if tile['position'] != (self.robber_pos[0], self.robber_pos[1]):
                     self.possible_robber_pos[pos] = (tile["position"][0] - 45, tile["position"][1])
 
     def update_robber_pos(self, new_robber_pos):
+        """
+        Update the position of the robber to the new_robber_pos.
+
+        Args:
+            new_robber_pos (tuple): A tuple representing the new position of the robber.
+
+        Return:
+            None.
+        """
         self.robber_pos = new_robber_pos
 
     def remove_robber_pos(self):
+        """
+        Remove the current robber position from the possible robber positions.
+
+        Args:
+            None.
+
+        Return:
+            None.
+        """
         for key, value in self.possible_robber_pos.copy().items():
             if value == (self.robber_pos[0] - 45, self.robber_pos[1]):
                 self.possible_robber_pos.pop(key)
                 break
 
     def list_of_players_with_house_at_robber(self):
+        """
+        Get a list of players who have a settlement or city on the tile where the robber is currently placed.
+
+        Returns:
+            dict: A dictionary with the tile where the robber is located as the key and a list of players as the value.
+        """
         tile = None
         for key, values in self.board.get_grid().items():
             if values["position"] == self.robber_pos:
@@ -318,9 +566,21 @@ class Game:
         return player_list
 
     def get_robber_pos(self):
+        """
+        Returns the current position of the robber on the board.
+
+        Returns:
+        tuple: The x,y coordinates of the robber on the board.
+        """
         return self.robber_pos
 
     def draw_house(self, screen):
+        """
+        Draws the house image for each player on the board.
+
+        Args:
+        screen (pygame.Surface): The screen surface to draw on.
+        """
         house_image = None
         for current_player in self.players:
             if current_player.get_color() == RED:
@@ -342,6 +602,12 @@ class Game:
             current_player.draw_houses(screen, house_image)
 
     def draw_city(self, screen):
+        """
+        Draws the city image for each player on the board.
+
+        Args:
+        screen (pygame.Surface): The screen surface to draw on.
+        """
         city_image = None
         for current_player in self.players:
             if current_player.color == RED:
@@ -364,6 +630,15 @@ class Game:
             current_player.draw_cities(screen, city_image)
 
     def isnt_to_close_to_other_houses(self, pos):
+        """
+        Checks whether a proposed house placement is too close to existing houses or cities.
+
+        Args:
+        pos (tuple): The x,y coordinates of the proposed house on the board.
+
+        Returns:
+        bool: True if the house is far enough from other houses and cities, False otherwise.
+        """
         for p in self.players:
             for house in p.get_house():
                 distance = math.sqrt((pos[0] - house[0]) ** 2 + (pos[1] - house[1]) ** 2)
@@ -376,14 +651,35 @@ class Game:
         return True
 
     def draw_robber(self, screen):
+        """
+        Draws the robber image on the board.
+
+        Args:
+        screen (pygame.Surface): The screen surface to draw on.
+        """
         robber_pos = self.robber_pos
         robber_rect = ROBBER.get_rect(center=((robber_pos[0] - 45), robber_pos[1]))
         screen.blit(ROBBER, robber_rect)
 
     def get_players(self):
+        """
+        Returns a list of players in the game.
+
+        Returns:
+        list: A list of Player objects.
+        """
         return self.players
 
     def check_game_over(self, current_player):
+        """
+        Checks whether the game is over by checking if any player has reached 10 victory points.
+
+        Args:
+        current_player (Player): The current player whose victory points are being checked.
+
+        Returns:
+        bool: True if any player has reached 10 victory points, False otherwise.
+        """
         # check if any player has reached 10 victory points
         if current_player.get_victory_points() >= 10:
             return True
@@ -391,12 +687,27 @@ class Game:
             return False
 
     def get_current_player(self):
+        """
+        Returns the current player whose turn it is.
+
+        Returns:
+        Player: The current player.
+        """
         return self.players[self.current_player_index]
 
     def end_turn(self):
+        """
+        Changes the current player to the next player in the list of players.
+        """
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
 
     def give_resources(self, current_player):
+        """
+        Gives resources to players based on the dice roll.
+
+        Args:
+        current_player (Player): The player who rolled the dice.
+        """
         dice_number = current_player.get_dice_number()
         tile_grid = self.board.get_grid()
         tiles_with_num = {}
@@ -427,9 +738,21 @@ class Game:
                         self.bank.remove_resources(test)
 
     def draw_board(self, screen):
+        """
+        Draws the board on the screen.
+
+        Args:
+        screen (pygame.Surface): The screen surface to draw on.
+        """
         self.board.draw_board(screen)
 
     def draw_players_resources(self, screen):
+        """
+        Draws the player names and their resources on the screen.
+
+        Args:
+        screen (pygame.Surface): The screen surface to draw on.
+        """
         for current_player in self.players:
             if current_player == self.players[0]:
                 current_player.draw_player_name(screen, 74)
@@ -445,6 +768,16 @@ class Game:
                 current_player.draw_resources(screen, 194)
 
     def draw_player_bank_ratios(self, screen, current_player):
+        """
+        Draws the trade ratios for the given player onto the screen.
+
+        Args:
+            screen (pygame.Surface): The surface to draw the trade ratios onto.
+            current_player (Player): The player whose trade ratios to draw.
+
+        Returns:
+            None
+        """
         ratios = current_player.get_trade_ratios()
         for resource_type, ratio in ratios.items():
             if resource_type == 'forest':
@@ -472,6 +805,17 @@ class Game:
         screen.blit(dev_image, dev_rect)
 
     def ui_Messages(self, screen, game_state, current_player):
+        """
+        Displays messages and UI elements on the game screen depending on the current game state and current player.
+
+        Parameters:
+        - screen: the game screen to display messages on
+        - game_state (str): the current state of the game
+        - current_player (Player object): the current player object
+
+        Returns:
+        - None
+        """
         if game_state == 'default':
             message = NUMBER_FONT.render("Ready player {}!".format(current_player.get_name()), True,
                                          current_player.get_color())
@@ -897,6 +1241,13 @@ class Game:
             screen.blit(GAME_HELP_IMAGE, GAME_HELP_IMAGE_RECT)
 
     def draw_trade_dev_buttons(self, screen):
+        """
+        Draws the player trading and development cards buttons on the screen.
+        Args:
+            screen: A Pygame Surface object representing the game screen.
+        Returns:
+            None
+        """
         # Draw the player trading button with a border
         player_trading_rect = pygame.Rect(PLAYER_TRADING_BUTTON)
         player_trading_rect.inflate_ip(20, 20)
@@ -910,6 +1261,14 @@ class Game:
         screen.blit(DEV_CARDS_IMAGE, DEV_CARDS_BUTTON)
 
     def flag_house_check(self):
+        """
+        Checks if a player has a settlement or a city on a flag location and updates the trade ratios for the player's
+        resources based on the flag.
+        Args:
+            None.
+        Returns:
+            None.
+        """
         for p in self.players:
             for pos in p.get_house():
                 for index, houses in FLAG_HOUSE_CHECK.items():
@@ -928,6 +1287,13 @@ class Game:
                             p.update_all_trade_ratios((3, 1))
 
     def draw_flags(self, screen):
+        """
+        Draws the flag images on the screen at their respective positions.
+        Args:
+            screen: A Pygame Surface object representing the game screen.
+        Returns:
+            None.
+        """
         flag_list = self.flag_list.copy()
         for pos in FLAG_POSITIONS.copy():
             flag_image = flag_list.pop(0)
@@ -936,6 +1302,13 @@ class Game:
 
 
     def make_buttons_for_player_trading(self, current_player):
+        """
+        Creates a list of buttons for each player except the current player to enable player trading.
+        Args:
+            current_player: A Player object representing the current player.
+        Returns:
+            A list of Button objects representing the player trading buttons.
+        """
         player_buttons = []
         y_pos = 675
         for p in self.players:
@@ -948,6 +1321,15 @@ class Game:
         return player_buttons
 
     def draw_names_on_trade_screen(self,screen, current_player, trade_player_index):
+        """
+        Draws the names of the current player and the trading player on the player trading screen.
+        Args:
+            screen: A Pygame Surface object representing the game screen.
+            current_player: A Player object representing the current player.
+            trade_player_index: An integer representing the index of the trading player in the trade player list.
+        Returns:
+            None
+        """
         if trade_player_index == 0:
             trade_player_name = NUMBER_FONT.render("{}".format(self.trade_player_list[0].get_name()),True,self.trade_player_list[0].get_color())
         elif trade_player_index == 1:
@@ -963,6 +1345,15 @@ class Game:
 
 
     def draw_numbers_on_trade_menu(self, screen, current_player, trade_player_index):
+        """
+        Draws the resource numbers of the current player and the trading player on the player trading screen.
+        Args:
+            screen: A Pygame Surface object representing the game screen.
+            current_player: A Player object representing the current player.
+            trade_player_index: An integer representing the index of the trading player in the trade player list.
+        Returns:
+            None
+        """
         # current players resources
         for key, value in current_player.resources.items():
             y_pos = 845
@@ -1057,6 +1448,16 @@ class Game:
                 screen.blit(resource_num, resource_rect)
 
     def draw_numbers_in_discard(self, screen, current_player):
+        """
+        Draws the numbers of the resources that the current player has discarded on the screen.
+
+        Args:
+            screen (pygame.Surface): The screen to blit the numbers on.
+            current_player (Player): The current player who has discarded the resources.
+
+        Returns:
+            None
+        """
         resource_num = NUMBER_FONT.render("{}".format(current_player.get_name()), True, current_player.get_color())
         resource_rect = resource_num.get_rect(center=(960, 670))
         screen.blit(resource_num, resource_rect)
@@ -1107,18 +1508,45 @@ class Game:
                 resource_rect = resource_num.get_rect(center=(1164, y_pos))
                 screen.blit(resource_num, resource_rect)
     def generate_victory_point_list(self):
+        """
+        Generates a list of the victory points of all players.
+
+        Args:
+            None.
+
+        Returns:
+            list: A list of the victory points of all players.
+        """
         vic_list = []
         for p in self.players:
             vic_list.append(p.get_victory_points())
         return vic_list
 
     def generate_player_name_list(self):
+        """
+        Generates a list of the names of all players.
+
+        Args:
+            None
+
+        Returns:
+            list: A list of the names of all players.
+        """
         name_list = []
         for p in self.players:
             name_list.append(p.get_name())
         return name_list
 
     def generate_sorted_player_score(self):
+        """
+        Generates a dictionary of player names and their corresponding victory points, sorted by highest to lowest.
+
+        Args:
+            None
+
+        Returns:
+            dict: A dictionary of player names and their corresponding victory points, sorted by highest to lowest.
+        """
         vic_list = self.generate_victory_point_list()
         name_list = self.generate_player_name_list()
 
@@ -1130,10 +1558,29 @@ class Game:
         return sorted_name_score_dict
 
     def give_resource_from_discard_to_bank(self, discard_player):
+        """
+        Adds the resources that the discard_player has discarded to the bank.
+
+        Args:
+            discard_player (Player): The player whose resources are to be added to the bank.
+
+        Returns:
+            None
+        """
         for key, value in discard_player.discard_pool.items():
             self.bank.add_bank_resources_with_amount(key, value)
         discard_player.reset_discard_pool()
     def generate_players_save_data(self):
+        """
+        Generates a dictionary of all players' data, including their name, color, victory points, houses, cities,
+         roads, resources, development cards, knights played, dice roll, and trade ratios.
+
+        Args:
+            None
+
+        Returns:
+            dict: A dictionary of all players' data.
+        """
         players_data = {}
         for p in self.players:
             players_data[p.get_name()] = {

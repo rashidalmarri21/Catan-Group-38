@@ -6,11 +6,45 @@ every_house_in_play = []
 
 
 class AIAgent(Player):
+    """
+    Class representing an AI agent for playing a game.
+
+    Args:
+        name (str): Name of the AI agent.
+        color (str): Color of the AI agent.
+
+    Attributes:
+        chosen_house (tuple): Coordinates of the house chosen by the AI agent.
+
+    Inherits:
+        Player: A parent class representing a player in the game.
+
+    """
     def __init__(self, name, color):
+        """
+        Initialize the AI agent with a name, color, and set the chosen house to None.
+
+        Args:
+            name (str): Name of the AI agent.
+            color (str): Color of the AI agent.
+
+        """
         super().__init__(name, color)
         self.chosen_house = None
 
     def make_decision(self, game_state, road_positions, house_positions):
+        """
+        Make a decision based on the current game state.
+
+        Args:
+            game_state (str): Current game state, which determines the AI agent's decision-making logic.
+            road_positions (list): List of road positions available for placement.
+            house_positions (list): List of house positions available for placement.
+
+        Returns:
+            tuple: Tuple containing updated road positions and house positions after the AI agent's decision.
+
+        """
         if game_state == "initial house placements P2+":
             valid_house_pos = []
             for pos in house_positions:
@@ -92,6 +126,14 @@ class AIAgent(Player):
                 return False, road_positions, house_positions
 
     def trade_with_bank(self):
+        """
+        Trade with the bank for resources.
+
+        Returns:
+            tuple: Tuple containing lists of tradeable resources and needed resources.
+
+        """
+
         tradeable_resources = []
         needed_resources = []
         for resource, value in self.resources.items():
@@ -103,6 +145,13 @@ class AIAgent(Player):
         return tradeable_resources, needed_resources
 
     def make_list_of_resources_to_str(self):
+        """
+        Convert the AI agent's resources into a list of strings.
+
+        Returns:
+            list: List of resource strings.
+
+        """
         string_list = []
         for key, value in self.resources.items():
             for i in range(value):
@@ -110,10 +159,24 @@ class AIAgent(Player):
         return string_list
 
     def remove_resources_from_list(self, resource_list):
+        """
+        Remove resources from the AI agent's resources based on a given list of resources.
+
+        Args:
+            resource_list (list): List of resources to be removed.
+
+        """
         for resource in resource_list:
             self.remove_resource(resource)
 
     def player_trade_50_50(self):
+        """
+        Perform a 50/50 trade with another player.
+
+        Returns:
+            bool: True if the trade is successful, False otherwise.
+
+        """
         nums = [1, 2]
         x = random.choice(nums)
         if x == 1:
@@ -123,8 +186,14 @@ class AIAgent(Player):
 
     def isnt_too_close_to_other_player_houses(self, pos):
         """
+        Check if the given house position is not too close to other player's houses.
 
-        :rtype: object
+        Args:
+            pos (tuple): Coordinates of the house position to be checked.
+
+        Returns:
+            bool: True if the house position is not too close to other player's houses, False otherwise.
+
         """
         for house in every_house_in_play:
             distance = math.sqrt((pos[0] - house[0]) ** 2 + (pos[1] - house[1]) ** 2)

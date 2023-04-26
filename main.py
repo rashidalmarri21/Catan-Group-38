@@ -33,25 +33,51 @@ from catan.ai_agent import every_house_in_play
 from catan.button import Button
 from catan.timer import Timer
 
-# Set up the screen
-
+# Setting up the Pygame screen with the given screen size and initializing Pygame and Pygame font
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 pygame.init()
 pygame.font.init()
-
+# Creating the Pygame screen with the set screen size, and setting its caption and icon
 SCREEN = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Settlers Of Catan")
 pygame.display.set_icon(ICON_32x)
-# Set up the clock
+# Setting up the Pygame clock and defining the game's frame rate
 clock = pygame.time.Clock()
 FPS = 60
 
 
 def doesFileExists(filePathAndName):
+    """
+    Checks if a file or directory exists at the specified path.
+
+    Parameters:
+        filePathAndName (str): The path of the file or directory to check.
+
+    Returns:
+        bool: True if the file or directory exists, False otherwise.
+
+    """
     return os.path.exists(filePathAndName)
 
 
 def main_menu():
+    """
+    Pygame main menu function for starting and displaying the game menu.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+
+    Note:
+    This function initializes various variables used in the game menu, such as the current game state,
+    play option values and counters, player colors and names, and AI names. It then enters a while loop that continuously runs the game menu until
+    an option is selected or the game is exited. The game menu displays the game options, such as game mode, number of players, and AI options, and
+    allows the players to edit their names and colors. The function handles user input and updates the display accordingly. Once a valid option is
+    selected, the function sets the corresponding play option values and exits the loop. The selected options are then passed on to the play function
+    for the actual gameplay.
+    """
     pygame.display.set_caption("Menu")
     game_state = "main menu"
 
@@ -523,12 +549,35 @@ def main_menu():
 
 
 def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_list=COLOR_LIST, time_trial = False):
+    """
+    Pygame play function to start and run the Catan game.
+
+    Parameters:
+    load_game (bool, optional): Indicates if a saved game will be loaded. Defaults to False.
+    players_names (tuple of str, optional): A tuple of the names of the players. Defaults to ("YOU", "MESSED", "UP", "BAD").
+    color_list (list of tuple of int, optional): A list of RGB tuples representing the colors of the players. Defaults to COLOR_LIST.
+    time_trial (bool, optional): Indicates if the game will be played with a time trial. Defaults to False.
+
+    Returns:
+    None
+
+    Note:
+    This function creates a new game instance and initializes all the necessary game components such as the board, players, and bank.
+    It runs the game loop until the game is finished or exited, during which it updates the screen, handles user input and game logic,
+    and displays messages to the players. If a saved game is loaded, the function restores the game state from the saved data.
+    The function also provides error messages for various game scenarios and helpers for dev cards and discarding resources.
+    """
+    # Set run flag to True
     run = True
+
+    # Create a timer object if time trial is enabled
     if time_trial:
         timer = Timer(SCREEN)
 
-    # create players
+    # Create a new game object, passing in player names and color list
     new_game = Game(players_names, color_list)
+
+    # If loading a saved game, load player, board, bank, and game data, and unpause timer if time trial is enabled
     if load_game:
         new_game.load_player_data()
         new_game.load_board_data()
@@ -537,18 +586,20 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         if time_trial:
             timer.load()
             timer.unpause()
+        # Set game state to "default" if loading a saved game
         game_state = "default"
+    # If not loading a saved game, set game state to "initial house placements P1"
     else:
         game_state = "initial house placements P1"
 
-    # dev card helpers. Road Building and Year of Plenty
+    # Set counters for road and resource cards
     road_counter = 0
     resource_counter = 0
 
-    # discard helpers
+    # Set empty list for players who need to discard cards
     PLAYERS_TO_DISCARD = []
 
-    # error messages
+    # Set error messages for various scenarios
     RESOURCE_ERROR = "Not enough resources to place that!"
     ZONE_OF_CONTROL_ERROR = "Too close to other players to place that!"
     ALLOWANCE_ERROR = "You have run out of that placement type!"
@@ -564,26 +615,27 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
         # Limit the frame rate
         dt = clock.tick(FPS)
 
+        # Set current player to the current_player in Game class
         current_player = new_game.get_current_player()
-        # draw everything
-        new_game.draw_board(SCREEN)
-        new_game.draw_players_resources(SCREEN)
-        new_game.update_state(SCREEN)
-        new_game.draw_house(SCREEN)
-        new_game.draw_city(SCREEN)
-        new_game.draw_robber(SCREEN)
-        new_game.draw_flags(SCREEN)
-        new_game.draw_player_bank_ratios(SCREEN, current_player)
-        new_game.ui_Messages(SCREEN, game_state, current_player)
+
+        # Draw everything
+        new_game.draw_board(SCREEN)  # Draws the game board on the screen
+        new_game.draw_players_resources(SCREEN)  # Draws the resources of each player on the screen
+        new_game.update_state(SCREEN)  # Updates the state of the game
+        new_game.draw_house(SCREEN)  # Draws the houses of each player on the screen
+        new_game.draw_city(SCREEN)  # Draws the cities of each player on the screen
+        new_game.draw_robber(SCREEN)  # Draws the robber on the screen
+        new_game.draw_flags(SCREEN)  # Draws the flags on the screen
+        new_game.draw_player_bank_ratios(SCREEN, current_player)  # Draws the bank ratios of each player on the screen
+        new_game.ui_Messages(SCREEN, game_state, current_player)  # Draws the user interface messages on the screen
 
         if time_trial:
-            timer.update(dt)
+            timer.update(dt)  # If it is a time trial game, updates the timer with the time elapsed
         else:
-            if new_game.check_game_over(current_player):
-                game_state = "victory screen"
+            if new_game.check_game_over(current_player):  # Checks if the game is over for the current player
+                game_state = "victory screen"  # If the game is over, sets the game state to "victory screen"
 
-        # get mouse position
-        mos_pos = pygame.mouse.get_pos()
+        mos_pos = pygame.mouse.get_pos()  # Gets the current mouse position on the screen
 
         """
         
@@ -814,7 +866,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             new_game.update_robber_pos_list()
                             new_game.remove_robber_pos()
                             game_state = "default"
-
+        # discard game state
         elif game_state == "discard":
 
             PLAYERS_TO_DISCARD = new_game.player_list_with_7_resources_or_more()
@@ -825,7 +877,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 game_state = "discard player 1"
             else:
                 game_state = "robber"
-
+        # discard player states
         elif game_state == "discard player 1":
             discard_player = PLAYERS_TO_DISCARD[0]
             if "AI" in discard_player.get_name():
@@ -2600,7 +2652,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         if new_game.trader_y_pool["hills"] > 0:
                             trade_player.add_resource("hills")
                             new_game.remove_resource_y_trader("hills")
-
+        # victory screen game state
         elif game_state == "victory screen":
             SCREEN.fill(BEIGE)
             SCREEN.blit(VICTORY_UI, VICTORY_UI_RECT)
@@ -2638,11 +2690,8 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         pygame.quit()
                         sys.exit()
 
-
         # Update the screen
         pygame.display.update()
-
-
 
 
 # run game
