@@ -49,8 +49,6 @@ class testPlayerClass(unittest.TestCase):
         self.assertEqual(self.player.get_knights_played(), 1)
 
     """
-        The values for tr
-
         Trade ratios have values that will be provided during initialisation. There are various
         methods which involve trade ratios, including returning all trade ratios, updating a
         specific resource type's ratio, upgrading all default trade ratios, etc.
