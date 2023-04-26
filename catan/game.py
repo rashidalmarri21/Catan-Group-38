@@ -185,6 +185,16 @@ class Game:
         for current_player in self.players:
             current_player.draw_roads(screen)
 
+    def player_list_with_7_resources_or_more(self):
+        player_list = []
+        for p in self.players:
+            if "AI" in p.get_name():
+                if sum(p.resources.values()) >= 10:
+                    player_list.append(p)
+            else:
+                if sum(p.resources.values()) >= 7:
+                    player_list.append(p)
+        return player_list
 
 
     def update_trade_player_list(self, current_player):
@@ -230,9 +240,9 @@ class Game:
 
         players_on_tile = []
         for p in self.players:
-            if p is not current_player:
-                for house in p.houses:
-                    for tiles, houses in HOUSE_TILE_CHECK.items():
+            for house in p.houses:
+                for tiles, houses in HOUSE_TILE_CHECK.items():
+                    if p is not current_player:
                         if tiles == tile:
                             for h in houses:
                                 if house == h:
@@ -240,7 +250,7 @@ class Game:
         if len(players_on_tile) != 0:
             chosen_player = random.choice(players_on_tile)
             if resource_to_take != 'desert':
-                if chosen_player.resources[resource_to_take] > 1:
+                if chosen_player.resources[resource_to_take] >= 1:
                     chosen_player.remove_resource(resource_to_take)
                     current_player.add_resource(resource_to_take)
 
@@ -1046,6 +1056,56 @@ class Game:
                 resource_rect = resource_num.get_rect(center=(1463, y_pos))
                 screen.blit(resource_num, resource_rect)
 
+    def draw_numbers_in_discard(self, screen, current_player):
+        resource_num = NUMBER_FONT.render("{}".format(current_player.get_name()), True, current_player.get_color())
+        resource_rect = resource_num.get_rect(center=(960, 670))
+        screen.blit(resource_num, resource_rect)
+
+        for key, value in current_player.resources.items():
+            y_pos = 845
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(756, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(858, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(960, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1062, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1164, y_pos))
+                screen.blit(resource_num, resource_rect)
+
+        for key, value in current_player.discard_pool.items():
+            y_pos = 492
+            if key == "forest":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(756, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "pasture":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(858, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "fields":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(960, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "mountains":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1062, y_pos))
+                screen.blit(resource_num, resource_rect)
+            elif key == "hills":
+                resource_num = NUMBER_FONT.render("{}".format(value), True, BLACK)
+                resource_rect = resource_num.get_rect(center=(1164, y_pos))
+                screen.blit(resource_num, resource_rect)
     def generate_victory_point_list(self):
         vic_list = []
         for p in self.players:
@@ -1069,6 +1129,10 @@ class Game:
         sorted_name_score_dict = dict(sorted(name_score_dict.items(), key=lambda item: item[1], reverse=True))
         return sorted_name_score_dict
 
+    def give_resource_from_discard_to_bank(self, discard_player):
+        for key, value in discard_player.discard_pool.items():
+            self.bank.add_bank_resources_with_amount(key, value)
+        discard_player.reset_discard_pool()
     def generate_players_save_data(self):
         players_data = {}
         for p in self.players:

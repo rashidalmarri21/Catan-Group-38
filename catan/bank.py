@@ -48,6 +48,10 @@ class Bank:
             self.bank_resources["fields"] += 1
             self.bank_resources["mountains"] += 1
 
+    def add_resources_from_list(self, resource_list):
+        for resource in resource_list:
+            self.add_bank_resources(resource)
+
     def remove_resources(self, resource_type):
         if resource_type == 'desert':
             return

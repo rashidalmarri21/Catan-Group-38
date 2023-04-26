@@ -24,7 +24,10 @@ from catan import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, CYAN, MENU_BG, MENU_TITLE_
     NUM_PLAYERS_TEXT_RECT, \
     AI_TEXT, AI_TEXT_RECT, COLOR_LIST, EDIT_PLAYERS_UI, EDIT_PLAYERS_UI_RECT, EDIT_NAME_PLATE, NUMBER_FONT, \
     MAIN_MENU_BUTTON, EDIT_NAME_PLATE_HOVER, EDIT_ARROWS_LIST, COLOR_IMAGE_LIST, BEIGE, VICTORY_IMAGE, VICTORY_IMAGE_RECT,\
-    MAIN_MENU_VICTORY_BUTTON, QUIT_VICTORY_BUTTON, VICTORY_UI, VICTORY_UI_RECT, HELP_BUTTON, RED
+    MAIN_MENU_VICTORY_BUTTON, QUIT_VICTORY_BUTTON, VICTORY_UI, VICTORY_UI_RECT, HELP_BUTTON, RED, DISCARD_UI, DISCARD_UI_RECT,\
+    DISCARD_BUTTONS, DISCARD_PLAYER_WOOD_BUTTON, DISCARD_PLAYER_SHEEP_BUTTON, DISCARD_PLAYER_WHEAT_BUTTON, DISCARD_PLAYER_ORE_BUTTON,\
+    DISCARD_PLAYER_BRICK_BUTTON, DISCARD_POOL_WOOD_BUTTON, DISCARD_POOL_SHEEP_BUTTON, DISCARD_POOL_WHEAT_BUTTON, DISCARD_POOL_ORE_BUTTON,\
+    DISCARD_POOL_BRICK_BUTTON, DISCARD_BUTTON
 from catan.game import Game
 from catan.ai_agent import every_house_in_play
 from catan.button import Button
@@ -542,6 +545,9 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
     road_counter = 0
     resource_counter = 0
 
+    # discard helpers
+    PLAYERS_TO_DISCARD = []
+
     # error messages
     RESOURCE_ERROR = "Not enough resources to place that!"
     ZONE_OF_CONTROL_ERROR = "Too close to other players to place that!"
@@ -760,7 +766,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                 new_game.give_resources(current_player)
                 print(current_player.get_name(), "rolled a", current_player.get_dice_number())
                 if current_player.get_dice_number() == 7:
-                    game_state = "robber"
+                    game_state = "discard"
                 else:
                     game_state = "default"
 
@@ -778,7 +784,7 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                         new_game.give_resources(current_player)
                         print(current_player.get_name(), "rolled a", current_player.get_dice_number())
                         if current_player.get_dice_number() == 7:
-                            game_state = "robber"
+                            game_state = "discard"
                         else:
                             game_state = "default"
         # robber game state
@@ -808,6 +814,393 @@ def play(load_game=False, players_names=("YOU", "MESSED", "UP", "BAD"), color_li
                             new_game.update_robber_pos_list()
                             new_game.remove_robber_pos()
                             game_state = "default"
+
+        elif game_state == "discard":
+
+            PLAYERS_TO_DISCARD = new_game.player_list_with_7_resources_or_more()
+
+            if PLAYERS_TO_DISCARD:
+                for p in PLAYERS_TO_DISCARD:
+                    p.update_discard_amount()
+                game_state = "discard player 1"
+            else:
+                game_state = "robber"
+
+        elif game_state == "discard player 1":
+            discard_player = PLAYERS_TO_DISCARD[0]
+            if "AI" in discard_player.get_name():
+                discard_list = discard_player.make_list_of_resources_to_str()
+                discard_amount = discard_player.discard_amount
+                to_remove = random.sample(discard_list, discard_amount)
+                discard_player.remove_resources_from_list(to_remove)
+                new_game.bank.add_resources_from_list(to_remove)
+                if len(PLAYERS_TO_DISCARD) >= 2:
+                    game_state = "discard player 2"
+                else:
+                    game_state = "robber"
+
+
+            current_player.draw_dice(SCREEN)
+            message = NUMBER_FONT.render("Ready player {}!".format(discard_player.get_name()), True,
+                                         discard_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            SCREEN.blit(message, message_rect)
+            new_game.draw_trade_dev_buttons(SCREEN)
+
+            SCREEN.blit(DISCARD_UI, DISCARD_UI_RECT)
+            new_game.draw_numbers_in_discard(SCREEN, discard_player)
+
+            discard_text = NUMBER_FONT.render("DISCARD {} CARDS!".format(discard_player.discard_amount), True, BLACK)
+            discard_text_rect = discard_text.get_rect(center=(960, 590))
+            SCREEN.blit(discard_text, discard_text_rect)
+            for butt in DISCARD_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if DISCARD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_amount == 0:
+                            new_game.give_resource_from_discard_to_bank(discard_player)
+                            if len(PLAYERS_TO_DISCARD) >= 2:
+                                game_state = "discard player 2"
+                            else:
+                                game_state = "robber"
+
+                    elif DISCARD_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.resources["forest"] > 0 and discard_player.discard_amount > 0:
+                            discard_player.remove_resource("forest")
+                            discard_player.add_resource_to_discard_pool("forest")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["pasture"] > 0:
+                            discard_player.remove_resource("pasture")
+                            discard_player.add_resource_to_discard_pool("pasture")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["fields"] > 0:
+                            discard_player.remove_resource("fields")
+                            discard_player.add_resource_to_discard_pool("fields")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_ORE_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["mountains"] > 0:
+                            discard_player.remove_resource("mountains")
+                            discard_player.add_resource_to_discard_pool("mountains")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_BRICK_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["hills"] > 0:
+                            discard_player.remove_resource("hills")
+                            discard_player.add_resource_to_discard_pool("hills")
+                            discard_player.remove_discard_amount()
+
+                    elif DISCARD_POOL_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["forest"] > 0:
+                            discard_player.remove_resource_from_discard_pool("forest")
+                            discard_player.add_resource("forest")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["pasture"] > 0:
+                            discard_player.remove_resource_from_discard_pool("pasture")
+                            discard_player.add_resource("pasture")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["fields"] > 0:
+                            discard_player.remove_resource_from_discard_pool("fields")
+                            discard_player.add_resource("fields")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_ORE_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["mountains"] > 0:
+                            discard_player.remove_resource_from_discard_pool("mountains")
+                            discard_player.add_resource("mountains")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_BRICK_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["hills"] > 0:
+                            discard_player.remove_resource_from_discard_pool("hills")
+                            discard_player.add_resource("hills")
+                            discard_player.add_discard_amount()
+        elif game_state == "discard player 2":
+            discard_player = PLAYERS_TO_DISCARD[1]
+            if "AI" in discard_player.get_name():
+                discard_list = discard_player.make_list_of_resources_to_str()
+                discard_amount = discard_player.discard_amount
+                to_remove = random.sample(discard_list, discard_amount)
+                discard_player.remove_resources_from_list(to_remove)
+                new_game.bank.add_resources_from_list(to_remove)
+                if len(PLAYERS_TO_DISCARD) >= 3:
+                    game_state = "discard player 3"
+                else:
+                    game_state = "robber"
+
+            current_player.draw_dice(SCREEN)
+            message = NUMBER_FONT.render("Ready player {}!".format(discard_player.get_name()), True,
+                                         discard_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            SCREEN.blit(message, message_rect)
+            new_game.draw_trade_dev_buttons(SCREEN)
+
+            SCREEN.blit(DISCARD_UI, DISCARD_UI_RECT)
+            new_game.draw_numbers_in_discard(SCREEN, discard_player)
+
+            discard_text = NUMBER_FONT.render("DISCARD {} CARDS!".format(discard_player.discard_amount), True, BLACK)
+            discard_text_rect = discard_text.get_rect(center=(960, 590))
+            SCREEN.blit(discard_text, discard_text_rect)
+            for butt in DISCARD_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if DISCARD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_amount == 0:
+                            new_game.give_resource_from_discard_to_bank(discard_player)
+                            if len(PLAYERS_TO_DISCARD) >= 3:
+                                game_state = "discard player 3"
+                            else:
+                                game_state = "robber"
+
+                    elif DISCARD_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.resources["forest"] > 0 and discard_player.discard_amount > 0:
+                            discard_player.remove_resource("forest")
+                            discard_player.add_resource_to_discard_pool("forest")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["pasture"] > 0:
+                            discard_player.remove_resource("pasture")
+                            discard_player.add_resource_to_discard_pool("pasture")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["fields"] > 0:
+                            discard_player.remove_resource("fields")
+                            discard_player.add_resource_to_discard_pool("fields")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_ORE_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["mountains"] > 0:
+                            discard_player.remove_resource("mountains")
+                            discard_player.add_resource_to_discard_pool("mountains")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_BRICK_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["hills"] > 0:
+                            discard_player.remove_resource("hills")
+                            discard_player.add_resource_to_discard_pool("hills")
+                            discard_player.remove_discard_amount()
+
+                    elif DISCARD_POOL_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["forest"] > 0:
+                            discard_player.remove_resource_from_discard_pool("forest")
+                            discard_player.add_resource("forest")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["pasture"] > 0:
+                            discard_player.remove_resource_from_discard_pool("pasture")
+                            discard_player.add_resource("pasture")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["fields"] > 0:
+                            discard_player.remove_resource_from_discard_pool("fields")
+                            discard_player.add_resource("fields")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_ORE_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["mountains"] > 0:
+                            discard_player.remove_resource_from_discard_pool("mountains")
+                            discard_player.add_resource("mountains")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_BRICK_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["hills"] > 0:
+                            discard_player.remove_resource_from_discard_pool("hills")
+                            discard_player.add_resource("hills")
+                            discard_player.add_discard_amount()
+        elif game_state == "discard player 3":
+            discard_player = PLAYERS_TO_DISCARD[2]
+            if "AI" in discard_player.get_name():
+                discard_list = discard_player.make_list_of_resources_to_str()
+                discard_amount = discard_player.discard_amount
+                to_remove = random.sample(discard_list, discard_amount)
+                discard_player.remove_resources_from_list(to_remove)
+                new_game.bank.add_resources_from_list(to_remove)
+                if len(PLAYERS_TO_DISCARD) >= 4:
+                    game_state = "discard player 4"
+                else:
+                    game_state = "robber"
+
+            current_player.draw_dice(SCREEN)
+            message = NUMBER_FONT.render("Ready player {}!".format(discard_player.get_name()), True,
+                                         discard_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            SCREEN.blit(message, message_rect)
+            new_game.draw_trade_dev_buttons(SCREEN)
+
+            SCREEN.blit(DISCARD_UI, DISCARD_UI_RECT)
+            new_game.draw_numbers_in_discard(SCREEN, discard_player)
+
+            discard_text = NUMBER_FONT.render("DISCARD {} CARDS!".format(discard_player.discard_amount), True, BLACK)
+            discard_text_rect = discard_text.get_rect(center=(960, 590))
+            SCREEN.blit(discard_text, discard_text_rect)
+            for butt in DISCARD_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if DISCARD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_amount == 0:
+                            new_game.give_resource_from_discard_to_bank(discard_player)
+                            if len(PLAYERS_TO_DISCARD) >= 4:
+                                game_state = "discard player 4"
+                            else:
+                                game_state = "robber"
+
+                    elif DISCARD_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.resources["forest"] > 0 and discard_player.discard_amount > 0:
+                            discard_player.remove_resource("forest")
+                            discard_player.add_resource_to_discard_pool("forest")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["pasture"] > 0:
+                            discard_player.remove_resource("pasture")
+                            discard_player.add_resource_to_discard_pool("pasture")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["fields"] > 0:
+                            discard_player.remove_resource("fields")
+                            discard_player.add_resource_to_discard_pool("fields")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_ORE_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["mountains"] > 0:
+                            discard_player.remove_resource("mountains")
+                            discard_player.add_resource_to_discard_pool("mountains")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_BRICK_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["hills"] > 0:
+                            discard_player.remove_resource("hills")
+                            discard_player.add_resource_to_discard_pool("hills")
+                            discard_player.remove_discard_amount()
+
+                    elif DISCARD_POOL_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["forest"] > 0:
+                            discard_player.remove_resource_from_discard_pool("forest")
+                            discard_player.add_resource("forest")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["pasture"] > 0:
+                            discard_player.remove_resource_from_discard_pool("pasture")
+                            discard_player.add_resource("pasture")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["fields"] > 0:
+                            discard_player.remove_resource_from_discard_pool("fields")
+                            discard_player.add_resource("fields")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_ORE_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["mountains"] > 0:
+                            discard_player.remove_resource_from_discard_pool("mountains")
+                            discard_player.add_resource("mountains")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_BRICK_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["hills"] > 0:
+                            discard_player.remove_resource_from_discard_pool("hills")
+                            discard_player.add_resource("hills")
+                            discard_player.add_discard_amount()
+        elif game_state == "discard player 4":
+            discard_player = PLAYERS_TO_DISCARD[3]
+            if "AI" in discard_player.get_name():
+                discard_list = discard_player.make_list_of_resources_to_str()
+                discard_amount = discard_player.discard_amount
+                to_remove = random.sample(discard_list, discard_amount)
+                discard_player.remove_resources_from_list(to_remove)
+                new_game.bank.add_resources_from_list(to_remove)
+                game_state = "robber"
+
+            current_player.draw_dice(SCREEN)
+            message = NUMBER_FONT.render("Ready player {}!".format(discard_player.get_name()), True,
+                                         discard_player.get_color())
+            message_rect = message.get_rect(center=(960, 50))
+            SCREEN.blit(message, message_rect)
+            new_game.draw_trade_dev_buttons(SCREEN)
+
+            SCREEN.blit(DISCARD_UI, DISCARD_UI_RECT)
+            new_game.draw_numbers_in_discard(SCREEN, discard_player)
+
+            discard_text = NUMBER_FONT.render("DISCARD {} CARDS!".format(discard_player.discard_amount), True, BLACK)
+            discard_text_rect = discard_text.get_rect(center=(960, 590))
+            SCREEN.blit(discard_text, discard_text_rect)
+            for butt in DISCARD_BUTTONS:
+                butt.change_color(mos_pos)
+                butt.update(SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if DISCARD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_amount == 0:
+                            new_game.give_resource_from_discard_to_bank(discard_player)
+                            game_state = "robber"
+
+                    elif DISCARD_PLAYER_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.resources["forest"] > 0 and discard_player.discard_amount > 0:
+                            discard_player.remove_resource("forest")
+                            discard_player.add_resource_to_discard_pool("forest")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_SHEEP_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["pasture"] > 0:
+                            discard_player.remove_resource("pasture")
+                            discard_player.add_resource_to_discard_pool("pasture")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_WHEAT_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["fields"] > 0:
+                            discard_player.remove_resource("fields")
+                            discard_player.add_resource_to_discard_pool("fields")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_ORE_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["mountains"] > 0:
+                            discard_player.remove_resource("mountains")
+                            discard_player.add_resource_to_discard_pool("mountains")
+                            discard_player.remove_discard_amount()
+                    elif DISCARD_PLAYER_BRICK_BUTTON.check_for_input(mos_pos) and discard_player.discard_amount > 0:
+                        if discard_player.resources["hills"] > 0:
+                            discard_player.remove_resource("hills")
+                            discard_player.add_resource_to_discard_pool("hills")
+                            discard_player.remove_discard_amount()
+
+                    elif DISCARD_POOL_WOOD_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["forest"] > 0:
+                            discard_player.remove_resource_from_discard_pool("forest")
+                            discard_player.add_resource("forest")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_SHEEP_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["pasture"] > 0:
+                            discard_player.remove_resource_from_discard_pool("pasture")
+                            discard_player.add_resource("pasture")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_WHEAT_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["fields"] > 0:
+                            discard_player.remove_resource_from_discard_pool("fields")
+                            discard_player.add_resource("fields")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_ORE_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["mountains"] > 0:
+                            discard_player.remove_resource_from_discard_pool("mountains")
+                            discard_player.add_resource("mountains")
+                            discard_player.add_discard_amount()
+                    elif DISCARD_POOL_BRICK_BUTTON.check_for_input(mos_pos):
+                        if discard_player.discard_pool["hills"] > 0:
+                            discard_player.remove_resource_from_discard_pool("hills")
+                            discard_player.add_resource("hills")
+                            discard_player.add_discard_amount()
 
         # default game state
         elif game_state == "default":

@@ -480,6 +480,47 @@ RIGHT_TRADE_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(1361, 417), text_in
 RIGHT_TRADE_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(1463, 417), text_input="", font=NUMBER_FONT,
                              base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
                              border_color=(127, 127, 127))
+# discard images
+DISCARD_UI = pygame.image.load('assets/UI/discard/discard UI.png')
+DISCARD_UI_RECT = DISCARD_UI.get_rect(center=(960, 650))
+
+# discard buttons
+
+DISCARD_PLAYER_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(858, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+DISCARD_PLAYER_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(960, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+DISCARD_PLAYER_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(756, 770), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+DISCARD_PLAYER_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(1062, 770), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+DISCARD_PLAYER_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(1164, 770), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+
+DISCARD_POOL_SHEEP_BUTTON = button.Button(image=SHEEP_IMAGE, pos=(858, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+DISCARD_POOL_WHEAT_BUTTON = button.Button(image=WHEAT_IMAGE, pos=(960, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+DISCARD_POOL_WOOD_BUTTON = button.Button(image=WOOD_IMAGE, pos=(756, 417), text_input="", font=NUMBER_FONT,
+                            base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                            border_color=(127, 127, 127))
+DISCARD_POOL_ORE_BUTTON = button.Button(image=ORE_IMAGE, pos=(1062, 417), text_input="", font=NUMBER_FONT,
+                           base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                           border_color=(127, 127, 127))
+DISCARD_POOL_BRICK_BUTTON = button.Button(image=BRICK_IMAGE, pos=(1164, 417), text_input="", font=NUMBER_FONT,
+                             base_color=BLACK, hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=(127, 127, 127))
+
+DISCARD_BUTTON = button.Button(image=BACK_TRADE_IMAGE, pos=(960, 950), text_input="Discard", font=NUMBER_FONT,
+                             base_color=(127, 127, 127), hovering_color=(160, 32, 220), border=True, border_width=5,
+                             border_color=BLACK)
 
 # button lists
 TRADE_BUTTONS = [LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON, LEFT_PLAYER_WOOD_BUTTON, LEFT_PLAYER_ORE_BUTTON, LEFT_PLAYER_BRICK_BUTTON,
@@ -487,6 +528,9 @@ TRADE_BUTTONS = [LEFT_PLAYER_SHEEP_BUTTON, LEFT_PLAYER_WHEAT_BUTTON, LEFT_PLAYER
                  LEFT_TRADE_SHEEP_BUTTON, LEFT_TRADE_WHEAT_BUTTON, LEFT_TRADE_WOOD_BUTTON, LEFT_TRADE_ORE_BUTTON, LEFT_TRADE_BRICK_BUTTON,
                  RIGHT_TRADE_SHEEP_BUTTON, RIGHT_TRADE_WHEAT_BUTTON, RIGHT_TRADE_WOOD_BUTTON, RIGHT_TRADE_ORE_BUTTON, RIGHT_TRADE_BRICK_BUTTON,
                  TRADE_BUTTON, BACK_BUTTON_TRADE]
+DISCARD_BUTTONS = [DISCARD_PLAYER_WOOD_BUTTON, DISCARD_PLAYER_SHEEP_BUTTON, DISCARD_PLAYER_WHEAT_BUTTON, DISCARD_PLAYER_ORE_BUTTON, DISCARD_PLAYER_BRICK_BUTTON,
+                   DISCARD_POOL_WOOD_BUTTON, DISCARD_POOL_SHEEP_BUTTON, DISCARD_POOL_WHEAT_BUTTON, DISCARD_POOL_ORE_BUTTON, DISCARD_POOL_BRICK_BUTTON,
+                   DISCARD_BUTTON]
 UI_BUTTONS = [END_TURN_BUTTON, PLACE_HOUSE_BUTTON, PLACE_ROAD_BUTTON, SHEEP_BUTTON, WHEAT_BUTTON, WOOD_BUTTON,
               ORE_BUTTON, BRICK_BUTTON,
               DEV_BUTTON, DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, PLACE_CITY_BUTTON, PAUSE_BUTTON, HELP_BUTTON]
