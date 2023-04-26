@@ -1,15 +1,19 @@
 import unittest
-
 from catan.player import Player
+
+"""
+"""
 
 class testPlayerClass(unittest.TestCase):
 
     """
-        Initialize the player class with a provided name and color, these should be defined as
-        strings (they will fail otherwise).
+        Initialize the player class with a provided name and color, these should be defined 
+        as strings (they will fail otherwise).
 
-        The first test will ensure the values provided by methods get_name() and get_color() are        strings, and that they equal the values provided.
+        The first test will ensure the values provided by methods get_name() and get_color() 
+        are strings, and that they equal the values provided.
     """
+
     testName = "John Smith"
     testColor = "blue"
     player = Player(testName, testColor)
@@ -25,6 +29,7 @@ class testPlayerClass(unittest.TestCase):
         The constant VIC_POINT_THRESHOLD defines the minimum value required to "win" the game.
         The value of the constant is 10, defined in file catan/constants.py.
     """
+
     def testPlayerHasWon(self):
         self.player.victory_points = 9;
         self.assertEqual(self.player.get_victory_points(), 9)
@@ -38,32 +43,40 @@ class testPlayerClass(unittest.TestCase):
         The method add_knight() should increment the amount of knights_played, which can be
         returned using the appropriately named method get_knights_played().
     """
+
     def testKnights(self):
         self.player.add_knight()
         self.assertEqual(self.player.get_knights_played(), 1)
 
     """
-        Trade ratios have values that will be provided during initialising. There are various           methods which involve trade ratios, including returning all trade ratios, updating a            specific resource type's ratio, upgrading all default trade ratios, etc.
+        The values for tr
+
+        Trade ratios have values that will be provided during initialisation. There are various
+        methods which involve trade ratios, including returning all trade ratios, updating a
+        specific resource type's ratio, upgrading all default trade ratios, etc.
     """
+
     def testUpdatingTradeRatios(self):
-        # Check that the initialised values are correct before changing anything.
+        """ Check that the initialised values are correct before changing anything. """
         self.assertEqual(self.player.get_trade_ratios(), {'forest': (4, 1), 'hills': (4, 1), 'pasture': (4, 1), 'fields': (4, 1), 'mountains': (4, 1)})
        
-        # Attempt to update one trade ratio, and make sure the returned value is correct.
+        """ Attempt to update one trade ratio, and make sure the returned value is correct. """
         self.player.update_trade_ratios('forest', (5,2))
         self.assertEqual(self.player.get_trade_ratios(), {'forest': (5, 2), 'hills': (4, 1), 'pasture': (4, 1), 'fields': (4, 1), 'mountains': (4, 1)})
 
-        # Update all trade ratios, this should only change resources using the default ratio            (4, 1) to the value provided.
+        """ Update all trade ratios, this should only change resources using the default 
+        ratio (4, 1) to the value provided. """
         self.player.update_all_trade_ratios((10,5))
         self.assertEqual(self.player.get_trade_ratios(), {'forest': (5, 2), 'hills': (10, 5), 'pasture': (10, 5), 'fields': (10, 5), 'mountains': (10, 5)})
 
 
     """
         There are 3 important types of infrastructure (houses, roads and cities) with limiting 
-        amounts of each that are possible (5, 15 and 4 respectively), each requires a certain           combination and amount of resource. 
+        amounts of each that are possible (5, 15 and 4 respectively), each requires a certain
+        combination and amount of resource. 
     """
     def testResources(self):
-        """ At this point, we should have permission to create roads, houses and cities, but not        enough resources. """
+        """ At this point, we should have permission to create roads, houses and cities, but not enough resources. """
         self.assertEqual(self.player.road_allowance(), True)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
@@ -87,7 +100,7 @@ class testPlayerClass(unittest.TestCase):
         self.player.remove_resource_with_amount("mountains", 3)
         self.assertEqual(self.player.has_enough_resources("city"), False)
 
-        # If we remove only one of the "fields" resource, we should still be able to create             a house.
+        """ If we remove only one of the "fields" resource, we should still be able to create a house. """
         self.player.remove_resource("fields")
         self.assertEqual(self.player.has_enough_resources("house"), True)
 
@@ -97,7 +110,7 @@ class testPlayerClass(unittest.TestCase):
         self.player.remove_resource("forest")
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
-        # We can simulate what would happen when placing a specific resource.
+        """ We can simulate what would happen when placing a specific resource. """
         self.player.add_resource("forest")
         self.assertEqual(self.player.resources["forest"], 1)
         self.assertEqual(self.player.resources["hills"], 1)
@@ -109,7 +122,8 @@ class testPlayerClass(unittest.TestCase):
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
     """ 
-        Add one of each development card type, check the full list of development cards and             ensure the reported amounts of each are valid.
+        Add one of each development card type, check the full list of development cards and ensure 
+        the reported amounts of each are valid.
     """
 
     def testDevCards(self):
@@ -126,15 +140,19 @@ class testPlayerClass(unittest.TestCase):
         self.assertEqual(self.player.get_dev_card_total_by_type("year"), 3)
 
     def testDice(self):
-        # The unrolled die both have values of "1", and equal the total of "2"
+        """ The unrolled die both have values of "1", and equal the total of "2" """
         self.assertEqual(self.player.get_dice_roll(), [1,1])
 
-        # We first manually apply an impossible value; the normal range of values provided by           get_dice_number() are between 2 and 12. 
-        # The default value is technically valid, so it would be possible to randomly achieve           such roll.
+        """ We first manually apply an impossible value; the normal range of values provided by 
+        get_dice_number() are between 2 and 12. """
+        """ The default value is technically valid, so it would be possible to randomly achieve
+        such roll. """
         self.player.dice_roll = [7,8]
         self.assertNotEqual(self.player.get_dice_roll(), [1,1])
         self.assertEqual(self.player.get_dice_number(), 15)
 
-        # If we roll the dice using the proper method, only values between 1 and 6 for each             die are possible, this will never be able to equal the impossible value of 15, which          had only been acheived through manually overriding the values.
+        """ If we roll the dice using the proper method, only values between 1 and 6 for each die are
+        possible, this will never be able to equal the impossible value of 15, which had only been
+        acheived through manually overriding the values. """
         self.player.roll_dice()
         self.assertNotEqual(self.player.get_dice_number(), 15)
