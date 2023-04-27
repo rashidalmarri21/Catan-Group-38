@@ -1,12 +1,11 @@
 import json
 
-import pygame, math, random
+import math
+import pygame
+import random
 
 import catan.ai_agent
-from catan.ai_agent import every_house_in_play
-from catan.ai_agent import AIAgent
-from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_BUTTONS, PLACE_HOUSE_BUTTON, \
-    END_TURN_BUTTON, PLACE_ROAD_BUTTON, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
+from catan import HOUSE_POSITIONS, board, player, NUMBER_FONT, BLACK, bank, HOUSE_TILE_CHECK, BANK_NUMBER_FONT, \
     QUESTION_MARK_DICE, \
     DEV_CARDS_BUTTON, PLAYER_TRADING_BUTTON, DEV_CARDS_IMAGE, PLAYER_TRADING_IMAGE, DEV_CARDS_UI_IMAGE, \
     DEV_CARDS_UI_RECT, \
@@ -22,10 +21,11 @@ from catan import HOUSE_POSITIONS, MOUSE_BUFFER, board, player, COLOR_LIST, UI_B
     YEAR_EFFECT_RECT, \
     FLAG_POSITIONS, FLAG_LIST, FLAG_HOUSE_CHECK, WOOD_FLAG, WHEAT_FLAG, ORE_FLAG, BRICK_FLAG, SHEEP_FLAG, ANY_FLAG, \
     SHEEP_IMAGE, WHEAT_IMAGE, WOOD_IMAGE, ORE_IMAGE, BRICK_IMAGE, MARITIME_TRADE, BUY_DEV_TRADE, KNIGHT_BUY_DEV, \
-    ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, PLAYER_ROBBER_IMAGE, ROBBER_EFFECT, \
+    ROAD_BUILDING_BUY_DEV, MONOPOLY_BUY_DEV, VICTORY_BUY_DEV, YEAR_BUY_DEV, ROBBER_EFFECT, \
     ROBBER_EFFECT_RECT, \
-    RED, BLUE, ORANGE, PURPLE, WHITE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT, \
+    RED, BLUE, ORANGE, PURPLE, button, NAME_PLATE, PLAYER_TRADING_UI, PLAYER_TRADE_UI, PLAYER_TRADE_UI_RECT, \
     PAUSE_MENU_UI, PAUSE_MENU_RECT, ROAD_POSITIONS, CYAN, BROWN, PINK, GAME_HELP_IMAGE, GAME_HELP_IMAGE_RECT
+from catan.ai_agent import AIAgent
 
 
 class Game:
@@ -444,7 +444,7 @@ class Game:
                     if p is not current_player:
                         if tiles == tile:
                             for h in houses:
-                                if house == h:
+                                if house == h and p.resources[resource_to_take] > 0:
                                     players_on_tile.append(p)
         if len(players_on_tile) != 0:
             chosen_player = random.choice(players_on_tile)
