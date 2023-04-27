@@ -162,6 +162,19 @@ class Game:
                 "road pos": self.road_positions,
                 "every house": None
             }
+        for i, person in enumerate(self.players):
+            if person == self.longest_road_player:
+                game_save["longest road index"] = i
+                break
+            else:
+                game_save["longest road index"] = None
+
+        for i, person in enumerate(self.players):
+            if person == self.largest_army_player:
+                game_save["largest army index"] = i
+                break
+            else:
+                game_save["largest army index"] = None
         return game_save
 
 
@@ -271,6 +284,10 @@ class Game:
 
         self.house_positions = game_data["house pos"]
         self.road_positions = game_data["road pos"]
+        if game_data["longest road index"] is not None:
+            self.longest_road_player = self.players[game_data["longest road index"]]
+        if game_data["largest army index"] is not None:
+            self.largest_army_player = self.players[game_data["largest army index"]]
         if self.get_AI_player() is not False:
             catan.ai_agent.every_house_in_play = game_data["every house"]
 

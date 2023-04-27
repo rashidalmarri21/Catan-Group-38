@@ -78,7 +78,7 @@ def main_menu():
     selected, the function sets the corresponding play option values and exits the loop. The selected options are then passed on to the play function
     for the actual gameplay.
     """
-    pygame.display.set_caption("Menu")
+    pygame.display.set_caption("Settlers of Catan")
     game_state = "main menu"
 
     # play options helper counters
