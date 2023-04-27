@@ -16,3 +16,13 @@ Added DISCARD WHEN 7 IS ROLLED for players and AI (AI only discards at 10 resour
 
 Patch 4.2:
 Fixed bug with robber not giving the current player a resource from a random enemy on the tile. 
+
+Patch 5.0: FINIAL PATCH
+
+Fixed longest road/ largest army not updating correctly on reload.
+
+Fixed Time Trial bug.
+
+Mutliple QOL changes. 
+
+Finial build for client. 
