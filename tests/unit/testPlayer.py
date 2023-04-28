@@ -48,6 +48,7 @@ class testPlayerClass(unittest.TestCase):
     """
 
     def testKnights(self):
+        self.assertEqual(self.player.get_knights_played(), 0)
         self.player.add_knight()
         self.assertEqual(self.player.get_knights_played(), 1)
 
@@ -78,11 +79,11 @@ class testPlayerClass(unittest.TestCase):
     """
 
     def testResources(self):
-        """ The player is given 10 of each type of resource at the beginning. """
+        """ The player is given 0 of each type of resource at the beginning. """
         self.assertEqual(self.player.get_resources(), {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0})
 
 
-        """ At this point, we should have permission to create roads, houses and cities, with enough of each resource to build each type of infrastructure. """
+        """ At this point, we should have permission to create roads, houses and cities, but not enough of each resource to build each type of infrastructure. """
         self.assertEqual(self.player.road_allowance(), True)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
@@ -92,30 +93,40 @@ class testPlayerClass(unittest.TestCase):
         self.assertEqual(self.player.city_allowance(), True)
         self.assertEqual(self.player.has_enough_resources("city"), False)
        
+        """ Add enough resources for each road, house or city """
+        self.player.add_resource("forest"), self.player.add_resource("hills")
+        self.assertEqual(self.player.has_enough_resources("road"), True)
+
+        self.player.add_resource("fields"), self.player.add_resource("pasture")
+        self.assertEqual(self.player.has_enough_resources("house"), True)
+
+        self.player.add_resource("fields"), self.player.add_resource("mountains"), self.player.add_resource("mountains"), self.player.add_resource("mountains")
+        self.assertEqual(self.player.has_enough_resources("city"), True)
+
         """ Remove an amount of resource that would dissallow building such infrastructure. """
-        self.player.remove_resource_with_amount("mountains", 0)
+        self.player.remove_resource_with_amount("mountains", 1)
         self.assertEqual(self.player.has_enough_resources("city"), False)
 
-        """  If we leave at least 1 field resource (removing 9 from 10), we should still be able to create a house. """
-        self.player.remove_resource_with_amount("fields", 0)
+        """ If we leave at least 1 field resource (removing 1 from 2), we should still be able to create a house. """
+        self.player.remove_resource_with_amount("fields", 1)
+        self.assertEqual(self.player.has_enough_resources("house"), True)
+
+        self.player.remove_resource_with_amount("pasture", 1)
         self.assertEqual(self.player.has_enough_resources("house"), False)
 
-        self.player.remove_resource_with_amount("pasture", 0)
-        self.assertEqual(self.player.has_enough_resources("house"), False)
-
-        self.player.remove_resource_with_amount("forest", 0)
+        self.player.remove_resource_with_amount("forest", 1)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
         """ We can simulate what would happen when placing a specific resource. """
         self.player.add_resource("forest")
         self.assertEqual(self.player.resources["forest"], 1)
-        self.assertEqual(self.player.resources["hills"], 0)
-        self.assertEqual(self.player.has_enough_resources("road"), False)
+        self.assertEqual(self.player.resources["hills"], 1)
+        self.assertEqual(self.player.has_enough_resources("road"), True)
 
-        """ We should go from having a single forest resource to zero, and having 10 hill resources to only 1. """
+        """ We should go from having a single forest and hill resoure to 0 of either. """
         self.player.remove_resources_for_placement("road")
         self.assertEqual(self.player.resources["forest"], 0)
-        self.assertEqual(self.player.resources["hills"], -1)
+        self.assertEqual(self.player.resources["hills"], 0)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
     """ 

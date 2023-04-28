@@ -2,9 +2,6 @@ import unittest
 import random
 from catan.bank import Bank
 
-""" 
-"""
-
 class testBank(unittest.TestCase):
     bank = Bank()
     bankSave = Bank()

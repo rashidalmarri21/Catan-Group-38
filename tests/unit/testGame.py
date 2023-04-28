@@ -1,10 +1,6 @@
 import unittest
 from catan.game import Game
 
-"""
-    The game class uses inputted information such as player names and colors, then 
-"""
-
 class testGameClass(unittest.TestCase):
     testPlayers = ["John Smith", "David Jones"]
     testColors = ["blue", "red"]
