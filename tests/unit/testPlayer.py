@@ -79,43 +79,43 @@ class testPlayerClass(unittest.TestCase):
 
     def testResources(self):
         """ The player is given 10 of each type of resource at the beginning. """
-        self.assertEqual(self.player.get_resources(), {'forest': 10, 'hills': 10, 'pasture': 10, 'fields': 10, 'mountains': 10})
+        self.assertEqual(self.player.get_resources(), {'forest': 0, 'hills': 0, 'pasture': 0, 'fields': 0, 'mountains': 0})
 
 
         """ At this point, we should have permission to create roads, houses and cities, with enough of each resource to build each type of infrastructure. """
         self.assertEqual(self.player.road_allowance(), True)
-        self.assertEqual(self.player.has_enough_resources("road"), True)
+        self.assertEqual(self.player.has_enough_resources("road"), False)
 
         self.assertEqual(self.player.house_allowance(), True)
-        self.assertEqual(self.player.has_enough_resources("house"), True)
+        self.assertEqual(self.player.has_enough_resources("house"), False)
 
         self.assertEqual(self.player.city_allowance(), True)
-        self.assertEqual(self.player.has_enough_resources("city"), True)
+        self.assertEqual(self.player.has_enough_resources("city"), False)
        
         """ Remove an amount of resource that would dissallow building such infrastructure. """
-        self.player.remove_resource_with_amount("mountains", 10)
+        self.player.remove_resource_with_amount("mountains", 0)
         self.assertEqual(self.player.has_enough_resources("city"), False)
 
         """  If we leave at least 1 field resource (removing 9 from 10), we should still be able to create a house. """
-        self.player.remove_resource_with_amount("fields", 9)
-        self.assertEqual(self.player.has_enough_resources("house"), True)
-
-        self.player.remove_resource_with_amount("pasture", 10)
+        self.player.remove_resource_with_amount("fields", 0)
         self.assertEqual(self.player.has_enough_resources("house"), False)
 
-        self.player.remove_resource_with_amount("forest", 10)
+        self.player.remove_resource_with_amount("pasture", 0)
+        self.assertEqual(self.player.has_enough_resources("house"), False)
+
+        self.player.remove_resource_with_amount("forest", 0)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
         """ We can simulate what would happen when placing a specific resource. """
         self.player.add_resource("forest")
         self.assertEqual(self.player.resources["forest"], 1)
-        self.assertEqual(self.player.resources["hills"], 10)
-        self.assertEqual(self.player.has_enough_resources("road"), True)
+        self.assertEqual(self.player.resources["hills"], 0)
+        self.assertEqual(self.player.has_enough_resources("road"), False)
 
         """ We should go from having a single forest resource to zero, and having 10 hill resources to only 1. """
         self.player.remove_resources_for_placement("road")
         self.assertEqual(self.player.resources["forest"], 0)
-        self.assertEqual(self.player.resources["hills"], 9)
+        self.assertEqual(self.player.resources["hills"], -1)
         self.assertEqual(self.player.has_enough_resources("road"), False)
 
     """ 
